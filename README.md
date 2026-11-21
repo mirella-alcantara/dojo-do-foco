@@ -182,9 +182,9 @@ DOJO_VAULT=/caminho/do/cofre PORT=4321 npm start
 O projeto já vem pronto para o [Netlify](https://www.netlify.com), que é gratuito e funciona com repositório privado. O `netlify.toml` diz tudo o que ele precisa: roda `npm run build` e publica a pasta `dist/`.
 
 1. Entre em <https://app.netlify.com> com a sua conta do GitHub.
-2. Clique em **Add new project → Import an existing project → GitHub** e autorize o acesso ao repositório `dojo-do-foco`.
-3. Escolha o repositório. As configurações já aparecem preenchidas pelo `netlify.toml`. Clique em **Deploy**.
-4. Em **Project configuration → Change project name**, troque o nome para ganhar um endereço como `dojo-do-foco.netlify.app`.
+2. Clique em **Add new site** (ou **Add new project**) → **Import an existing project** → **GitHub** e autorize o acesso ao repositório `dojo-do-foco`.
+3. Escolha o repositório. O comando de build e a pasta de publicação já aparecem preenchidos pelo `netlify.toml`. Clique em **Deploy**.
+4. Nas configurações do site, troque o nome para ganhar um endereço como `dojo-do-foco.netlify.app`.
 
 Depois disso, cada `git push` publica uma versão nova sozinho.
 
@@ -192,7 +192,7 @@ Depois disso, cada `git push` publica uma versão nova sozinho.
 | --- | --- | --- |
 | Onde o progresso fica | No navegador de cada aparelho | No cofre do Obsidian |
 | Clima | Automático, pela cidade ou pela localização do aparelho | Automático, pela cidade ou pela localização |
-| Funciona no celular | Sim | Sim, na mesma rede, se você liberar o acesso |
+| Onde abre | Em qualquer aparelho, celular incluído | Só no computador onde o servidor está rodando |
 
 Para conferir o site antes de publicar:
 
