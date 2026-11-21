@@ -165,6 +165,18 @@ function writeNotes(state) {
   writeIfChanged(path.join(VAULT, 'Dojo do Foco.md'), P.join('\n') + '\n');
 }
 
+/* ---------- página ---------- */
+// O index.html é escrito sem <head>, no formato que o claude.ai publica. Aqui ele ganha
+// o documento completo, com a meta viewport que o celular precisa.
+function page() {
+  const body = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  if (/^\s*<!doctype/i.test(body)) return body;
+  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' +
+    '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}' +
+    'body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>' + body + '</body></html>';
+}
+
 /* ---------- http ---------- */
 function send(res, code, type, body) {
   res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store' });
@@ -202,7 +214,7 @@ const server = http.createServer(async (req, res) => {
     return send(res, 405, 'text/plain', 'Método não permitido');
   }
   if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
-    return send(res, 200, 'text/html; charset=utf-8', fs.readFileSync(path.join(ROOT, 'index.html')));
+    return send(res, 200, 'text/html; charset=utf-8', page());
   }
   send(res, 404, 'text/plain; charset=utf-8', 'Não encontrado');
 });
