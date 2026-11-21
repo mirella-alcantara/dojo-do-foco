@@ -1,10 +1,11 @@
 {
   "name": "dojo-do-foco",
   "version": "1.0.0",
-  "description": "Pomodoro de estudos em pixel art japonesa, com salvamento num cofre do Obsidian.",
+  "description": "Pomodoro de estudos em pixel art japonesa, com salvamento num cofre do Obsidian e publicação no Netlify.",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "node scripts/build.js"
   },
   "engines": {
     "node": ">=18"

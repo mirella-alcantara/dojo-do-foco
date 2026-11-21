@@ -2,3 +2,4 @@
 node_modules/
 dojo.config.json
 .claude/
+dist/
