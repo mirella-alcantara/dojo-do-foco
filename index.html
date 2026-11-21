@@ -86,6 +86,9 @@ body.focusing .dojo-left,body.focusing .dojo-right,body.focusing .strip,body.foc
 .seg button{background:none;border:0;color:var(--muted);font-family:var(--jp);font-size:14px;padding:4px 10px;border-radius:6px;line-height:1.3}
 .seg button[aria-pressed="true"]{background:var(--phase);color:var(--on)}
 .seg button:disabled{opacity:.4;cursor:not-allowed}
+.scene-pick{display:flex;align-items:center;gap:8px;margin-right:auto}
+.scene-pick select{padding:5px 8px;font-size:14px}
+body.focusing .scene-pick{display:none}
 .etag{font-family:var(--px);font-size:14px;text-align:right;color:var(--ink)}
 .etag small{font-family:var(--num);font-size:17px;color:var(--muted);letter-spacing:.04em;margin-left:6px}
 .stage{position:relative;border-radius:12px;overflow:hidden;border:2px solid var(--line);background:#0b0a1a;container-type:inline-size}
@@ -254,6 +257,40 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .opts button[aria-pressed="true"]{border-color:var(--violet);color:var(--violet)}
 .wx-status{font-size:14px;color:var(--muted)}
 
+/* Editor de personagens */
+.ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.ed-head h3{margin:0}
+.tagon{font-family:var(--num);font-size:15px;color:var(--on);background:var(--matcha);border-radius:5px;padding:1px 8px;letter-spacing:.05em}
+.ed-sec{border-top:2px solid var(--line);padding:12px 0 4px}
+.ed-sec summary{cursor:pointer;font-family:var(--px);font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+.ed-sec summary::after{content:"+";font-family:var(--num)}
+.ed-sec[open] summary::after{content:"−"}
+.ed-sec[open] summary{margin-bottom:10px}
+.ed-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ed-grid .full{grid-column:1/-1}
+@media (max-width:520px){.ed-grid{grid-template-columns:minmax(0,1fr)}}
+.ed-grid label,.col-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.ed-grid textarea{background:var(--panel2);border:2px solid var(--line);border-radius:7px;padding:8px 10px;font-size:15px;color:var(--ink);min-height:84px;resize:vertical;font-family:var(--body)}
+.ed-grid select,.ed-grid input{width:100%}
+.ed-label{font-size:13px;color:var(--muted);margin:10px 0 5px}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.col-grid input[type=color]{width:100%;height:36px;border:2px solid var(--line);border-radius:7px;background:var(--panel2);padding:2px;cursor:pointer}
+.px-wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.px-grid{display:grid;grid-template-columns:repeat(12,1fr);width:min(100%,300px);border:2px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;background:repeating-conic-gradient(var(--panel2) 0 25%,var(--panel) 0 50%) 0 0/12px 12px}
+.px-grid i{aspect-ratio:1;display:block;box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--line) 70%,transparent);cursor:crosshair}
+.pk{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}
+.pk button{display:flex;align-items:center;gap:6px;border:2px solid var(--line);background:var(--panel2);border-radius:7px;padding:4px 8px;font-size:13px}
+.pk button i{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);display:block}
+.pk button[aria-pressed="true"]{border-color:var(--violet)}
+.spec-row{display:grid;grid-template-columns:90px minmax(0,1fr) 30px;gap:10px;align-items:center;font-size:14px}
+.spec-row input{accent-color:var(--violet);width:100%}
+.spec-row b{font-family:var(--num);font-size:20px;font-weight:400;text-align:right}
+.ros{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;border:2px solid transparent}
+.ros.editing{border-color:var(--violet)}
+.ros canvas{width:40px;height:48px;image-rendering:pixelated}
+.ros .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.spec-mini{display:flex;gap:8px;font-family:var(--num);font-size:15px;color:var(--muted);flex-wrap:wrap}
+
 /* Jogo */
 .set{display:flex;flex-direction:column;gap:12px}
 .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
@@ -367,6 +404,7 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
               <button data-phase="short">休憩 Pausa</button>
               <button data-phase="long">温泉 Onsen</button>
             </div>
+            <label class="scene-pick"><span class="mono">Cenário</span><select id="sceneSel" aria-label="Cenário"></select></label>
             <div class="etag" id="etag"></div>
           </div>
           <div class="stage">
@@ -440,26 +478,22 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
     <!-- PERFIL -->
     <section class="view" id="view-perfil" hidden>
       <div class="stack">
-        <div class="page-h"><h2>Perfil <em class="jp">人物</em></h2><span class="mono">Quem estuda com você</span></div>
+        <div class="page-h"><h2>Personagens <em class="jp">人物</em></h2><span class="mono">Crie, edite e escolha quem estuda com você</span></div>
         <div class="cols">
-          <div class="card">
-            <div class="p-portrait"><canvas id="bigPortrait" width="96" height="60"></canvas></div>
-            <label class="fld">Nome do herói<input type="text" id="nameIn" maxlength="24"></label>
-            <div class="mono lab">Personagens prontos</div>
-            <div class="presets-grid" id="presetsGrid"></div>
-            <div class="mono lab">Classe</div>
-            <div class="classes" id="classes"></div>
-            <div class="mono lab">Penteado</div><div class="opts" id="opt-hs"></div>
-            <div class="mono lab">Traje</div><div class="opts" id="opt-tr"></div>
-            <div class="mono lab">Acessório</div><div class="opts" id="opt-acc"></div>
-            <div class="mono lab">Rosto</div><div class="opts" id="opt-face"></div>
-            <div class="mono lab">Cor do cabelo</div><div class="sw" id="sw-hair"></div>
-            <div class="mono lab">Cor da roupa</div><div class="sw" id="sw-outfit"></div>
-            <div class="mono lab">Cor do detalhe</div><div class="sw" id="sw-accent"></div>
-          </div>
+          <div class="card" id="editor"></div>
           <div class="stack">
+            <div class="card">
+              <h3>Seu elenco</h3>
+              <ul class="list" id="roster" style="gap:8px"></ul>
+              <div style="margin-top:12px"><button class="btn primary sm" id="newChar" type="button">Criar personagem do zero</button></div>
+            </div>
+            <div class="card">
+              <h3>Criar a partir de um modelo</h3>
+              <p class="small" style="margin-bottom:10px">Toque num modelo para criar a sua versão. Ela já entra no dojo e fica aberta para editar.</p>
+              <div class="presets-grid" id="presetsGrid"></div>
+            </div>
             <div class="card"><h3>Título e caminho</h3><ol class="path" id="path"></ol></div>
-            <div class="card"><h3>Atributos</h3><div class="stats4" id="stats4"></div></div>
+            <div class="card"><h3>Atributos do seu estudo</h3><div class="stats4" id="stats4"></div></div>
             <div class="card"><h3>Conquistas <span class="mono" id="achCount"></span></h3><div class="ach" id="ach"></div></div>
             <div class="card">
               <h3>Loja de recompensas <span class="cost" id="shopRyo"></span></h3>
@@ -513,6 +547,16 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
                 <button class="btn sm" data-sky="por">Pôr do sol</button>
                 <button class="btn sm" data-sky="noite">Sempre noite</button>
               </div>
+            </div>
+            <div class="card set">
+              <h3>Cenário</h3>
+              <p class="small">Onde o seu herói estuda. A batalha, o chá e o onsen acontecem em qualquer um deles.</p>
+              <div class="presets" id="sceneOpts"></div>
+            </div>
+            <div class="card set">
+              <h3>Obsidian</h3>
+              <p class="small" id="vaultInfo"></p>
+              <p class="wx-status" id="vaultStatus"></p>
             </div>
             <div class="card set">
               <h3>Clima</h3>
@@ -629,7 +673,11 @@ const CLASSES = {
   onna:{ n:'Onna-bugeisha', k:'女武', perk:'Chefes dão +25% de XP.' },
   kunoichi:{ n:'Kunoichi', k:'くノ一', perk:'+3 ryō por pausa completa.' },
   kyudo:{ n:'Arqueira', k:'弓', perk:'Cada passo marcado dá +2 XP extra.' },
-  onmyoji:{ n:'Onmyōji', k:'陰陽', perk:'Revisões depois da batalha dão +5 XP extra.' }
+  onmyoji:{ n:'Onmyōji', k:'陰陽', perk:'Revisões depois da batalha dão +5 XP extra.' },
+  ferreira:{ n:'Ferreira', k:'鍛', perk:'+20 ryō ao bater a meta diária.' },
+  kitsune:{ n:'Kitsune', k:'狐', perk:'O botão Só 5 minutos dá o dobro de XP.' },
+  yamabushi:{ n:'Yamabushi', k:'山伏', perk:'A pausa longa recupera toda a energia.' },
+  ronin:{ n:'Rōnin', k:'浪人', perk:'+5% de XP por dia seguido de estudo, até 25%.' }
 };
 const CLASS_LOOK = {
   samurai:{ hs:'curto', tr:'calca', acc:'nenhum', face:'simples' },
@@ -639,22 +687,51 @@ const CLASS_LOOK = {
   onna:{ hs:'rabo', tr:'hakama', acc:'nenhum', face:'delicado' },
   kunoichi:{ hs:'rabo', tr:'calca', acc:'nenhum', face:'delicado' },
   kyudo:{ hs:'longo', tr:'hakama', acc:'flor', face:'delicado' },
-  onmyoji:{ hs:'coque', tr:'quimono', acc:'kanzashi', face:'delicado' }
+  onmyoji:{ hs:'coque', tr:'quimono', acc:'kanzashi', face:'delicado' },
+  ferreira:{ hs:'rabo', tr:'calca', acc:'hachimaki', face:'delicado' },
+  kitsune:{ hs:'longo', tr:'quimono', acc:'raposa', face:'delicado' },
+  yamabushi:{ hs:'curto', tr:'hakama', acc:'kasa', face:'simples' },
+  ronin:{ hs:'espetado', tr:'hakama', acc:'nenhum', face:'simples' }
 };
-const RANGED = ['kyudo','onmyoji'];
-const HS = { curto:'Curto', longo:'Longo', rabo:'Rabo de cavalo', coque:'Coque', chiquinhas:'Maria-chiquinha', careca:'Careca' };
+const RANGED = ['arco','ofuda'];
+const HS = { curto:'Curto', longo:'Longo', rabo:'Rabo de cavalo', coque:'Coque', chiquinhas:'Maria-chiquinha', espetado:'Espetado', careca:'Careca' };
 const TR = { calca:'Calça', hakama:'Hakama (saia)', quimono:'Quimono longo' };
-const ACCS = { nenhum:'Nenhum', laco:'Laço', flor:'Flor de sakura', kanzashi:'Kanzashi' };
+const ACCS = { nenhum:'Nenhum', laco:'Laço', flor:'Flor de sakura', kanzashi:'Kanzashi', hachimaki:'Faixa hachimaki', kasa:'Chapéu kasa', raposa:'Orelhas e cauda de raposa', oni:'Chifres de oni' };
 const FACES = { simples:'Simples', delicado:'Cílios e blush' };
+const PERKS = {
+  xp10:'+10% de XP em cada pomodoro.', ryo5:'+5 ryō por yōkai derrotado.', heal10:'Pausas recuperam +10 de energia.',
+  quest20:'Missões concluídas dão +20 XP.', boss25:'Chefes dão +25% de XP.', breakRyo:'+3 ryō por pausa completa.',
+  step2:'Cada passo marcado dá +2 XP extra.', review5:'Revisões depois da batalha dão +5 XP extra.', goalRyo:'+20 ryō ao bater a meta diária.',
+  miniXp:'O botão Só 5 minutos dá o dobro de XP.', longHeal:'A pausa longa recupera toda a energia.', streakXp:'+5% de XP por dia seguido de estudo, até 25%.'
+};
+const WEAPONS = { katana:'Katana', naginata:'Naginata', kunai:'Kunai', arco:'Arco e flecha', ofuda:'Talismãs ofuda', gohei:'Gohei', cajado:'Cajado', martelo:'Martelo', leque:'Leque' };
+const CLASS_GEAR = { samurai:['katana','xp10'], ninja:['kunai','ryo5'], miko:['gohei','heal10'], monge:['cajado','quest20'], onna:['naginata','boss25'], kunoichi:['kunai','breakRyo'], kyudo:['arco','step2'], onmyoji:['ofuda','review5'], ferreira:['martelo','goalRyo'], kitsune:['leque','miniXp'], yamabushi:['cajado','longHeal'], ronin:['katana','streakXp'] };
+const PERSONAS = { gentil:'Gentil', animada:'Animada', calma:'Calma', seria:'Séria', brincalhona:'Brincalhona' };
+const PERSONA_LINES = {
+  gentil:['Estou aqui com você. Um passo de cada vez.','Você está indo bem, de verdade.'],
+  animada:['Bora! Esse yōkai não tem chance!','Mais um pomodoro e a gente arrasa!'],
+  calma:['Respira. O tempo está do nosso lado.','Devagar também chega.'],
+  seria:['Foco total. Uma coisa de cada vez.','Disciplina hoje, liberdade amanhã.'],
+  brincalhona:['Se o yōkai fugir, eu corro atrás. Você estuda!','Prometo não comer seus lanches. Talvez.']
+};
+const SPEC = { forca:'Força', agil:'Agilidade', mente:'Mente', espirito:'Espírito' };
+const SPEC_BUDGET = 24;
+const SCENES = { dojo:'Dojo da cidade', bambu:'Bosque de bambu', templo:'Templo na montanha', rua:'Rua de Tóquio', sakura:'Jardim de sakura' };
 const PRESETS = [
-  { n:'Sakura', cls:'miko' },
-  { n:'Aiko', cls:'onna' },
-  { n:'Hana', cls:'kunoichi' },
-  { n:'Yuki', cls:'onmyoji' },
-  { n:'Rin', cls:'kyudo' },
-  { n:'Mei', cls:'samurai', hs:'longo', tr:'hakama', acc:'flor', face:'delicado', hair:'#5a3a22' },
-  { n:'Kenji', cls:'samurai' },
-  { n:'Taro', cls:'monge' }
+  { name:'Sakura', cls:'miko', persona:'gentil', phrase:'Que os espíritos guiem seu estudo.', spec:{ forca:3, agil:5, mente:7, espirito:9 } },
+  { name:'Aiko', cls:'onna', persona:'seria', phrase:'Nenhum chefe passa por mim.', spec:{ forca:9, agil:6, mente:4, espirito:5 } },
+  { name:'Hana', cls:'kunoichi', persona:'brincalhona', phrase:'Silêncio. A distração nem me viu.', spec:{ forca:4, agil:10, mente:5, espirito:5 } },
+  { name:'Yuki', cls:'onmyoji', persona:'calma', phrase:'Cada revisão é um talismã a mais.', spec:{ forca:2, agil:4, mente:10, espirito:8 } },
+  { name:'Rin', cls:'kyudo', persona:'calma', phrase:'Mire num passo pequeno e acerte.', spec:{ forca:4, agil:8, mente:7, espirito:5 } },
+  { name:'Mei', cls:'samurai', look:{ hs:'longo', tr:'hakama', acc:'flor', face:'delicado' }, col:{ h:'#5a3a22' }, persona:'animada', phrase:'Katana afiada, caderno aberto!', spec:{ forca:7, agil:6, mente:6, espirito:5 } },
+  { name:'Akane', cls:'ferreira', persona:'animada', phrase:'Conhecimento se forja na repetição.', spec:{ forca:9, agil:4, mente:6, espirito:5 } },
+  { name:'Kiko', cls:'kitsune', persona:'brincalhona', phrase:'Só 5 minutinhos… e depois mais 20!', spec:{ forca:3, agil:8, mente:6, espirito:7 } },
+  { name:'Nami', cls:'ninja', look:{ hs:'chiquinhas', face:'delicado' }, col:{ h:'#3a5a9a' }, persona:'animada', phrase:'Rápida como a água.', spec:{ forca:4, agil:9, mente:6, espirito:5 } },
+  { name:'Sora', cls:'yamabushi', persona:'calma', phrase:'A montanha ensina a descansar.', spec:{ forca:6, agil:5, mente:5, espirito:8 } },
+  { name:'Kenji', cls:'samurai', persona:'seria', phrase:'Um golpe por vez.', spec:{ forca:8, agil:6, mente:5, espirito:5 } },
+  { name:'Taro', cls:'monge', persona:'gentil', phrase:'Paciência também é estudo.', spec:{ forca:5, agil:3, mente:7, espirito:9 } },
+  { name:'Jin', cls:'ronin', persona:'seria', phrase:'Sem mestre, mas com constância.', spec:{ forca:7, agil:7, mente:5, espirito:5 } },
+  { name:'Hoshi', cls:'onmyoji', look:{ hs:'curto', acc:'nenhum', face:'simples' }, col:{ h:'#2a1f1a', b:'#2d4a7e' }, persona:'gentil', phrase:'As estrelas também estudam à noite.', spec:{ forca:3, agil:5, mente:9, espirito:7 } }
 ];
 const WX = {
   limpo:{ n:'Céu limpo', clouds:.12, grey:0 },
@@ -740,14 +817,30 @@ function exampleTasks(){
   ];
 }
 function newDay(k){ return { date:k, pomos:0, mins:0, breaks:0, skips:0, interrupts:0, xp:0, ryo:0, distr:[], sessions:[], energy:[], ach:[], steps:0, notified:false }; }
-function fresh(){
+function newChar(base){
+  base = base || {};
+  const cls = CLASSES[base.cls] ? base.cls : 'samurai', gear = CLASS_GEAR[cls];
   return {
-    v:2,
-    hero:{ name:'Viajante', cls:'samurai', hair:null, outfit:null, accent:null, hs:null, tr:null, acc:null, face:null },
+    id:uid(), name:base.name || 'Nova personagem', title:base.title || '', cls,
+    weapon:base.weapon || gear[0], perk:base.perk || gear[1], persona:base.persona || 'gentil',
+    phrase:base.phrase || '', story:base.story || '',
+    look:Object.assign({}, base.look || {}), col:Object.assign({}, base.col || {}),
+    map:Array.isArray(base.map) ? base.map.slice() : null,
+    spec:Object.assign({ forca:6, agil:6, mente:6, espirito:6 }, base.spec || {}), created:Date.now()
+  };
+}
+function HERO(){ return (S.chars || []).find(c => c.id === S.activeChar) || S.chars[0]; }
+function EC(){ return (S.chars || []).find(c => c.id === S.editChar) || HERO(); }
+function hasPerk(k){ return HERO().perk === k; }
+function fresh(){
+  const c0 = newChar({ name:'Viajante', cls:'samurai' });
+  return {
+    v:3,
+    chars:[c0], activeChar:c0.id, editChar:c0.id,
     wx:{ mode:'auto', manual:'limpo', city:'', geoCity:'', lat:null, lon:null, place:'', data:null, tabId:null, auto:false, status:'' },
     lvl:1, xp:0, hp:100, ryo:0,
     stats:{ foco:1, sab:1, disc:1, vit:1 },
-    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00' },
+    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00', scene:'dojo' },
     timer:{ phase:'focus', running:false, started:false, endAt:0, left:1500, total:1500, cycle:0, mini:false, miniDone:false, warned:false },
     enemyN:0,
     tasks:exampleTasks(), active:null, distr:[],
@@ -761,7 +854,16 @@ function fresh(){
 function merge(o){
   const d = fresh();
   const out = Object.assign(d, o);
-  ['hero','stats','cfg','timer','totals','brk','draft','wx'].forEach(k => out[k] = Object.assign(fresh()[k], o[k] || {}));
+  if (!Array.isArray(o.chars) || !o.chars.length) {
+    const h = o.hero || {};
+    const c = newChar({ name:h.name || 'Viajante', cls:h.cls, look:{ hs:h.hs, tr:h.tr, acc:h.acc, face:h.face }, col:{ h:h.hair, b:h.outfit, a:h.accent } });
+    out.chars = [c]; out.activeChar = c.id; out.editChar = c.id;
+  }
+  out.chars = out.chars.map(c => { const n = newChar({ cls:c.cls }); return Object.assign(n, c, { look:Object.assign({}, c.look), col:Object.assign({}, c.col), spec:Object.assign(n.spec, c.spec) }); });
+  if (!out.chars.find(c => c.id === out.activeChar)) out.activeChar = out.chars[0].id;
+  if (!out.chars.find(c => c.id === out.editChar)) out.editChar = out.activeChar;
+  delete out.hero;
+  ['stats','cfg','timer','totals','brk','draft','wx'].forEach(k => out[k] = Object.assign(fresh()[k], o[k] || {}));
   if (!o.v || o.v < 2) {
     out.days = {};
     if (o.hist) Object.entries(o.hist).forEach(([k, v]) => { const x = newDay(k); x.pomos = v; x.mins = v * 25; out.days[k] = x; });
@@ -775,7 +877,40 @@ function merge(o){
   return out;
 }
 function load(){ try { const r = localStorage.getItem(KEY); if (r) return merge(JSON.parse(r)); } catch(e){} return null; }
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function save(){ S._savedAt = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} vaultSave(); }
+
+/* ================= Obsidian (servidor local) ================= */
+const LOCAL = /^https?:$/.test(location.protocol) && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const vault = { on:false, path:'', last:0, err:'', sent:'' };
+let vaultT;
+function vaultSave(now){
+  if (!vault.on) return;
+  clearTimeout(vaultT);
+  const go = () => {
+    const c = Object.assign({}, S); delete c._savedAt; const key = JSON.stringify(c);
+    if (key === vault.sent) return;
+    fetch('/api/state', { method:'PUT', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ state:S, savedAt:S._savedAt || Date.now() }) })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(j => { vault.sent = key; vault.last = j.savedAt || Date.now(); vault.err = ''; renderVault(); })
+      .catch(() => { vault.err = 'Não consegui salvar no cofre. O servidor local ainda está rodando?'; renderVault(); });
+  };
+  if (now) go(); else vaultT = setTimeout(go, 1500);
+}
+function vaultBeacon(){
+  if (!vault.on || !navigator.sendBeacon) return;
+  try { navigator.sendBeacon('/api/state', new Blob([JSON.stringify({ state:S, savedAt:S._savedAt || Date.now() })], { type:'application/json' })); } catch(e){}
+}
+async function vaultLoad(){
+  if (!LOCAL) return null;
+  try { const r = await fetch('/api/state', { cache:'no-store' }); if (!r.ok) return null; const j = await r.json(); vault.on = true; vault.path = j.vault || ''; return j; } catch(e){ return null; }
+}
+function renderVault(){
+  const i = $('#vaultInfo'), st = $('#vaultStatus'); if (!i) return;
+  if (!LOCAL) { i.textContent = 'Para salvar no Obsidian, rode o jogo pelo servidor local do projeto (npm start) e abra http://localhost:4321. Aqui os dados ficam só neste navegador.'; st.textContent = ''; return; }
+  if (!vault.on) { i.textContent = 'O servidor local não respondeu. Rode npm start na pasta do projeto.'; st.textContent = ''; return; }
+  i.textContent = `Seus dados ficam no cofre: ${vault.path}. Abra essa pasta no Obsidian como cofre para ver os resumos, missões e personagens em notas.`;
+  st.textContent = vault.err || (vault.last ? `Salvo às ${hm(vault.last)}.` : 'Conectado.');
+}
 
 let S;
 
@@ -830,16 +965,17 @@ function pickBreakItems(p){
   while (out.length < (p === 'long' ? 4 : 3) && pool.length) out.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]);
   S.brk = { items:out, checked:[] };
 }
-function makePal(cls, h){
-  const p = Object.assign({}, HPAL[cls] || HPAL.samurai), d = CLASS_LOOK[cls] || CLASS_LOOK.samurai;
-  p.look = { hs:h.hs || d.hs, tr:h.tr || d.tr, acc:h.acc || d.acc, face:h.face || d.face };
-  if (h.hair) p.h = h.hair; else if (cls === 'monge' && p.look.hs !== 'careca') p.h = '#2a1f1a';
-  if (h.outfit) p.b = h.outfit;
-  if (h.accent) p.a = h.accent;
+function charPal(ch){
+  const p = Object.assign({}, HPAL[ch.cls] || HPAL.samurai), d = CLASS_LOOK[ch.cls] || CLASS_LOOK.samurai, L = ch.look || {}, C = ch.col || {};
+  p.look = { hs:L.hs || d.hs, tr:L.tr || d.tr, acc:L.acc || d.acc, face:L.face || d.face };
+  if (!C.h && ch.cls === 'monge' && p.look.hs !== 'careca') p.h = '#2a1f1a';
+  Object.keys(C).forEach(k => { if (C[k]) p[k] = C[k]; });
   if (p.look.hs === 'careca') p.h = p.s;
+  p.x = C.x || '#ff6fb5'; p.y = C.y || '#5ce1e6';
+  p.map = Array.isArray(ch.map) && ch.map.length === 13 ? ch.map : null;
   return p;
 }
-function pal(){ return makePal(S.hero.cls, S.hero); }
+function pal(){ return charPal(HERO()); }
 
 /* ================= Som ================= */
 let AC = null, MG = null;
@@ -916,20 +1052,20 @@ function stopMini(){
   const d = day(), c = S.cur || { t:Date.now()-300000 };
   d.sessions.push({ t:c.t, end:Date.now(), mins:5, plan:c.plan||'', taskId:c.taskId, taskName:c.taskName, cat:c.cat, energy:c.energy, result:'mini', note:'', mini:true });
   d.mins += 5; S.totals.minis++;
-  addXP(5); addRyo(2);
-  addLog('5 minutos de foco. Começar já é uma vitória. +5 XP, +2 ryō.', 'good');
+  const mx = hasPerk('miniXp') ? 10 : 5; addXP(mx); addRyo(2);
+  addLog(`5 minutos de foco. Começar já é uma vitória. +${mx} XP, +2 ryō.`, 'good');
   S.cur = null; S.draft.plan = ''; checkAch(); setPhase('focus');
 }
 function complete(){
   const T = S.timer; T.running = false; T.left = 0; sleepLock();
-  const cls = S.hero.cls, d = day();
+  const cls = HERO().cls, d = day();
   if (T.phase === 'focus') {
     if (T.mini) { T.miniDone = true; sfx('chime'); toast('5 minutos feitos! Quer continuar?'); renderAll(); save(); return; }
     const e = enemy(), boss = !!e.boss;
-    let xp = S.cfg.focus * 2 * (boss ? 1.5 : 1) * (cls === 'samurai' ? 1.1 : 1) * (cls === 'onna' && boss ? 1.25 : 1);
+    let xp = S.cfg.focus * 2 * (boss ? 1.5 : 1) * (hasPerk('xp10') ? 1.1 : 1) * (hasPerk('boss25') && boss ? 1.25 : 1) * (hasPerk('streakXp') ? 1 + Math.min(0.25, streak()*0.05) : 1);
     if (S.cfg.penalties && S.hp < 30) xp *= 0.5;
     xp = Math.round(xp);
-    const gold = Math.round(S.cfg.focus/2.5) + (boss ? 10 : 0) + (cls === 'ninja' ? 5 : 0);
+    const gold = Math.round(S.cfg.focus/2.5) + (boss ? 10 : 0) + (hasPerk('ryo5') ? 5 : 0);
     const c = S.cur || { t:Date.now() - T.total*1000 };
     const t = S.tasks.find(x => x.id === c.taskId) || activeTask();
     if (t) t.done++;
@@ -943,7 +1079,7 @@ function complete(){
     T.cycle++;
     let next = 'short';
     if (T.cycle >= S.cfg.cycles) { T.cycle = 0; next = 'long'; S.totals.longs++; S.stats.disc++; S.enemyN++; addLog('Chefe derrotado. O onsen te espera.', 'gold'); }
-    if (d.pomos === S.cfg.goal) { S.stats.disc++; addLog(`Meta diária de ${S.cfg.goal} pomodoros alcançada!`, 'gold'); }
+    if (d.pomos === S.cfg.goal) { S.stats.disc++; if (hasPerk('goalRyo')) addRyo(20); addLog(`Meta diária de ${S.cfg.goal} pomodoros alcançada!`, 'gold'); }
     S.cur = null; S.draft.plan = '';
     startVictory(e);
     sfx('rin'); sfx('coin');
@@ -952,9 +1088,9 @@ function complete(){
     if (S.cfg.auto && !S.pendingReview) start();
   } else {
     const long = T.phase === 'long';
-    const h = (long ? 60 : 25) + (cls === 'miko' ? 10 : 0);
+    const h = hasPerk('longHeal') && long ? 100 : (long ? 60 : 25) + (hasPerk('heal10') ? 10 : 0);
     heal(h); S.stats.vit++; d.breaks++; S.totals.breaks++;
-    if (cls === 'kunoichi') addRyo(3);
+    if (hasPerk('breakRyo')) addRyo(3);
     const xp = long ? 15 : 5; addXP(xp);
     addLog(`Pausa ${long ? 'longa' : 'curta'} completa. +${h} de energia, +${xp} XP.`, 'good');
     sfx('gong');
@@ -990,7 +1126,7 @@ function saveReview(result, note){
   const r = S.pendingReview; if (!r) return;
   const d = S.days[r.date]; const s = d && d.sessions[r.idx];
   if (s) { s.result = result || s.result; s.note = (note || '').trim(); }
-  if (result) { S.totals.reviews++; addXP(S.hero.cls === 'onmyoji' ? 8 : 3); addLog(`Revisão: ${RESULTS[result]}${note ? ' · ' + note : ''}.`); }
+  if (result) { S.totals.reviews++; addXP(hasPerk('review5') ? 8 : 3); addLog(`Revisão: ${RESULTS[result]}${note ? ' · ' + note : ''}.`); }
   S.pendingReview = null;
 }
 let lastMinute = -1;
@@ -1082,6 +1218,11 @@ const WEAP = {
   kyudo:{ up:[[2,-2,1,11,'w'],[3,-3,1,1,'w'],[3,9,1,1,'w']], slash:[[12,3,1,11,'w'],[11,2,1,1,'w'],[11,14,1,1,'w'],[12,8,1,1,'g']], raise:[[8,-4,1,11,'w']] },
   onmyoji:{ up:[[4,-1,2,3,'g'],[4,0,2,1,'a']], slash:[[12,7,2,3,'g'],[12,8,2,1,'a']], raise:[[6,-2,2,3,'g'],[6,-1,2,1,'a']] }
 };
+const WEAP_BY = {
+  katana:WEAP.samurai, kunai:WEAP.ninja, gohei:WEAP.miko, cajado:WEAP.monge, naginata:WEAP.onna, arco:WEAP.kyudo, ofuda:WEAP.onmyoji,
+  martelo:{ up:[[4,-2,1,5,'w'],[3,-4,3,2,'g']], slash:[[10,8,4,1,'w'],[14,7,2,3,'g']], raise:[[6,-3,1,5,'w'],[5,-5,3,2,'g']] },
+  leque:{ up:[[3,0,3,2,'g'],[4,-1,1,1,'w']], slash:[[11,6,2,4,'g'],[13,7,1,2,'w']], raise:[[5,-1,3,2,'g'],[6,-2,1,1,'w']] }
+};
 const BACK = ['...hhhhhh...','..hhhhhhhh..','..hhhhhhhh..','..hhhhhhhh..','..shhhhhhs..','...hhhhhh...','....ssss....','..bbbbbbbb..','.bbbbggbbbb.','.bbbbggbbbb.','.bbbbbbbbbb.','.s.aaaaaa.s.','...bbbbbb...','...ll..ll...','...ll..ll...','...dd..dd...'];
 const YOKAI = ['...k....k...','...kk..kk...','...oooooo...','..oooooooo..','.oowwoowwoo.','.oowpoowpoo.','.oooooooooo.','.oottttttoo.','.ootmmmmtoo.','..oooooooo..','..oo.oo.oo..','.oo..oo..oo.'];
 const MASTER = ['....ww......','...wwww.....','..wwwwwww...','.sEsssswww..','.ssssssww...','.wwwsssw....','..wwwss.....','...gggggg...','..gggggggg..','..gggggggg..','..yyyyyyyy..','..gggggggg..','..gggggggg..','..llllllll..','llllllllldd.'];
@@ -1095,12 +1236,16 @@ const HPAL = {
   onna:{ h:'#2a1a1a', s:'#f3cda8', e:'#1b1b1b', E:'#1b1b1b', b:'#7a2d3a', a:'#e1b85a', l:'#2b2f3a', d:'#3a2a20', w:'#6b4a2a', g:'#dfe4ea' },
   kunoichi:{ h:'#3a2440', s:'#f2c9a0', e:'#1b1b1b', E:'#1b1b1b', b:'#3a2f52', a:'#ff6fb5', l:'#2a2340', d:'#16121f', w:'#b8bfcc', g:'#5a5f70', mask:true },
   kyudo:{ h:'#4a2e1e', s:'#f4d0ac', e:'#1b1b1b', E:'#1b1b1b', b:'#f4f2ec', a:'#3c5aa8', l:'#2c3a6a', d:'#f4f2ec', w:'#8a5a2a', g:'#f4f2ec' },
-  onmyoji:{ h:'#e7e2f3', s:'#f6d6b8', e:'#1b1b1b', E:'#1b1b1b', b:'#5a3f8a', a:'#e1b85a', l:'#3a2a5a', d:'#2a1a3a', w:'#f4f2ec', g:'#f4f2ec' }
+  onmyoji:{ h:'#e7e2f3', s:'#f6d6b8', e:'#1b1b1b', E:'#1b1b1b', b:'#5a3f8a', a:'#e1b85a', l:'#3a2a5a', d:'#2a1a3a', w:'#f4f2ec', g:'#f4f2ec' },
+  ferreira:{ h:'#7a2e1e', s:'#e8b48a', e:'#1b1b1b', E:'#1b1b1b', b:'#5a4a3a', a:'#e1b85a', l:'#3a3028', d:'#2a2018', w:'#5a4030', g:'#9aa0ac' },
+  kitsune:{ h:'#f0a860', s:'#f8dcc0', e:'#1b1b1b', E:'#1b1b1b', b:'#f4f2ec', a:'#c8442e', l:'#c8442e', d:'#f4f2ec', w:'#c8442e', g:'#f4f2ec' },
+  yamabushi:{ h:'#2a1f1a', s:'#e0b08a', e:'#1b1b1b', E:'#1b1b1b', b:'#e8e2d0', a:'#6b8e4e', l:'#e8e2d0', d:'#5a4030', w:'#7a5230', g:'#c9a24a' },
+  ronin:{ h:'#1a1a22', s:'#e8b98e', e:'#1b1b1b', E:'#1b1b1b', b:'#4a4a58', a:'#8a7a5a', l:'#2b2b33', d:'#3a2a20', w:'#d8dde6', g:'#3a3a44' }
 };
 function drawSide(c, x, yb, o){
   const u = o.u || 2, p = o.pal, look = p.look || CLASS_LOOK.samurai;
   const LS = look.tr === 'hakama' ? LEGS_H : look.tr === 'quimono' ? LEGS_K : LEGS;
-  const legs = LS[o.legs || 'stand'], map = UP.concat(legs);
+  const legs = LS[o.legs || 'stand'], map = (p.map || UP).concat(legs);
   const top = Math.round(yb - map.length*u + (o.dy || 0));
   const P = (i, j, w, h, col) => { if (!col) return; c.fillStyle = col; c.fillRect(Math.round(o.flip ? x + (12 - i - w)*u : x + i*u), top + j*u, w*u, h*u); };
   for (let j = 0; j < map.length; j++) for (let i = 0; i < 12; i++) {
@@ -1116,13 +1261,18 @@ function drawSide(c, x, yb, o){
   else if (look.hs === 'rabo') { P(-1, 1, 2, 1, hc); P(-2, 2, 2, 5, hc); P(0, 2, 1, 1, p.a); }
   else if (look.hs === 'coque') { P(1, -1, 3, 2, hc); P(4, -1, 1, 1, p.a); }
   else if (look.hs === 'chiquinhas') { P(-1, 4, 2, 5, hc); P(0, 3, 1, 1, p.a); }
+  else if (look.hs === 'espetado') { P(2, -1, 1, 1, hc); P(4, -2, 1, 2, hc); P(6, -1, 1, 1, hc); P(8, -2, 1, 2, hc); P(0, 1, 1, 1, hc); }
+  if (look.acc === 'raposa') { P(-3, 10, 3, 2, hc); P(-4, 9, 2, 2, hc); P(-4, 8, 1, 1, '#f4f2ec'); P(3, -2, 2, 2, hc); P(4, -3, 1, 1, hc); P(3, -1, 1, 1, '#ffb7d0'); }
+  else if (look.acc === 'oni') { P(3, -2, 1, 2, '#f0e6c8'); P(7, -2, 1, 2, '#f0e6c8'); }
+  else if (look.acc === 'kasa') { P(-1, 0, 13, 1, '#c9a24a'); P(1, -1, 9, 1, '#d8b45a'); P(3, -2, 5, 1, '#e3c26a'); }
+  else if (look.acc === 'hachimaki') { P(1, 2, 10, 1, '#f4f2ec'); P(-1, 2, 2, 1, '#f4f2ec'); P(-2, 3, 2, 1, '#f4f2ec'); P(9, 2, 1, 1, '#c8442e'); }
   if (look.acc === 'laco') { P(4, -1, 3, 1, p.a); P(5, 0, 1, 1, p.a); }
   else if (look.acc === 'flor') { P(2, 0, 2, 2, '#ffb7d0'); P(2, 0, 1, 1, '#ff6fb5'); }
   else if (look.acc === 'kanzashi') { P(6, -1, 1, 2, '#e1b85a'); P(7, -2, 1, 1, '#ff6fb5'); }
   if (look.face === 'delicado' && !p.mask) { P(8, 5, 1, 1, '#f2a0a8'); if (!o.blink) P(9, 3, 1, 1, p.e); }
   if (o.towel) { P(2, -1, 8, 1, '#f4f2ec'); P(3, -2, 6, 1, '#ffffff'); }
   (ARMS[o.arm || 'down']).forEach(([i,j,w,h,k]) => P(i, j, w, h, p[k]));
-  if (o.weapon) ((WEAP[o.cls] || WEAP.samurai)[o.arm] || []).forEach(([i,j,w,h,k]) => P(i, j, w, h, p[k]));
+  if (o.weapon) ((WEAP_BY[o.cls] || WEAP_BY.katana)[o.arm] || []).forEach(([i,j,w,h,k]) => P(i, j, w, h, p[k]));
   return { top, P, u };
 }
 function drawBack(c, x, yb, o){
@@ -1146,6 +1296,11 @@ function drawBack(c, x, yb, o){
   if (look.acc === 'laco') P(4 + dxh, -1, 4, 1, p.a);
   else if (look.acc === 'flor') { P(8 + dxh, 0, 2, 2, '#ffb7d0'); P(9 + dxh, 0, 1, 1, '#ff6fb5'); }
   else if (look.acc === 'kanzashi') { P(7 + dxh, -1, 1, 2, '#e1b85a'); P(8 + dxh, -2, 1, 1, '#ff6fb5'); }
+  else if (look.acc === 'raposa') { P(2 + dxh, -2, 2, 2, hc); P(8 + dxh, -2, 2, 2, hc); P(5, 12, 2, 3, hc); P(4, 14, 4, 2, hc); P(5, 15, 2, 1, '#f4f2ec'); }
+  else if (look.acc === 'oni') { P(3 + dxh, -2, 1, 2, '#f0e6c8'); P(8 + dxh, -2, 1, 2, '#f0e6c8'); }
+  else if (look.acc === 'kasa') { P(-1 + dxh, 0, 14, 1, '#c9a24a'); P(1 + dxh, -1, 10, 1, '#d8b45a'); P(3 + dxh, -2, 6, 1, '#e3c26a'); }
+  else if (look.acc === 'hachimaki') { P(2 + dxh, 2, 8, 1, '#f4f2ec'); P(5 + dxh, 3, 1, 3, '#f4f2ec'); P(6 + dxh, 3, 1, 2, '#f4f2ec'); }
+  if (look.hs === 'espetado') { P(2 + dxh, -1, 1, 1, hc); P(4 + dxh, -2, 1, 2, hc); P(7 + dxh, -2, 1, 2, hc); P(9 + dxh, -1, 1, 1, hc); }
   if (o.pose === 'up') { P(1,2,1,6,p.b); P(10,2,1,6,p.b); P(1,1,1,1,p.s); P(10,1,1,1,p.s); }
   if (o.pose === 'out') { P(-2,8,3,1,p.b); P(11,8,3,1,p.b); P(-3,8,1,1,p.s); P(14,8,1,1,p.s); }
 }
@@ -1186,7 +1341,7 @@ function drawBG(h){
   const s = skyAt(h), WP = WX[wxNow()]; amb = effAmb(s.amb, WP); skyNow = s;
   const c = bc; c.setTransform(K, 0, 0, K, 0, 0); c.imageSmoothingEnabled = false; c.clearRect(0, 0, W, H);
   const top = mix(s.top, mix('#8d93a3','#22242d', s.amb), WP.grey || 0), bot = mix(s.bot, mix('#b9bdc6','#32343e', s.amb), WP.grey || 0);
-  const gr = c.createLinearGradient(0, 0, 0, 72); gr.addColorStop(0, top); gr.addColorStop(1, bot); c.fillStyle = gr; c.fillRect(0, 0, W, 72);
+  const gr = c.createLinearGradient(0, 0, 0, 72); gr.addColorStop(0, top); gr.addColorStop(1, bot); c.fillStyle = gr; c.fillRect(0, 0, W, 152);
   if (s.amb > 0.35) { c.globalAlpha = (s.amb - 0.35)/0.65 * (1 - (WP.clouds || 0)*0.85); STARS.forEach(([x, y, k]) => R(c, x*W/320, y, 1, 1, k ? '#f4efe2' : '#cfc4ff')); c.globalAlpha = 1; }
   if (!WP.hide && h >= 5.8 && h <= 18.6) {
     const t = (h - 5.8)/12.8, sx = 20 + t*(W - 40), sy = 66 - Math.sin(Math.PI*t)*52;
@@ -1204,6 +1359,7 @@ function drawBG(h){
     c.globalAlpha = 1;
   }
   c.translate(OX, 0);
+  const sbg = SCENE_BG[S.cfg.scene]; if (sbg) { sbg(c); return; }
   const brick = dn('#9a6450','#2e2140'), mortar = dn('#7a4c3e','#22182f');
   [[-OX, 92 + OX],[228, 92 + OX]].forEach(([x0, w]) => {
     R(c, x0, 46, w, 104, brick);
@@ -1248,6 +1404,7 @@ function neonText(txt, x, y, font, col, k){
 function neonBox(x, y, w, h, col, k){ g.save(); g.globalAlpha = k; g.shadowColor = col; g.shadowBlur = 8; g.strokeStyle = col; g.lineWidth = 1.5; g.strokeRect(x + 1.5, y + 1.5, w - 3, h - 3); g.restore(); }
 function drawEnv(now){
   const k = clamp((amb - 0.3)/0.4, 0, 1);
+  const senv = SCENE_ENV[S.cfg.scene]; if (senv) { senv(now, k); groundMist(now, k); return; }
   const win = dn('#d8e2e4', '#ffb35c');
   [[134,100],[165,100]].forEach(([x, y]) => {
     if (k > 0) { g.save(); g.shadowColor = '#ffb35c'; g.shadowBlur = 12*k; R(g, x, y, 21, 15, win); g.restore(); } else R(g, x, y, 21, 15, win);
@@ -1283,6 +1440,130 @@ function drawEnv(now){
     g.globalAlpha = 1;
   }
 }
+
+/* ---- cenários ---- */
+const md = (v, n) => ((v % n) + n) % n;
+function toro(c, x, base){
+  const st = dn('#a3a093','#3c3a48'), dk = dn('#7d7a6e','#2a2834');
+  R(c, x - 1, base - 4, 12, 4, dk); R(c, x + 3, base - 16, 4, 12, st); R(c, x, base - 18, 10, 2, dk);
+  R(c, x + 1, base - 27, 8, 9, st); R(c, x + 3, base - 25, 4, 5, dn('#4a4840','#1a1612'));
+  R(c, x - 2, base - 30, 14, 3, dk); R(c, x + 4, base - 33, 2, 3, dk);
+}
+function toroLight(x, base, k){
+  if (k <= 0) return;
+  g.save(); g.globalAlpha = 0.45*k; circ(g, x + 5, base - 23, 9, '#ffb35c'); g.globalAlpha = k; R(g, x + 3, base - 25, 4, 5, '#ffd38a'); g.restore();
+}
+function groundMist(now, k){
+  if (k > 0.3 && !reduced) { g.globalAlpha = 0.07*k; g.fillStyle = '#d8d0ff'; for (let i = 0; i < 2; i++) { const x = ((now/90 + i*170) % 420) - 60; g.beginPath(); g.ellipse(x, 166 - i*4, 70, 6, 0, 0, Math.PI*2); g.fill(); } g.globalAlpha = 1; }
+}
+function sceneBambuBG(c){
+  const L = -OX, RR = 320 + OX;
+  [['#a9c796','#24332c'],['#86ab70','#1c2a22'],['#628c4e','#14201a']].forEach(([d, n], li) => {
+    const col = dn(d, n), node = dn('#d7e5c0','#33453a');
+    for (let x = L + li*5; x < RR; x += 10 + li*5) {
+      const w = 2 + li, top = 4 + md(x*13 + li*29, 26);
+      R(c, x, top, w, 150 - top, col);
+      for (let y = top + 9 + li*3; y < 150; y += 13 + li*3) R(c, x, y, w, 1, node);
+      R(c, x - 5, top + 3, 5, 2, col); R(c, x + w, top + 8, 6, 2, col); R(c, x - 4, top + 15, 4, 1, col);
+    }
+    if (li < 2) { c.globalAlpha = 0.22; R(c, L, 96 + li*14, W, 40, dn('#eef4e6','#2c3650')); c.globalAlpha = 1; }
+  });
+  R(c, L, 150, W, 30, dn('#8f9370','#1e2420'));
+  for (let x = L + 4; x < RR; x += 17) R(c, x, 160 + md(x, 3), 12, 3, dn('#b6b09c','#3a3644'));
+  for (let x = L; x < RR; x += 7) R(c, x, 150, 1, 2, dn('#6f7a50','#18201a'));
+  toro(c, 24, 150); toro(c, 286, 150);
+}
+function sceneBambuEnv(now, k){
+  toroLight(24, 150, k); toroLight(286, 150, k);
+  if (!reduced && k > 0.3 && Math.random() < 0.03) spawn({ type:'fly', x:-OX + Math.random()*W, y:90 + Math.random()*70, vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*4, life:8, seed:Math.random()*6 });
+  if (!reduced && k < 0.5 && Math.random() < 0.015) spawn({ x:-OX + Math.random()*W, y:-2, vx:-5, vy:12, life:13, size:2, col:'#8fb06a', sway:2, seed:Math.random()*6 });
+}
+function sceneTemploBG(c){
+  const L = -OX, RR = 320 + OX;
+  for (let x = L; x < RR; x++) { const y = Math.round(78 - (Math.sin(x*0.03)*7 + Math.sin(x*0.011 + 1)*10)); R(c, x, y, 1, 150 - y, dn('#8f9ec2','#1d2240')); }
+  for (let x = 120; x < 300; x++) { const h = Math.max(0, 64 - Math.abs(x - 210)*0.72); if (!h) continue; R(c, x, 104 - h, 1, h + 46, dn('#7888ae','#181d38')); if (h > 50) R(c, x, 104 - h, 1, h - 50 + (x % 3), dn('#f2f5f8','#6a7090')); }
+  for (let x = L; x < RR; x++) { const y = Math.round(118 - (Math.sin(x*0.05)*4 + Math.sin(x*0.02 + 2)*6)); R(c, x, y, 1, 150 - y, dn('#5f8a58','#141e1c')); }
+  const stone = dn('#b3ada2','#3a3644'), edge = dn('#8e887e','#2a2634');
+  for (let i = 0; i < 8; i++) { const w = 84 - i*7, y = 150 - (i + 1)*6; R(c, 160 - w/2, y, w, 6, stone); R(c, 160 - w/2, y, w, 1, edge); }
+  R(c, 140, 92, 40, 10, dn('#8a3a2a','#4a1e22')); R(c, 134, 86, 52, 6, dn('#4a4560','#1a1628')); R(c, 138, 84, 44, 2, dn('#5e5878','#2a2440'));
+  const shu = dn('#d4442c','#7a2420'), dark = dn('#2a2a2a','#141018');
+  R(c, 104, 52, 7, 98, shu); R(c, 209, 52, 7, 98, shu);
+  R(c, 92, 44, 136, 6, shu); R(c, 88, 42, 8, 4, shu); R(c, 224, 42, 8, 4, shu); R(c, 96, 50, 128, 3, dark);
+  R(c, 100, 64, 120, 5, shu); R(c, 155, 53, 10, 11, dark); R(c, 157, 55, 6, 7, dn('#e1b85a','#7a6430'));
+  R(c, 102, 69, 116, 1, dn('#c9a24a','#5a4a2a'));
+  for (let x = 124; x < 200; x += 18) { R(c, x, 70, 2, 3, '#f4f2ec'); R(c, x + 1, 73, 2, 3, '#f4f2ec'); }
+  R(c, L, 150, W, 30, dn('#9c968c','#26222e'));
+  for (let x = L; x < RR; x += 16) R(c, x, 150, 1, 30, dn('#86807a','#1e1a26'));
+  R(c, 130, 150, 60, 30, dn('#aaa49a','#2e2a38'));
+  toro(c, 50, 150); toro(c, 260, 150);
+}
+function sceneTemploEnv(now, k){
+  toroLight(50, 150, k); toroLight(260, 150, k);
+  if (k > 0) { g.save(); g.globalAlpha = 0.3*k; circ(g, 160, 96, 14, '#ffb35c'); g.restore(); }
+  if (!reduced && Math.random() < 0.01) spawn({ x:-OX + Math.random()*W, y:-2, vx:-4, vy:10, life:14, size:2, col:k > 0.5 ? '#8a7a9a' : '#e0773a', sway:2, seed:Math.random()*6 });
+}
+let RUA_WIN = [];
+const RUA_SIGNS = [{ x:14, y:56, t:'ラーメン', c:'#ff5fb0' }, { x:66, y:70, t:'本屋', c:'#5ce1e6' }, { x:238, y:50, t:'カラオケ', c:'#a07fff' }, { x:292, y:62, t:'ゲーム', c:'#f5c66b' }, { x:-30, y:60, t:'喫茶', c:'#5ce1e6' }, { x:334, y:58, t:'24H', c:'#ff5fb0' }];
+function sceneRuaBG(c){
+  const L = -OX, RR = 320 + OX; RUA_WIN = [];
+  const tones = [['#7a7090','#1b1932'],['#8a7a80','#201a2c'],['#6a7a90','#171d2e'],['#857c96','#1d1a30']];
+  let i = 0;
+  for (let x = L - 10; x < RR; x += 38, i++) {
+    const w = 36, top = 16 + ((i*37) % 44);
+    R(c, x, top, w, 150 - top, dn(tones[i % 4][0], tones[i % 4][1])); R(c, x, top, w, 2, dn('#5a5268','#0e0c1a'));
+    for (let wy = top + 6; wy < 100; wy += 9) for (let wx = x + 4; wx < x + w - 5; wx += 8) { R(c, wx, wy, 5, 5, dn('#c8d4e0','#262840')); RUA_WIN.push([wx, wy]); }
+  }
+  R(c, 96, 104, 128, 46, dn('#5a4a5a','#1a1424')); R(c, 100, 116, 120, 34, dn('#cfd8e0','#2a2c44'));
+  for (let x = 104; x < 220; x += 12) R(c, x, 116, 1, 34, dn('#8a92a0','#1a1c2e'));
+  R(c, 96, 106, 128, 6, dn('#c8442e','#5a1e22')); for (let x = 96; x < 224; x += 8) R(c, x, 112, 4, 2, dn('#f4f2ec','#5a5468'));
+  R(c, L, 40, W, 1, '#16141e'); R(c, L, 46, W, 1, '#16141e');
+  R(c, 30, 70, 2, 80, '#2a2a34'); R(c, 24, 68, 12, 3, '#2a2a34');
+  R(c, 286, 112, 22, 38, dn('#d8dde6','#3a3e50')); R(c, 289, 116, 16, 18, dn('#8fc3d6','#1e2a40')); R(c, 289, 138, 16, 6, dn('#5a6070','#1a1c28'));
+  RUA_SIGNS.forEach(sg => R(c, sg.x, sg.y, 16, sg.t.length*11 + 6, dn('#3a3346','#141024')));
+  R(c, L, 150, W, 30, dn('#6c6a76','#1b1925')); R(c, L, 150, W, 5, dn('#a3a0aa','#2c2a38'));
+  for (let x = 104; x < 220; x += 16) R(c, x, 162, 9, 14, dn('#e6e6ea','#45434f'));
+  c.font = '9px DotGothic16, monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = dn('#d8cfe0','#3e3456');
+  RUA_SIGNS.forEach(sg => [...sg.t].forEach((ch, j) => c.fillText(ch, sg.x + 8, sg.y + 8 + j*11)));
+}
+function sceneRuaEnv(now, k){
+  const kk = Math.max(0.35, k);
+  if (k > 0) { g.save(); g.fillStyle = '#ffd88a'; g.globalAlpha = k*0.9; RUA_WIN.forEach(([x, y], i) => { if ((i*7 + 3) % 5 < 2) g.fillRect(x, y, 5, 5); }); g.restore(); }
+  RUA_SIGNS.forEach((sg, i) => { const h = sg.t.length*11 + 6, fl = i === 2 && (Math.sin(now/120) + Math.sin(now/47)) > 1.7 ? 0.3 : 1; neonBox(sg.x, sg.y, 16, h, sg.c, kk*fl); [...sg.t].forEach((ch, j) => neonText(ch, sg.x + 8, sg.y + 8 + j*11, '9px DotGothic16, monospace', sg.c, kk*fl)); });
+  g.save(); g.globalAlpha = kk; g.shadowColor = '#8fe3ff'; g.shadowBlur = 10*kk; R(g, 289, 116, 16, 18, '#bfefff'); g.restore();
+  if (k > 0) { g.save(); g.globalAlpha = 0.22*k; g.fillStyle = '#ffe9a8'; g.beginPath(); g.moveTo(26, 71); g.lineTo(36, 71); g.lineTo(54, 150); g.lineTo(8, 150); g.closePath(); g.fill(); g.restore(); }
+  g.globalAlpha = 0.14*kk; RUA_SIGNS.forEach(sg => { for (let y = 152; y < 180; y += 2) R(g, sg.x + Math.sin(now/400 + y)*2, y, 16, 1, sg.c); }); g.globalAlpha = 1;
+}
+function sceneSakuraBG(c){
+  const L = -OX, RR = 320 + OX;
+  for (let x = L; x < RR; x++) { const y = Math.round(104 - (Math.sin(x*0.025)*8 + Math.sin(x*0.013 + 1)*6)); R(c, x, y, 1, 150 - y, dn('#a9c98f','#1c2a28')); }
+  for (let x = L; x < RR; x++) { const y = Math.round(124 - Math.sin(x*0.05 + 1)*4); R(c, x, y, 1, 150 - y, dn('#86b06c','#162220')); }
+  c.fillStyle = dn('#6aaed0','#1c3a5a'); c.beginPath(); c.ellipse(232, 140, 74, 9, 0, 0, Math.PI*2); c.fill();
+  c.fillStyle = dn('#8fc8e0','#2a4a6a'); c.beginPath(); c.ellipse(232, 139, 66, 6, 0, 0, Math.PI*2); c.fill();
+  const shu = dn('#d4442c','#7a2420');
+  for (let x = 192; x <= 272; x++) { const y = Math.round(134 - Math.sin((x - 192)/80*Math.PI)*14); R(c, x, y, 1, 3, shu); R(c, x, y - 7, 1, 1, shu); if ((x - 192) % 10 === 0) R(c, x, y - 7, 1, 7, shu); }
+  const trunk = dn('#6a4030','#2a1a18');
+  R(c, 38, 66, 9, 84, trunk); R(c, 46, 78, 34, 4, trunk); R(c, 14, 88, 26, 4, trunk); R(c, 30, 60, 4, 10, trunk);
+  const pinks = [dn('#f4b6c8','#5e3c5e'), dn('#f9cfdc','#6e4c6e'), dn('#e898b0','#4c2e4c')];
+  [[42,52,20],[18,66,14],[70,64,16],[56,40,14],[86,76,11],[8,82,10],[36,30,12]].forEach(([x, y, r], i) => circ(c, x, y, r, pinks[i % 3]));
+  for (let i = 0; i < 40; i++) R(c, 4 + (i*37) % 96, 24 + (i*53) % 64, 2, 2, pinks[(i + 1) % 3]);
+  R(c, 300, 110, 3, 26, trunk); circ(c, 301, 106, 9, pinks[0]); circ(c, 294, 112, 6, pinks[1]);
+  R(c, L, 150, W, 30, dn('#7ea464','#1c2a1e'));
+  for (let x = L; x < RR; x += 6) R(c, x, 150 + md(x*7, 5), 1, 2, dn('#5f8a4c','#142018'));
+  for (let i = 0; i < 26; i++) R(c, L + ((i*61) % W), 152 + (i*13) % 26, 2, 1, pinks[i % 3]);
+  c.fillStyle = '#2a1a20'; for (let x = L; x < 190; x++) c.fillRect(x, Math.round(30 + Math.sin(((x - L)/(190 - L))*Math.PI)*10), 1, 1);
+}
+function sceneSakuraEnv(now, k){
+  const L = -OX;
+  for (let x = L + 12, i = 0; x < 186; x += 24, i++) {
+    const y = Math.round(30 + Math.sin(((x - L)/(190 - L))*Math.PI)*10) + 1;
+    if (k > 0) { g.save(); g.globalAlpha = 0.45*k; circ(g, x + 3, y + 5, 7, '#ff9a5a'); g.restore(); }
+    R(g, x, y, 6, 8, k > 0.2 ? (i % 2 ? '#ff7a4a' : '#ffb35c') : (i % 2 ? '#c8442e' : '#d9822b')); R(g, x + 1, y - 1, 4, 1, '#2a1a18'); R(g, x + 1, y + 8, 4, 1, '#2a1a18');
+  }
+  if (!reduced) for (let i = 0; i < 3; i++) { const t = now/(5000 + i*1300) + i*2, kx = 232 + Math.cos(t)*52, ky = 140 + Math.sin(t)*4; R(g, kx, ky, 3, 2, i === 1 ? '#f4f2ec' : '#ff8a3a'); }
+  if (!reduced && Math.random() < 0.06) spawn({ x:L + Math.random()*(W*0.6), y:20 + Math.random()*40, vx:-4 - Math.random()*4, vy:10 + Math.random()*6, life:12, size:2, col:Math.random() < .5 ? '#ffb7d0' : '#ffd0de', sway:2.5, seed:Math.random()*6 });
+}
+const SCENE_BG = { bambu:sceneBambuBG, templo:sceneTemploBG, rua:sceneRuaBG, sakura:sceneSakuraBG };
+const SCENE_ENV = { bambu:sceneBambuEnv, templo:sceneTemploEnv, rua:sceneRuaEnv, sakura:sceneSakuraEnv };
 
 /* ---- props ---- */
 function desk(x){ R(g, x, 160, 38, 3, '#8a5c34'); R(g, x, 163, 38, 2, '#5e3e24'); R(g, x + 3, 165, 3, 7, '#5e3e24'); R(g, x + 32, 165, 3, 7, '#5e3e24'); }
@@ -1339,7 +1620,7 @@ function drawIdle(now){
   drawYokaiIdle(now, false);
 }
 function drawStudy(now){
-  const T = S.timer, P = pal(), cls = S.hero.cls;
+  const T = S.timer, P = pal(), cls = HERO().weapon;
   const t = activeTask(), catK = (S.cur && S.cur.cat) || (t && t.cat) || null;
   if (T.running && !reduced) {
     const left = (T.endAt - Date.now())/1000, el = T.total - left, idx = Math.floor(el/ATK_EVERY);
@@ -1357,7 +1638,7 @@ function drawStudy(now){
       if (a >= 250 && a < 900) arm = 'up';
       else if (a >= 900 && a < 1300) {
         arm = 'slash'; const pt = (a - 900)/400, px = lerp(68, yp.x + 4, pt), py = FLOOR - 20 - Math.sin(pt*Math.PI)*10;
-        if (cls === 'kyudo') { R(g, px - 7, py, 8, 1, '#e9dcc0'); R(g, px, py - 1, 2, 3, '#d8dde6'); }
+        if (cls === 'arco') { R(g, px - 7, py, 8, 1, '#e9dcc0'); R(g, px, py - 1, 2, 3, '#d8dde6'); }
         else { g.save(); g.globalAlpha = .55; circ(g, px + 1, py + 2, 5, '#cdbdff'); g.restore(); R(g, px, py, 3, 5, '#f4f2ec'); R(g, px, py + 2, 3, 1, '#c8442e'); }
       }
       else if (a >= 1300) { hit(); if (a > 2000) legs = 'sit'; }
@@ -1428,7 +1709,7 @@ function drawStudyHero(now, catK, P, blink, running){
 function drawVictory(now){
   const P = pal(), a = now - victory.t;
   desk(66);
-  drawSide(g, 206, FLOOR, { pal:P, legs:'stand', arm:'raise', weapon:true, cls:S.hero.cls, dy:(!reduced && a < 600) ? -Math.round(Math.sin(a/600*Math.PI)*6) : 0 });
+  drawSide(g, 206, FLOOR, { pal:P, legs:'stand', arm:'raise', weapon:true, cls:HERO().weapon, dy:(!reduced && a < 600) ? -Math.round(Math.sin(a/600*Math.PI)*6) : 0 });
   if (a < 220) { const e = victory.e, p = yokaiPos(e); drawYokai(g, e, p.x, p.y, p.s, true); }
 }
 function drawTea(now){
@@ -1699,8 +1980,9 @@ function drawPortrait(now){
   c.fillStyle = 'rgba(255,255,255,.7)'; [[8,8],[54,14],[12,38],[50,40]].forEach(([x, y], i) => { if ((i + (sp ? 1 : 0)) % 2) { c.fillRect(x, y, 1, 3); c.fillRect(x - 1, y + 1, 3, 1); } });
   drawSide(c, 20, 47, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
   if (S.view === 'perfil') {
-    const b = $('#bigPortrait').getContext('2d'); b.clearRect(0, 0, 96, 60);
-    drawSide(b, 30, 57, { pal:P, legs:'stand', arm:(now % 6000) < 1500 ? 'raise' : 'down', weapon:(now % 6000) < 1500, cls:S.hero.cls, blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
+    const bc2 = $('#bigPortrait'), b = bc2 && bc2.getContext('2d'); if (!b) return; b.clearRect(0, 0, 96, 60);
+    const EP = charPal(EC());
+    drawSide(b, 30, 57, { pal:EP, legs:'stand', arm:(now % 6000) < 1500 ? 'raise' : 'down', weapon:(now % 6000) < 1500, cls:HERO().weapon, blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
   }
 }
 
@@ -1771,6 +2053,7 @@ function pick(arr, n){ return arr[Math.abs(n) % arr.length]; }
 function renderStage(){
   const T = S.timer, P = PHASES[T.phase];
   document.body.dataset.phase = T.phase;
+  const ss = $('#sceneSel'); if (!ss.options.length) ss.innerHTML = Object.entries(SCENES).map(([k, n]) => `<option value="${k}">${n}</option>`).join(''); ss.value = S.cfg.scene;
   const locked = T.started;
   $$('#seg button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.phase === T.phase); b.disabled = locked && b.dataset.phase !== T.phase; });
   let h = '';
@@ -1814,10 +2097,10 @@ function renderMissionCard(){
     ${t.steps.length ? `<ul class="steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label></li>`).join('')}</ul>` : '<p class="small">Sem passos. Adicione passos pequenos na aba Missões.</p>'}`;
 }
 function renderCard(){
-  const c = CLASSES[S.hero.cls] || CLASSES.samurai, t = title(S.lvl);
-  $('#ccName').textContent = S.hero.name;
+  const c = CLASSES[HERO().cls] || CLASSES.samurai, t = title(S.lvl);
+  $('#ccName').textContent = HERO().name || 'Sem nome';
   $('#ccLv').textContent = `LV ${S.lvl} ♥`;
-  $('#ccSub').textContent = `${c.n} ${c.k} · ${t[1]} ${t[2]}`;
+  $('#ccSub').textContent = `${HERO().title || c.n + ' ' + c.k} · ${t[1]} ${t[2]}`;
   $('#xpTxt').textContent = `${S.xp}/${need(S.lvl)}`; $('#xpFill').style.width = (S.xp/need(S.lvl)*100) + '%';
   $('#hpTxt').textContent = `${S.hp}/100`; const hf = $('#hpFill'); hf.style.width = S.hp + '%'; hf.classList.toggle('low', S.hp < 30);
   $('#attrs').innerHTML = [['Foco','foco'],['Disciplina','disc'],['Vitalidade','vit']].map(([n, k]) => `<div class="attr"><div class="v">${S.stats[k]}</div><div class="k">${n}</div></div>`).join('');
@@ -1825,12 +2108,13 @@ function renderCard(){
   if (!q.dataset.talk) q.textContent = '“' + heroLine() + '”';
 }
 function heroLine(){
-  const T = S.timer;
-  if (S.hp < 30) return 'Tô cansado… uma pausa longa de verdade ia bem agora.';
-  if (T.phase === 'focus' && T.running) return 'Estou estudando com você. Não precisa ser perfeito.';
+  const T = S.timer, ch = HERO(), L = PERSONA_LINES[ch.persona] || PERSONA_LINES.gentil;
+  if (S.hp < 30) return 'Estou sem energia… uma pausa longa de verdade ia bem agora.';
+  if (T.phase === 'focus' && T.running) return L[0];
   if (T.phase !== 'focus') return 'Respira. A gente volta já, mais leve.';
+  if (ch.phrase) return ch.phrase;
   if (day().pomos === 0) return 'Que tal começar só com 5 minutos?';
-  return `Já são ${day().pomos} hoje. Mais um passo?`;
+  return L[1];
 }
 function renderStrip(){
   const d = day(), t = activeTask();
@@ -1864,17 +2148,72 @@ function renderMissoes(){
   $('#distrList').innerHTML = S.distr.length ? S.distr.map(d => `<li class="row-item"><span class="n">${esc(d.txt)}<br><span class="small">${hm(d.t)}</span></span><button class="btn sm" data-dact="ok" data-id="${d.id}">Resolvido</button></li>`).join('') : '<li class="empty">Nada anotado. Mente limpa.</li>';
   $('#log').innerHTML = S.log.map(l => `<li><time>${hm(l.t)}</time><span class="${l.c}">${esc(l.txt)}</span></li>`).join('');
 }
+const COLS = [['s','Pele'],['h','Cabelo'],['e','Olhos'],['b','Roupa'],['a','Detalhe'],['l','Calça ou hakama'],['d','Sapatos'],['w','Arma'],['g','Lâmina e enfeites'],['x','Cor livre 1'],['y','Cor livre 2']];
+const PXK = [['.','Apagar'],['h','Cabelo'],['s','Pele'],['E','Olho'],['b','Roupa'],['a','Detalhe'],['l','Calça'],['x','Livre 1'],['y','Livre 2']];
+let paintKey = 'h', edOpen = { id:true, look:true, col:false, px:false, spec:true }, delArmed = null;
+function pxColor(P, k){ return k === '.' ? 'transparent' : k === 'E' ? P.e : (P[k] || 'transparent'); }
+function hex6(v){ return /^#[0-9a-f]{6}$/i.test(v || '') ? v : '#888888'; }
+function renderEditor(){
+  const ch = EC(), P = charPal(ch), L = P.look, active = ch.id === S.activeChar;
+  const opt = (obj, cur) => Object.entries(obj).map(([v, n]) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${esc(n)}</option>`).join('');
+  const grp = (k, m) => `<div class="ed-label">${{ hs:'Penteado', tr:'Traje', acc:'Acessório', face:'Rosto' }[k]}</div><div class="opts">${Object.entries(m).map(([v, n]) => `<button type="button" data-look="${k}" data-v="${v}" aria-pressed="${L[k] === v}">${n}</button>`).join('')}</div>`;
+  const map = P.map || UP, spent = Object.keys(SPEC).reduce((a, k) => a + (+ch.spec[k] || 0), 0);
+  $('#editor').innerHTML = `
+    <div class="ed-head"><h3>Editando: ${esc(ch.name || 'Sem nome')}</h3>${active ? '<span class="tagon">NO DOJO</span>' : '<button class="btn primary sm" data-ed="activate" type="button">Usar no dojo</button>'}</div>
+    <div class="p-portrait"><canvas id="bigPortrait" width="96" height="60"></canvas></div>
+    <details class="ed-sec" data-sec="id" ${edOpen.id ? 'open' : ''}><summary>Identidade</summary>
+      <div class="ed-grid">
+        <label>Nome<input type="text" data-f="name" maxlength="24" value="${esc(ch.name)}"></label>
+        <label>Título ou apelido<input type="text" data-f="title" maxlength="30" placeholder="ex.: Guardiã das revisões" value="${esc(ch.title)}"></label>
+        <label>Classe<select data-f="cls">${opt(Object.fromEntries(Object.entries(CLASSES).map(([k, c]) => [k, c.n + ' ' + c.k])), ch.cls)}</select></label>
+        <label>Arma<select data-f="weapon">${opt(WEAPONS, ch.weapon)}</select></label>
+        <label class="full">Habilidade<select data-f="perk">${opt(PERKS, ch.perk)}</select></label>
+        <label>Personalidade<select data-f="persona">${opt(PERSONAS, ch.persona)}</select></label>
+        <label>Frase de efeito<input type="text" data-f="phrase" maxlength="80" placeholder="O que ela diz no cartão" value="${esc(ch.phrase)}"></label>
+        <label class="full">História<textarea data-f="story" maxlength="600" placeholder="De onde veio, o que estuda, qual o sonho...">${esc(ch.story)}</textarea></label>
+      </div>
+      <p class="small" style="margin-top:8px">Trocar a classe volta a arma, a habilidade e a aparência para o padrão daquela classe.</p>
+    </details>
+    <details class="ed-sec" data-sec="look" ${edOpen.look ? 'open' : ''}><summary>Aparência</summary>
+      ${grp('hs', HS)}${grp('tr', TR)}${grp('acc', ACCS)}${grp('face', FACES)}
+    </details>
+    <details class="ed-sec" data-sec="col" ${edOpen.col ? 'open' : ''}><summary>Cores</summary>
+      <div class="col-grid">${COLS.map(([k, n]) => `<label>${n}<input type="color" data-col="${k}" value="${hex6(k === 'e' ? P.e : P[k])}"></label>`).join('')}</div>
+      <div style="margin-top:10px"><button class="btn sm" data-ed="resetcol" type="button">Voltar às cores da classe</button></div>
+    </details>
+    <details class="ed-sec" data-sec="px" ${edOpen.px ? 'open' : ''}><summary>Desenho à mão</summary>
+      <p class="small" style="margin-bottom:10px">Pinte a cabeça e o tronco pixel por pixel. Braços, pernas, penteado e acessório continuam por cima. ${P.map ? 'Este desenho é seu.' : 'Agora mostra o desenho padrão.'}</p>
+      <div class="px-wrap">
+        <div class="px-grid" id="pxGrid">${map.map((row, j) => [...row].map((k, i2) => `<i data-px="${i2},${j}" style="background:${pxColor(P, k)}"></i>`).join('')).join('')}</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="pk">${PXK.map(([k, n]) => `<button type="button" data-pk="${k}" aria-pressed="${paintKey === k}"><i style="background:${k === '.' ? 'transparent' : pxColor(P, k)}"></i>${n}</button>`).join('')}</div>
+          <div><button class="btn sm" data-ed="pxreset" type="button" ${P.map ? '' : 'disabled'}>Voltar ao desenho padrão</button></div>
+        </div>
+      </div>
+    </details>
+    <details class="ed-sec" data-sec="spec" ${edOpen.spec ? 'open' : ''}><summary>Especificações</summary>
+      <p class="small" style="margin-bottom:10px">Distribua até ${SPEC_BUDGET} pontos. <span id="specLeft">Restam ${SPEC_BUDGET - spent}.</span></p>
+      ${Object.entries(SPEC).map(([k, n]) => `<div class="spec-row"><span>${n}</span><input type="range" min="1" max="10" data-spec="${k}" value="${ch.spec[k]}" aria-label="${n}"><b id="spec-${k}">${ch.spec[k]}</b></div>`).join('')}
+    </details>
+    <div class="ed-sec" style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn sm" data-ed="dup" type="button">Duplicar</button>
+      <button class="btn sm warn" data-ed="del" type="button" ${S.chars.length < 2 ? 'disabled title="É preciso ter pelo menos uma personagem"' : ''}>${delArmed === ch.id ? 'Clique de novo para excluir' : 'Excluir personagem'}</button>
+    </div>`;
+}
+function renderRoster(){
+  $('#roster').innerHTML = S.chars.map(ch => {
+    const C = CLASSES[ch.cls] || CLASSES.samurai, act = ch.id === S.activeChar;
+    return `<li class="row-item ros ${ch.id === S.editChar ? 'editing' : ''}" data-id="${ch.id}"><canvas width="20" height="24"></canvas>
+      <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small">${esc(ch.title || C.n)} · ${WEAPONS[ch.weapon] || ''}</span>
+      <div class="spec-mini">${Object.entries(SPEC).map(([k, n]) => `<span>${n.slice(0, 3).toUpperCase()} ${ch.spec[k]}</span>`).join('')}</div></div>
+      <div class="acts"><button class="btn sm" data-r="edit">Editar</button>${act ? '' : '<button class="btn sm primary" data-r="use">Usar</button>'}</div></li>`;
+  }).join('');
+  $$('#roster .ros').forEach(li => { const ch = S.chars.find(c => c.id === li.dataset.id); drawSide(li.querySelector('canvas').getContext('2d'), 4, 23, { pal:charPal(ch), legs:'stand', arm:'down', u:1 }); });
+}
 function renderPerfil(){
-  if (document.activeElement !== $('#nameIn')) $('#nameIn').value = S.hero.name;
-  $$('#classes .cls').forEach(b => { b.setAttribute('aria-pressed', b.dataset.cls === S.hero.cls); const c = b.querySelector('canvas').getContext('2d'); c.clearRect(0, 0, 20, 24); drawSide(c, 4, 23, { pal:makePal(b.dataset.cls, {}), legs:'stand', arm:'down', u:1 }); });
-  const same = (a, b) => (a || null) === (b || null);
-  $('#presetsGrid').innerHTML = PRESETS.map((p, i) => { const on = S.hero.cls === p.cls && same(S.hero.hs, p.hs) && same(S.hero.tr, p.tr) && same(S.hero.acc, p.acc) && same(S.hero.face, p.face) && same(S.hero.hair, p.hair) && !S.hero.outfit && !S.hero.accent; return `<button type="button" class="pre" data-preset="${i}" aria-pressed="${on}"><canvas width="20" height="24"></canvas><b>${p.n}</b><span>${CLASSES[p.cls].n}</span></button>`; }).join('');
-  $$('#presetsGrid .pre').forEach(b => { const p = PRESETS[+b.dataset.preset]; drawSide(b.querySelector('canvas').getContext('2d'), 4, 23, { pal:makePal(p.cls, p), legs:'stand', arm:'down', u:1 }); });
-  const LK = pal().look;
-  [['hs',HS],['tr',TR],['acc',ACCS],['face',FACES]].forEach(([k, m]) => { $('#opt-' + k).innerHTML = Object.entries(m).map(([v, n]) => `<button type="button" data-opt="${k}" data-v="${v}" aria-pressed="${LK[k] === v}">${n}</button>`).join(''); });
-  [['hair',HAIR],['outfit',OUTFIT],['accent',ACCENT]].forEach(([k, list]) => {
-    $('#sw-' + k).innerHTML = `<button class="def" data-sw="${k}" data-v="" aria-label="Padrão da classe" aria-pressed="${!S.hero[k]}"></button>` + list.map(c => `<button data-sw="${k}" data-v="${c}" style="background:${c}" aria-label="Cor ${c}" aria-pressed="${S.hero[k] === c}"></button>`).join('');
-  });
+  renderEditor(); renderRoster();
+  $('#presetsGrid').innerHTML = PRESETS.map((p, i) => `<button type="button" class="pre" data-preset="${i}"><canvas width="20" height="24"></canvas><b>${esc(p.name)}</b><span>${CLASSES[p.cls].n}</span></button>`).join('');
+  $$('#presetsGrid .pre').forEach(b => drawSide(b.querySelector('canvas').getContext('2d'), 4, 23, { pal:charPal(PRESETS[+b.dataset.preset]), legs:'stand', arm:'down', u:1 }));
   $('#path').innerHTML = TITLES.map((t, i) => { const nx = TITLES[i+1]; const now = S.lvl >= t[0] && (!nx || S.lvl < nx[0]); return `<li class="${now ? 'now' : S.lvl >= t[0] ? 'got' : ''}"><span>${t[1]} <span class="jp">${t[2]}</span></span><span class="mono" style="font-size:16px">Nível ${t[0]}</span></li>`; }).join('');
   $('#stats4').innerHTML = [['Foco 集','foco','pomodoros completos'],['Sabedoria 知','sab','missões e revisões'],['Disciplina 律','disc','ciclos e metas'],['Vitalidade 気','vit','pausas feitas']].map(([n, k, s]) => `<div class="attr" style="text-align:left;padding:10px"><div class="k">${n}</div><div class="v">${S.stats[k]}</div><div class="k">${s}</div></div>`).join('');
   const n = ACH.filter(a => S.ach[a.id]).length; $('#achCount').textContent = `${n}/${ACH.length}`;
@@ -1890,6 +2229,8 @@ function renderJogo(){
   const cur = [S.cfg.focus, S.cfg.short, S.cfg.long].join(',');
   $$('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.preset === cur));
   $$('#skyOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.sky === S.cfg.sky));
+  $('#sceneOpts').innerHTML = Object.entries(SCENES).map(([k, n]) => `<button class="btn sm" data-scene="${k}" aria-pressed="${S.cfg.scene === k}">${n}</button>`).join('');
+  renderVault();
   const wc = $('#wxCity'); if (document.activeElement !== wc) wc.value = S.wx.city || '';
   $('#wxAuto').checked = !!S.wx.auto;
   $('#wxStatus').textContent = S.wx.status || 'Nenhuma previsão buscada ainda.';
@@ -2001,7 +2342,7 @@ function addDistr(txt){
 function toggleStep(taskId, stepId, ok){
   const t = S.tasks.find(x => x.id === taskId); if (!t) return;
   const s = t.steps.find(x => x.id === stepId); if (!s) return;
-  if (ok && !s.ok) { const sx = S.hero.cls === 'kyudo' ? 4 : 2; s.ok = true; S.totals.steps++; day().steps++; addRyo(1); addXP(sx); sfx('step'); addLog(`Passo feito: ${s.txt}. +${sx} XP, +1 ryō.`, 'good'); checkAch(); }
+  if (ok && !s.ok) { const sx = hasPerk('step2') ? 4 : 2; s.ok = true; S.totals.steps++; day().steps++; addRyo(1); addXP(sx); sfx('step'); addLog(`Passo feito: ${s.txt}. +${sx} XP, +1 ryō.`, 'good'); checkAch(); }
   else if (!ok) s.ok = false;
   renderMissionCard(); renderCard(); if (S.view === 'missoes') renderMissoes(); save();
 }
@@ -2080,23 +2421,82 @@ function wire(){
     if (a === 'delstep') t.steps = t.steps.filter(s => s.id !== b.dataset.s);
     if (a === 'fin') {
       t.fin = true; S.totals.quests++; S.stats.sab++;
-      const xp = 15 + (S.hero.cls === 'monge' ? 20 : 0);
+      const xp = 15 + (hasPerk('quest20') ? 20 : 0);
       addLog(`Missão concluída: ${t.name}. Estimou ${t.est}, usou ${t.done}${t.done === t.est ? ', estimativa perfeita!' : ''}. +${xp} XP.`, 'good');
       addXP(xp); sfx('coin'); checkAch(); toast(`Missão concluída! +${xp} XP`);
     }
     renderAll(); save();
   });
   $('#distrList').addEventListener('click', e => { const b = e.target.closest('[data-dact]'); if (!b) return; S.distr = S.distr.filter(d => d.id !== b.dataset.id); renderMissoes(); renderStrip(); save(); });
-  // Perfil
-  $('#classes').innerHTML = Object.entries(CLASSES).map(([k, c]) => `<button type="button" class="cls" data-cls="${k}"><canvas width="20" height="24"></canvas><div><b>${c.n} <span class="jp">${c.k}</span></b><span>${c.perk}</span></div></button>`).join('');
-  $('#classes').addEventListener('click', e => { const b = e.target.closest('.cls'); if (!b) return; S.hero.cls = b.dataset.cls; Object.assign(S.hero, { hs:null, tr:null, acc:null, face:null }); addLog(`${S.hero.name} agora é ${CLASSES[S.hero.cls].n}.`); renderPerfil(); renderCard(); save(); });
-  $('#nameIn').addEventListener('input', e => { S.hero.name = e.target.value.trim() || 'Viajante'; renderCard(); save(); });
-  $('#view-perfil').addEventListener('click', e => {
-    const sw = e.target.closest('[data-sw]'); if (sw) { S.hero[sw.dataset.sw] = sw.dataset.v || null; renderPerfil(); save(); return; }
-    const op = e.target.closest('[data-opt]'); if (op) { S.hero[op.dataset.opt] = op.dataset.v; renderPerfil(); save(); return; }
-    const pr = e.target.closest('[data-preset]');
-    if (pr) { const p = PRESETS[+pr.dataset.preset]; Object.assign(S.hero, { cls:p.cls, hs:p.hs || null, tr:p.tr || null, acc:p.acc || null, face:p.face || null, hair:p.hair || null, outfit:null, accent:null }); addLog(`Novo visual: ${p.n}, ${CLASSES[p.cls].n}.`); renderPerfil(); renderCard(); save(); }
+  // Personagens
+  let edT;
+  const edChanged = (full) => { const ch = EC(); if (ch.id === S.activeChar) renderCard(); clearTimeout(edT); edT = setTimeout(() => { renderRoster(); save(); }, 250); if (full) renderEditor(); };
+  const ED = $('#editor');
+  ED.addEventListener('toggle', e => { const d = e.target.closest && e.target.closest('details[data-sec]'); if (d) edOpen[d.dataset.sec] = d.open; }, true);
+  ED.addEventListener('input', e => {
+    const ch = EC(), t = e.target;
+    if (t.dataset.f && t.dataset.f !== 'cls') { ch[t.dataset.f] = t.value; if (t.dataset.f === 'name') $('#editor h3').textContent = 'Editando: ' + (t.value || 'Sem nome'); edChanged(false); }
+    if (t.dataset.col) { ch.col[t.dataset.col] = t.value; edChanged(false); }
+    if (t.dataset.spec) {
+      const k = t.dataset.spec, others = Object.keys(SPEC).filter(x => x !== k).reduce((a, x) => a + (+ch.spec[x] || 0), 0);
+      const v = clamp(+t.value, 1, Math.max(1, Math.min(10, SPEC_BUDGET - others))); t.value = v; ch.spec[k] = v;
+      $('#spec-' + k).textContent = v; $('#specLeft').textContent = `Restam ${SPEC_BUDGET - others - v}.`; edChanged(false);
+    }
   });
+  ED.addEventListener('change', e => {
+    const ch = EC(), t = e.target;
+    if (t.dataset.f === 'cls') { const gear = CLASS_GEAR[t.value]; Object.assign(ch, { cls:t.value, weapon:gear[0], perk:gear[1], look:{} }); edChanged(true); }
+    else if (t.dataset.f === 'weapon' || t.dataset.f === 'perk' || t.dataset.f === 'persona') edChanged(false);
+    if (t.dataset.col) renderEditor();
+  });
+  ED.addEventListener('click', e => {
+    const ch = EC();
+    const lk = e.target.closest('[data-look]'); if (lk) { ch.look[lk.dataset.look] = lk.dataset.v; edChanged(true); return; }
+    const pk = e.target.closest('[data-pk]'); if (pk) { paintKey = pk.dataset.pk; $$('#editor [data-pk]').forEach(b => b.setAttribute('aria-pressed', b === pk)); return; }
+    const b = e.target.closest('[data-ed]'); if (!b) return;
+    const a = b.dataset.ed;
+    if (a === 'activate') { S.activeChar = ch.id; addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); renderAll(); save(); }
+    if (a === 'resetcol') { ch.col = {}; edChanged(true); }
+    if (a === 'pxreset') { ch.map = null; edChanged(true); }
+    if (a === 'dup') { const c = newChar(JSON.parse(JSON.stringify(ch))); c.name = (ch.name || 'Personagem') + ' (cópia)'; S.chars.push(c); S.editChar = c.id; renderPerfil(); save(); toast('Cópia criada.'); }
+    if (a === 'del') {
+      if (S.chars.length < 2) return;
+      if (delArmed !== ch.id) { delArmed = ch.id; renderEditor(); setTimeout(() => { if (delArmed === ch.id) { delArmed = null; if (S.view === 'perfil') renderEditor(); } }, 4000); return; }
+      delArmed = null; S.chars = S.chars.filter(c => c.id !== ch.id);
+      if (S.activeChar === ch.id) S.activeChar = S.chars[0].id;
+      S.editChar = S.activeChar; addLog(`${ch.name || 'Uma personagem'} saiu do elenco.`); renderAll(); save();
+    }
+  });
+  let painting = false;
+  const paintAt = (el) => {
+    if (!el || !el.dataset || !el.dataset.px) return;
+    const ch = EC(), [i, j] = el.dataset.px.split(',').map(Number);
+    if (!ch.map) ch.map = UP.slice();
+    const row = ch.map[j]; if (row[i] === paintKey) return;
+    ch.map[j] = row.slice(0, i) + paintKey + row.slice(i + 1);
+    el.style.background = pxColor(charPal(ch), paintKey);
+  };
+  ED.addEventListener('pointerdown', e => { const c = e.target.closest('[data-px]'); if (!c) return; e.preventDefault(); painting = true; paintAt(c); });
+  ED.addEventListener('pointermove', e => { if (!painting) return; paintAt(document.elementFromPoint(e.clientX, e.clientY)); });
+  window.addEventListener('pointerup', () => { if (painting) { painting = false; const btn = $('#editor [data-ed=pxreset]'); if (btn) btn.disabled = false; edChanged(false); } });
+  $('#roster').addEventListener('click', e => {
+    const b = e.target.closest('[data-r]'); if (!b) return;
+    const id = b.closest('.ros').dataset.id;
+    if (b.dataset.r === 'edit') { S.editChar = id; renderPerfil(); $('#editor').scrollIntoView({ behavior:reduced ? 'auto' : 'smooth', block:'start' }); }
+    if (b.dataset.r === 'use') { S.activeChar = id; S.editChar = id; const ch = HERO(); addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); toast(`${ch.name || 'Personagem'} está no dojo.`); renderAll(); }
+    save();
+  });
+  $('#newChar').addEventListener('click', () => { const c = newChar({ name:'Nova personagem', cls:'samurai' }); S.chars.push(c); S.activeChar = c.id; S.editChar = c.id; edOpen.id = true; renderAll(); save(); toast('Personagem criada. Dê um nome e monte o visual.'); });
+  $('#presetsGrid').addEventListener('click', e => {
+    const b = e.target.closest('[data-preset]'); if (!b) return;
+    const c = newChar(JSON.parse(JSON.stringify(PRESETS[+b.dataset.preset])));
+    if (S.chars.some(x => x.name === c.name)) c.name += ' ' + (S.chars.filter(x => x.name.startsWith(c.name)).length + 1);
+    S.chars.push(c); S.activeChar = c.id; S.editChar = c.id;
+    addLog(`${c.name}, ${CLASSES[c.cls].n}, entrou no elenco.`); toast(`${c.name} entrou no dojo.`); renderAll(); save();
+  });
+  const setScene = v => { if (!SCENES[v]) return; S.cfg.scene = v; parts = []; bgDirty = true; renderStage(); if (S.view === 'jogo') renderJogo(); save(); };
+  $('#sceneSel').addEventListener('change', e => setScene(e.target.value));
+  $('#sceneOpts').addEventListener('click', e => { const b = e.target.closest('[data-scene]'); if (b) { setScene(b.dataset.scene); toast(`Cenário: ${SCENES[b.dataset.scene]}.`); } });
   $('#wxCity').addEventListener('change', e => { S.wx.city = e.target.value.trim(); save(); });
   $('#wxCity').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); S.wx.city = e.target.value.trim(); fetchWeather(true); } });
   $('#wxFetch').addEventListener('click', () => { S.wx.city = $('#wxCity').value.trim(); fetchWeather(true); });
@@ -2147,6 +2547,16 @@ function boot(data){
   const h = location.hash.slice(1);
   go(['dojo','missoes','perfil','jogo','resumo'].includes(h) ? h : 'dojo');
   window.claude?.hot?.snapshot?.(() => ({ S }));
+  vaultLoad().then(j => {
+    if (!j) return;
+    if (j.state && (j.state._savedAt || 0) > (S._savedAt || 0)) {
+      S = merge(j.state); checkDay(); applyUI(); go(S.view || 'dojo');
+      toast('Progresso carregado do Obsidian.');
+    }
+    vault.sent = ''; vaultSave(true); renderVault();
+  });
+  window.addEventListener('pagehide', vaultBeacon);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') vaultBeacon(); });
   setInterval(tick, 250); tick(); minuteTick();
   requestAnimationFrame(frame);
   setInterval(save, 10000);
