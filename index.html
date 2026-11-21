@@ -543,6 +543,8 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
               <h3>Som e céu</h3>
               <label class="tog"><input type="checkbox" id="cfg-sound"><div><b>Sino, gongo e moedas</b><span>Inclui um aviso suave 1 minuto antes do fim de cada fase.</span></div></label>
               <div class="inrow" style="align-items:center"><span class="small" style="flex:0 0 auto">Volume</span><input type="range" id="cfg-vol" min="0" max="1" step="0.05" style="flex:1 1 140px"><button class="btn sm" id="testSound" type="button">Testar</button></div>
+              <label class="tog"><input type="checkbox" id="cfg-music"><div><b>Música nas pausas</b><span>Uma música lo-fi tranquila começa junto com a pausa e para quando ela acaba.</span></div></label>
+              <div class="inrow" style="align-items:center"><span class="small" style="flex:0 0 auto">Volume da música</span><input type="range" id="cfg-musicVol" min="0" max="1" step="0.05" style="flex:1 1 140px"><button class="btn sm" id="testMusic" type="button">Ouvir</button></div>
               <div class="presets" id="skyOpts">
                 <button class="btn sm" data-sky="auto">Seguir o horário</button>
                 <button class="btn sm" data-sky="dia">Sempre dia</button>
@@ -843,7 +845,7 @@ function fresh(){
     wx:{ mode:'auto', manual:'limpo', city:'', geoCity:'', lat:null, lon:null, place:'', data:null, tabId:null, auto:false, status:'' },
     lvl:1, xp:0, hp:100, ryo:0,
     stats:{ foco:1, sab:1, disc:1, vit:1 },
-    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00', scene:'dojo' },
+    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00', scene:'dojo', music:true, musicVol:0.5 },
     timer:{ phase:'focus', running:false, started:false, endAt:0, left:1500, total:1500, cycle:0, mini:false, miniDone:false, warned:false },
     enemyN:0,
     tasks:exampleTasks(), active:null, distr:[],
@@ -1013,7 +1015,80 @@ function sleepLock(){ try { WL && WL.release(); } catch(e){} WL = null; }
 /* ================= Timer ================= */
 let armed = false, armT;
 function disarm(){ armed = false; clearTimeout(armT); }
+
+/* ================= Música da pausa (composta no Web Audio) ================= */
+// Lo-fi aconchegante em ré maior: pad suave, baixo, koto dedilhado, chimbal de escova e um sininho.
+const MUS = { on:false, timer:null, next:0, step:0, bpm:72, out:null, noise:null, verb:null };
+const MCHORDS = [[62,66,69,73],[59,62,66,69],[55,59,62,66],[57,62,64,69]];
+const MBASS = [38,35,31,33];
+const MMEL = [
+  [[74,null,76,78,null,76,74,null],[71,null,74,null,69,null,66,null],[71,74,76,null,74,null,71,null],[69,null,null,66,64,null,62,null]],
+  [[66,69,74,null,76,null,74,69],[71,null,69,null,66,69,null,null],[67,71,74,null,78,null,76,null],[74,null,76,74,69,null,null,null]]
+];
+const mf = m => 440 * Math.pow(2, (m - 69)/12);
+function musicSetup(){
+  if (MUS.noise) return;
+  const len = AC.sampleRate * 0.25, nb = AC.createBuffer(1, len, AC.sampleRate), d = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random()*2 - 1;
+  MUS.noise = nb;
+  const rl = AC.sampleRate * 2.6, ir = AC.createBuffer(2, rl, AC.sampleRate);
+  for (let c = 0; c < 2; c++) { const ch = ir.getChannelData(c); for (let i = 0; i < rl; i++) ch[i] = (Math.random()*2 - 1) * Math.pow(1 - i/rl, 3); }
+  MUS.ir = ir;
+}
+function voice(type, f, t, peak, attack, decay, dest, detune){
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (detune) o.detune.setValueAtTime(detune, t);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+  o.connect(g).connect(dest); o.start(t); o.stop(t + attack + decay + 0.05);
+}
+function musicStep(step, t, e){
+  const bar = Math.floor(step/8) % 8, pos = step % 8, ci = bar % 4, sec = bar < 4 ? 0 : 1, out = MUS.out;
+  const tt = pos % 2 ? t + e*0.12 : t;
+  if (pos === 0) {
+    const pf = AC.createBiquadFilter(); pf.type = 'lowpass'; pf.frequency.value = 1100; pf.connect(out);
+    MCHORDS[ci].forEach(n => { voice('sine', mf(n), t, 0.045, 0.9, e*8, pf); voice('triangle', mf(n), t, 0.02, 1.1, e*8, pf, 4); });
+    voice('sine', mf(MBASS[ci] + 12), t, 0.16, 0.02, e*3.5, out);
+  }
+  if (pos === 4) voice('sine', mf(MBASS[ci] + 12), t, 0.09, 0.02, e*3, out);
+  const n = MMEL[sec][ci][pos];
+  if (n) { voice('triangle', mf(n), tt, 0.13, 0.006, 1.5, out); voice('sine', mf(n)*2, tt, 0.035, 0.006, 0.8, out); }
+  if (pos % 2 === 1) {
+    const src = AC.createBufferSource(), hp = AC.createBiquadFilter(), g = AC.createGain();
+    src.buffer = MUS.noise; hp.type = 'highpass'; hp.frequency.value = 7000;
+    g.gain.setValueAtTime(pos === 3 || pos === 7 ? 0.03 : 0.018, tt); g.gain.exponentialRampToValueAtTime(0.0001, tt + 0.06);
+    src.connect(hp).connect(g).connect(out); src.start(tt); src.stop(tt + 0.08);
+  }
+  if (bar === 7 && pos === 6) { voice('sine', mf(86), t, 0.05, 0.01, 2.2, out); voice('sine', mf(93), t + e, 0.035, 0.01, 2.2, out); }
+}
+function musicTick(){
+  if (!MUS.on || !AC) return;
+  const e = 60/MUS.bpm/2;
+  while (MUS.next < AC.currentTime + 0.35) { musicStep(MUS.step, MUS.next, e); MUS.next += e; MUS.step++; }
+}
+function musicStart(phase){
+  if (!S.cfg.music) return;
+  unlockAudio();
+  if (!AC || MUS.on) return;
+  musicSetup();
+  MUS.on = true; MUS.bpm = phase === 'long' ? 62 : 72; MUS.step = 0;
+  const t = AC.currentTime, master = AC.createGain(), lp = AC.createBiquadFilter(), verb = AC.createConvolver(), wet = AC.createGain();
+  lp.type = 'lowpass'; lp.frequency.value = 3200; verb.buffer = MUS.ir; wet.gain.value = 0.32;
+  master.gain.setValueAtTime(0.0001, t); master.gain.exponentialRampToValueAtTime(Math.max(0.001, S.cfg.musicVol), t + 2.5);
+  master.connect(lp).connect(AC.destination); master.connect(verb).connect(wet).connect(AC.destination);
+  MUS.out = master; MUS.next = t + 0.12;
+  MUS.timer = setInterval(musicTick, 60); musicTick();
+}
+function musicStop(){
+  if (!MUS.on) return;
+  MUS.on = false; clearInterval(MUS.timer);
+  const g = MUS.out, t = AC.currentTime;
+  try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(Math.max(0.0001, g.gain.value), t); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5); } catch(e){}
+  setTimeout(() => { try { g.disconnect(); } catch(e){} }, 2600);
+}
+function musicVolume(v){ if (MUS.on && MUS.out) { const t = AC.currentTime; MUS.out.gain.cancelScheduledValues(t); MUS.out.gain.setTargetAtTime(Math.max(0.001, v), t, 0.2); } }
+function musicSync(){ const T = S.timer; if (T.phase !== 'focus' && T.running && S.cfg.music) musicStart(T.phase); else musicStop(); }
 function setPhase(p){
+  musicStop();
   const T = S.timer;
   Object.assign(T, { phase:p, running:false, started:false, total:phaseLen(p), left:phaseLen(p), endAt:0, mini:false, miniDone:false, warned:false });
   if (p !== 'focus') pickBreakItems(p);
@@ -1032,7 +1107,7 @@ function start(){
   T.running = true; T.started = true; T.endAt = Date.now() + T.left*1000;
   atkIdx = Math.floor((T.total - T.left) / ATK_EVERY);
   if (T.phase !== 'focus') phaseStartPerf = performance.now() - (T.total - T.left)*1000;
-  wake(); renderAll(); save();
+  wake(); musicSync(); renderAll(); save();
 }
 function startMini(){
   const T = S.timer;
@@ -1042,7 +1117,7 @@ function startMini(){
 function pause(){
   const T = S.timer; if (!T.running) return;
   T.left = Math.max(0, Math.ceil((T.endAt - Date.now())/1000)); T.running = false;
-  sleepLock(); renderAll(); save();
+  sleepLock(); musicSync(); renderAll(); save();
 }
 function toggle(){ S.timer.running ? pause() : start(); }
 function continueMini(){
@@ -2032,7 +2107,7 @@ function dlgState(){
 let dlgKey = '';
 function renderDialog(force){
   const T = S.timer, st = dlgState();
-  const key = [st, T.running, T.started, armed, T.phase, S.brk.checked.length, S.tasks.length, S.active].join('|');
+  const key = [st, T.running, T.started, armed, T.phase, S.brk.checked.length, S.tasks.length, S.active, S.cfg.music].join('|');
   if (!force && key === dlgKey) return; dlgKey = key;
   const D = $('#dlg'); let h = '';
   const open = S.tasks.filter(t => !t.fin);
@@ -2065,7 +2140,7 @@ function renderDialog(force){
     const line = pick(long ? MASTER_LONG : MASTER_SHORT, Math.floor(Date.now()/120000));
     h = `<p class="dl-line"><span class="star">*</span><span class="mono" style="font-size:16px;color:#a99fd6">Mestre do chá:</span> ${esc(line)}</p>
       <div class="dl-row">${S.brk.items.map((it, i) => { const on = S.brk.checked.includes(i); return `<button class="chipb ${on ? 'done' : ''}" data-act="ritual" data-i="${i}" ${on ? 'disabled' : ''}>${esc(it)} ${on ? '✓' : '+2'}</button>`; }).join('')}</div>
-      <div class="dl-actions"><button class="btn primary big" data-act="toggle">${T.running ? 'Pausar' : (T.started ? 'Continuar pausa' : (long ? 'Entrar no onsen' : 'Iniciar pausa'))}</button><button class="btn ${armed ? 'warn' : 'ghost'}" data-act="skip">${armed ? (S.cfg.penalties ? 'Confirmar (−10 de energia)' : 'Confirmar: pular pausa') : 'Pular pausa'}</button></div>`;
+      <div class="dl-actions"><button class="btn primary big" data-act="toggle">${T.running ? 'Pausar' : (T.started ? 'Continuar pausa' : (long ? 'Entrar no onsen' : 'Iniciar pausa'))}</button><button class="btn outline" data-act="music" aria-pressed="${S.cfg.music}">${S.cfg.music ? '♪ Música ligada' : '♪ Música desligada'}</button><button class="btn ${armed ? 'warn' : 'ghost'}" data-act="skip">${armed ? (S.cfg.penalties ? 'Confirmar (−10 de energia)' : 'Confirmar: pular pausa') : 'Pular pausa'}</button></div>`;
   }
   D.innerHTML = h + '<span class="caret" aria-hidden="true">▼</span>';
 }
@@ -2246,6 +2321,8 @@ function renderJogo(){
   $('#cfg-summaryAt').value = S.cfg.summaryAt;
   ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).checked = !!S.cfg[k]);
   $('#cfg-vol').value = S.cfg.vol;
+  $('#cfg-music').checked = !!S.cfg.music; $('#cfg-musicVol').value = S.cfg.musicVol;
+  $('#testMusic').textContent = MUS.on ? 'Parar' : 'Ouvir';
   const cur = [S.cfg.focus, S.cfg.short, S.cfg.long].join(',');
   $$('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.preset === cur));
   $$('#skyOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.sky === S.cfg.sky));
@@ -2379,6 +2456,7 @@ function wire(){
     if (a === 'start') start();
     if (a === 'mini') startMini();
     if (a === 'toggle') toggle();
+    if (a === 'music') { S.cfg.music = !S.cfg.music; musicSync(); if (S.cfg.music && !S.timer.running) toast('A música começa quando a pausa começar.'); renderDialog(true); save(); }
     if (a === 'skip') skip();
     if (a === 'distr') { const r = $('#dlDistr'); r.hidden = !r.hidden; if (!r.hidden) $('#dlDistrIn').focus(); }
     if (a === 'distrSave') { const i = $('#dlDistrIn'); addDistr(i.value); i.value = ''; $('#dlDistr').hidden = true; }
@@ -2544,6 +2622,13 @@ function wire(){
   $('#presets').addEventListener('click', e => { const b = e.target.closest('[data-preset]'); if (!b) return; const [f, s, l] = b.dataset.preset.split(',').map(Number); Object.assign(S.cfg, { focus:f, short:s, long:l }); applyLen(); renderAll(); save(); toast(`Ritmo ${f}/${s} aplicado.`); });
   ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } renderAll(); save(); }));
   $('#cfg-vol').addEventListener('input', e => { S.cfg.vol = +e.target.value; save(); });
+  $('#cfg-music').addEventListener('change', e => { S.cfg.music = e.target.checked; musicSync(); renderDialog(true); save(); });
+  $('#cfg-musicVol').addEventListener('input', e => { S.cfg.musicVol = +e.target.value; musicVolume(S.cfg.musicVol); save(); });
+  $('#testMusic').addEventListener('click', e => {
+    if (MUS.on) { musicStop(); e.target.textContent = 'Ouvir'; return; }
+    const was = S.cfg.music; S.cfg.music = true; musicStart('short'); S.cfg.music = was; e.target.textContent = 'Parar';
+  });
+  document.addEventListener('pointerdown', () => { if (!MUS.on) musicSync(); }, { passive:true });
   $('#testSound').addEventListener('click', () => { unlockAudio(); sfx('chime'); setTimeout(() => sfx('rin'), 500); });
   $('#skyOpts').addEventListener('click', e => { const b = e.target.closest('[data-sky]'); if (!b) return; S.cfg.sky = b.dataset.sky; applyUI(); renderAll(); save(); });
   $('#cfg-summaryAt').addEventListener('change', e => { S.cfg.summaryAt = e.target.value || '22:00'; day().notified = false; save(); minuteTick(); });
