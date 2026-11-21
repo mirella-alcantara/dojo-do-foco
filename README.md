@@ -13,7 +13,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 <img alt="Salva no Obsidian" src="https://img.shields.io/badge/salva%20no-Obsidian-7c3aed?style=flat-square&logo=obsidian&logoColor=white">
 <img alt="Em português" src="https://img.shields.io/badge/idioma-portugu%C3%AAs-ff6fb5?style=flat-square">
 
-[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Cenários](#-cenários) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian)
+[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Cenários](#-cenários) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
 
 </div>
 
@@ -45,7 +45,7 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 | --- | --- |
 | ⏱️ **Pomodoro completo** | Foco, pausa curta e pausa longa a cada ciclo, com o chefe no último pomodoro |
 | ✍️ **Plano e revisão** | Antes de cada batalha você escreve o que vai fazer. Depois, conta se conseguiu tudo, parte ou se travou |
-| 🌗 **Hora e clima de verdade** | A cena escurece com o dia, os neons acendem à noite e o clima da sua cidade aparece: chuva, neve, neblina, tempestade |
+| 🌗 **Hora e clima de verdade** | A cena escurece com o dia, os neons acendem à noite e o clima da sua cidade aparece, pela [Open-Meteo](https://open-meteo.com): chuva, neve, neblina, tempestade |
 | 🧠 **Feito para TDAH** | Uma ação de cada vez, botão "Só 5 minutos", aviso 1 minuto antes do fim, modo foco e nenhuma bronca |
 | 📜 **Pergaminho de distrações** | Pensou em outra coisa? Anota em um toque e volta. Você resolve na pausa |
 | 🏆 **RPG** | XP, nível, títulos de Aprendiz a Shōgun, energia, moedas ryō, conquistas e uma loja de recompensas que você mesmo cria |
@@ -177,12 +177,40 @@ DOJO_VAULT=/caminho/do/cofre PORT=4321 npm start
 
 </details>
 
+## 🌐 Publicar no Netlify
+
+O projeto já vem pronto para o [Netlify](https://www.netlify.com), que é gratuito e funciona com repositório privado. O `netlify.toml` diz tudo o que ele precisa: roda `npm run build` e publica a pasta `dist/`.
+
+1. Entre em <https://app.netlify.com> com a sua conta do GitHub.
+2. Clique em **Add new project → Import an existing project → GitHub** e autorize o acesso ao repositório `dojo-do-foco`.
+3. Escolha o repositório. As configurações já aparecem preenchidas pelo `netlify.toml`. Clique em **Deploy**.
+4. Em **Project configuration → Change project name**, troque o nome para ganhar um endereço como `dojo-do-foco.netlify.app`.
+
+Depois disso, cada `git push` publica uma versão nova sozinho.
+
+| | No site publicado | Rodando `npm start` |
+| --- | --- | --- |
+| Onde o progresso fica | No navegador de cada aparelho | No cofre do Obsidian |
+| Clima | Automático, pela cidade ou pela localização do aparelho | Automático, pela cidade ou pela localização |
+| Funciona no celular | Sim | Sim, na mesma rede, se você liberar o acesso |
+
+Para conferir o site antes de publicar:
+
+```bash
+npm run build
+```
+
+O resultado fica em `dist/index.html`.
+
 ## 🧱 Estrutura
 
 ```
 index.html        o jogo inteiro: HTML, CSS e JavaScript, com a pixel art desenhada em canvas
 server.js         servidor local e gravação no cofre do Obsidian
-package.json      script npm start
+lib/page.js       monta o documento completo (viewport, ícone) a partir do index.html
+scripts/build.js  gera a versão estática em dist/ para o Netlify
+netlify.toml      configuração de publicação no Netlify
+package.json      scripts npm start e npm run build
 docs/             capturas de tela e GIF deste README
 .vscode/          configuração para rodar pelo VS Code
 ```
