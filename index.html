@@ -345,6 +345,8 @@ dl.terms dd{margin:0;color:var(--muted)}
 .bnav button[aria-current="page"] svg{filter:drop-shadow(0 0 6px var(--violet))}
 body.focusing .bnav{opacity:.35}
 body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
+/* Selo "Powered by Netlify" do plano grátis: fica acima da barra de abas em vez de cobri-la */
+#nl-badge-frame{bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--dlg);color:var(--dlg-ink);border:2px solid var(--dlg-ink);padding:10px 16px;border-radius:6px;font-size:15px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 0 0 3px var(--dlg),0 8px 24px rgba(0,0,0,.3)}
 .log{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:4px;font-size:14px}
