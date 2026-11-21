@@ -13,6 +13,8 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 <img alt="Salva no Obsidian" src="https://img.shields.io/badge/salva%20no-Obsidian-7c3aed?style=flat-square&logo=obsidian&logoColor=white">
 <img alt="Em português" src="https://img.shields.io/badge/idioma-portugu%C3%AAs-ff6fb5?style=flat-square">
 
+### [▶ Jogar agora: dojo-do-foco.netlify.app](https://dojo-do-foco.netlify.app)
+
 [Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Cenários](#-cenários) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
 
 </div>
