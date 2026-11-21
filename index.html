@@ -564,9 +564,10 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
               <div class="inrow">
                 <input type="text" id="wxCity" maxlength="60" placeholder="Sua cidade, ex.: Recife" aria-label="Cidade">
                 <button class="btn sm primary" id="wxFetch" type="button">Buscar clima</button>
+                <button class="btn sm" id="wxGeo" type="button" hidden>Usar minha localização</button>
               </div>
               <p class="wx-status" id="wxStatus"></p>
-              <label class="tog"><input type="checkbox" id="wxAuto"><div><b>Atualizar sozinho a cada hora</b><span>A busca usa o navegador do app Claude para desktop, então só funciona com a página aberta no app.</span></div></label>
+              <label class="tog"><input type="checkbox" id="wxAuto"><div><b>Atualizar sozinho a cada hora</b><span id="wxAutoHint">Funciona no site publicado, no servidor local e no app Claude para desktop.</span></div></label>
               <div class="mono" style="margin-top:4px">Ou escolha o clima</div>
               <div class="presets" id="wxOpts"></div>
             </div>
@@ -1147,7 +1148,7 @@ function tick(){
 }
 function minuteTick(){
   checkDay(); applyUI(); renderHeader();
-  if (S.wx.auto && S.wx.city && !wxBusy && (!S.wx.data || Date.now() - S.wx.data.at > 3600e3)) fetchWeather(false);
+  if (S.wx.auto && (S.wx.city || S.wx.geoCity === '@geo') && !wxBusy && (!S.wx.data || Date.now() - S.wx.data.at > 3600e3)) fetchWeather(false);
   const d = day(), [hh, mm] = (S.cfg.summaryAt || '22:00').split(':').map(Number), now = new Date();
   if (!d.notified && (now.getHours() > hh || (now.getHours() === hh && now.getMinutes() >= mm))) {
     d.notified = true;
@@ -1942,36 +1943,53 @@ async function readJson(mcp, url){
   if (i < 0 || j < i) throw { code:'parse' };
   try { return JSON.parse(txt.slice(i, j + 1)); } catch(e){ throw { code:'parse' }; }
 }
-async function fetchWeather(manual){
+const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
+const CAN_GEO = !IN_CLAUDE && 'geolocation' in navigator;
+async function getJson(url){
+  const mcp = await mcpP;
+  if (mcp) return readJson(mcp, url);
+  if (IN_CLAUDE) throw { code:'no_route' };
+  const r = await fetch(url, { cache:'no-store' });
+  if (!r.ok) throw { code:'http' };
+  try { return await r.json(); } catch(e){ throw { code:'parse' }; }
+}
+function askPosition(){
+  return new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, err => rej({ code:'geo', geo:err.code }), { timeout:12000, maximumAge:30*60e3 }));
+}
+async function fetchWeather(manual, useGeo){
   if (wxBusy) return;
-  const city = (S.wx.city || '').trim();
-  if (!city) { wxSetStatus('Escreva sua cidade e toque em Buscar clima.'); return; }
+  const city = (S.wx.city || '').trim(), byGeo = useGeo || (!city && S.wx.geoCity === '@geo' && S.wx.lat != null);
+  if (!city && !byGeo) { wxSetStatus(CAN_GEO ? 'Escreva sua cidade ou toque em Usar minha localização.' : 'Escreva sua cidade e toque em Buscar clima.'); return; }
   wxBusy = true; wxSetStatus('Buscando o clima…');
   try {
-    const mcp = await mcpP;
-    if (!mcp) { wxSetStatus('A busca automática funciona com a página aberta no app Claude para desktop. Aqui, escolha o clima abaixo.'); return; }
-    if (S.wx.lat == null || S.wx.geoCity !== city) {
-      const geo = await readJson(mcp, `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`);
+    if (useGeo) {
+      const pos = await askPosition();
+      Object.assign(S.wx, { lat:Math.round(pos.coords.latitude*100)/100, lon:Math.round(pos.coords.longitude*100)/100, place:'Sua localização', geoCity:'@geo', city:'' });
+      const ci = $('#wxCity'); if (ci) ci.value = '';
+    } else if (!byGeo && (S.wx.lat == null || S.wx.geoCity !== city)) {
+      const geo = await getJson(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`);
       const r = geo && geo.results && geo.results[0];
       if (!r) { wxSetStatus(`Não encontrei "${city}". Confira o nome da cidade.`); return; }
       Object.assign(S.wx, { lat:r.latitude, lon:r.longitude, place:[r.name, r.admin1].filter(Boolean).join(', '), geoCity:city });
     }
-    const f = await readJson(mcp, `https://api.open-meteo.com/v1/forecast?latitude=${S.wx.lat}&longitude=${S.wx.lon}&current=temperature_2m,weather_code,is_day,cloud_cover,precipitation,wind_speed_10m&timezone=auto`);
+    const f = await getJson(`https://api.open-meteo.com/v1/forecast?latitude=${S.wx.lat}&longitude=${S.wx.lon}&current=temperature_2m,weather_code,is_day,cloud_cover,precipitation,wind_speed_10m&timezone=auto`);
     const cur = f && f.current; if (!cur || cur.weather_code == null) throw { code:'parse' };
     S.wx.data = { code:cur.weather_code, temp:cur.temperature_2m, wind:cur.wind_speed_10m, cloud:cur.cloud_cover, precip:cur.precipitation, at:Date.now() };
     S.wx.mode = 'auto';
     wxSetStatus(`${S.wx.place}: ${Math.round(cur.temperature_2m)}°C, ${WX[wxCode(cur.weather_code)].n.toLowerCase()}. Atualizado às ${hm(Date.now())}.`);
-    applyUI(); renderHeader(); if (S.view === 'jogo') renderJogo();
+    drops = []; sbDrops = []; applyUI(); renderHeader(); if (S.view === 'jogo') renderJogo();
     if (manual) toast(`Clima de ${S.wx.place}: ${WX[wxCode(cur.weather_code)].n.toLowerCase()}.`);
   } catch(e) {
     const code = e && e.code;
     wxSetStatus(
+      code === 'geo' ? (e.geo === 1 ? 'Você não permitiu a localização. Escreva sua cidade no campo acima.' : 'Não consegui descobrir sua localização. Escreva sua cidade no campo acima.') :
+      code === 'no_route' ? 'No claude.ai pelo navegador, a busca automática não funciona. Abra no app Claude para desktop ou no site publicado, ou escolha o clima abaixo.' :
       code === 'server_not_connected' ? 'O navegador do app não respondeu. Abra esta página no app Claude para desktop e tente de novo.' :
       code === 'cancelled' ? 'A busca foi recusada no app. Toque em Buscar clima para tentar de novo.' :
       ['not_in_manifest','not_granted','approval_required','blocked_by_policy'].includes(code) ? 'A página não tem permissão para usar o navegador do app. Libere no menu de permissões do artifact.' :
       ['capability_disabled','capability_removed'].includes(code) ? 'Este jeito de abrir a página não permite buscar o clima. Escolha o clima abaixo.' :
       code === 'parse' ? 'A previsão veio num formato inesperado. Tente de novo mais tarde.' :
-      'Não consegui buscar o clima agora. Tente de novo em alguns minutos.');
+      'Não consegui buscar o clima agora. Confira a internet e tente de novo em alguns minutos.');
   } finally { wxBusy = false; save(); }
 }
 function drawPortrait(now){
@@ -2501,6 +2519,8 @@ function wire(){
   $('#wxCity').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); S.wx.city = e.target.value.trim(); fetchWeather(true); } });
   $('#wxFetch').addEventListener('click', () => { S.wx.city = $('#wxCity').value.trim(); fetchWeather(true); });
   $('#wxAuto').addEventListener('change', e => { S.wx.auto = e.target.checked; save(); });
+  $('#wxGeo').hidden = !CAN_GEO;
+  $('#wxGeo').addEventListener('click', () => fetchWeather(true, true));
   $('#wxOpts').addEventListener('click', e => {
     const b = e.target.closest('[data-wx]'); if (!b) return;
     if (b.dataset.wx === 'auto') S.wx.mode = 'auto'; else { S.wx.mode = 'manual'; S.wx.manual = b.dataset.wx; }
