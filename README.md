@@ -15,7 +15,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 
 ### [▶ Jogar agora: dojo-do-foco.netlify.app](https://dojo-do-foco.netlify.app)
 
-[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Cenários](#-cenários) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
+[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Reinos](#-reinos) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
 
 </div>
 
@@ -49,6 +49,7 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 | ✍️ **Plano e revisão** | Antes de cada batalha você escreve o que vai fazer. Depois, conta se conseguiu tudo, parte ou se travou |
 | 🌗 **Hora e clima de verdade** | A cena escurece com o dia, os neons acendem à noite e o clima da sua cidade aparece, pela [Open-Meteo](https://open-meteo.com): chuva, neve, neblina, tempestade |
 | 🧠 **Feito para TDAH** | Uma ação de cada vez, botão "Só 5 minutos", aviso 1 minuto antes do fim, modo foco e nenhuma bronca |
+| 🌄 **Reinos em 3D** | 11 reinos em pixel art, cada um com uma paisagem em 3D ([three.js](https://threejs.org)) animada no fundo e uma visão sem distrações para as pausas |
 | 🎵 **Música nas pausas** | Uma música lo-fi aconchegante, composta no próprio jogo, começa com a pausa e para quando ela acaba. Mais lenta no onsen |
 | 📜 **Pergaminho de distrações** | Pensou em outra coisa? Anota em um toque e volta. Você resolve na pausa |
 | 🏆 **RPG** | XP, nível, títulos de Aprendiz a Shōgun, energia, moedas ryō, conquistas e uma loja de recompensas que você mesmo cria |
@@ -57,7 +58,9 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 
 A personagem não fica parada. Ela estuda conforme o tipo de missão: lê um livro, escreve com pincel, usa o ábaco, programa no notebook ou revisa cartões. A cada 40 segundos corre até o yōkai e ataca. Na casa de chá o mestre serve o chá e ela bebe. No onsen ela entra devagar na água quente.
 
-## 🏯 Cenários
+## 🏯 Reinos
+
+São 11 reinos. Troque no seletor acima da cena ou na aba **Jogo**. Todos acompanham a hora do dia e o clima.
 
 <table>
   <tr>
@@ -70,9 +73,31 @@ A personagem não fica parada. Ela estuda conforme o tipo de missão: lê um liv
   </tr>
   <tr>
     <td><img src="docs/cenarios/sakura.png" alt="Jardim de sakura de dia com cerejeira, ponte vermelha e lago"><br><b>Jardim de sakura</b> · pétalas caindo, lago com carpas e ponte</td>
-    <td><img src="docs/cenarios/onsen-neve.png" alt="Onsen à noite com neve caindo no templo"><br><b>Onsen com neve</b> · a pausa longa, em qualquer cenário</td>
+    <td><img src="docs/cenarios/onsen-neve.png" alt="Onsen à noite com neve caindo no templo"><br><b>Onsen com neve</b> · a pausa longa, em qualquer reino</td>
+  </tr>
+  <tr>
+    <td><img src="docs/cenarios/floresta.png" alt="Floresta dos vagalumes à noite, com a árvore gigante de janela acesa e porta azul brilhante"><br><b>Floresta dos vagalumes</b> · árvore-casa, lago e vaga-lumes</td>
+    <td><img src="docs/cenarios/ilhas.png" alt="Ilhas flutuantes ao pôr do sol, com castelo, cachoeiras e mar de nuvens"><br><b>Ilhas flutuantes</b> · castelo, cachoeiras, lanternas e aurora à noite</td>
+  </tr>
+  <tr>
+    <td><img src="docs/cenarios/neon.png" alt="Terraço neon à noite com garoa, prédios iluminados e torre vermelha"><br><b>Terraço neon</b> · a cidade vista do telhado, com a torre ao fundo</td>
+    <td><img src="docs/cenarios/cha.png" alt="Casa de chá nas nuvens ao pôr do sol, com lanternas e carpas nadando nas nuvens"><br><b>Casa de chá nas nuvens</b> · lanternas e carpas nadando no céu</td>
+  </tr>
+  <tr>
+    <td><img src="docs/cenarios/janela.png" alt="Janela do Fuji de dia, uma sala com shoji olhando o monte Fuji, a vila e um pagode"><br><b>Janela do Fuji</b> · sala de tatame com vista para o monte</td>
+    <td><img src="docs/cenarios/canal.png" alt="Café do canal de dia, com café de madeira, bicicleta, cerejeiras e canal de pedras"><br><b>Café do canal</b> · café, bicicleta e cerejeiras na beira da água</td>
   </tr>
 </table>
+
+### Reino em 3D
+
+Atrás do jogo, uma paisagem em 3D do mesmo reino se move devagar: ilhas que flutuam, cachoeiras, carpas, vaga-lumes, pétalas e lanternas subindo à noite. O botão **🌄 Reino 3D** esconde todo o resto e mostra só o reino e o tempo que falta, bom para a pausa. As setas trocam de reino e `Esc` volta. O link `#reino` abre direto nessa visão.
+
+<div align="center">
+  <img src="docs/telas/reino-3d.png" alt="Visão do reino em 3D: ilhas flutuantes à noite sobre um mar de nuvens, com aurora e lanternas" width="88%">
+</div>
+
+O 3D é feito com three.js, carregado do cdnjs. Se o computador ficar lento, desligue em **Jogo → Reino**. Sem internet ou sem WebGL, o jogo volta para o fundo em pixel art.
 
 <div align="center">
   <img src="docs/cenarios/tempestade.png" alt="Dojo ao pôr do sol durante uma tempestade" width="60%"><br>
@@ -126,9 +151,9 @@ A arma e a habilidade podem ser trocadas no editor, independente da classe.
   </tr>
 </table>
 
-<img src="docs/telas/jogo.png" alt="Tela Especificações com ritmo, ajuda para o foco, som, céu, cenário, Obsidian e clima" width="100%">
+<img src="docs/telas/jogo.png" alt="Tela Especificações com ritmo, ajuda para o foco, som, céu, reino, Obsidian e clima" width="100%">
 
-Na aba **Jogo** você ajusta os tempos (15/5, 25/5, 50/10 ou do seu jeito), a meta diária, o modo foco, as penalidades, o som, o céu, o cenário e o clima.
+Na aba **Jogo** você ajusta os tempos (15/5, 25/5, 50/10 ou do seu jeito), a meta diária, o modo foco, as penalidades, o som, a música, o céu, o reino (e o 3D) e o clima.
 
 ### No celular
 
