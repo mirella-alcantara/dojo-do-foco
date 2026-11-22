@@ -355,7 +355,7 @@ dl.terms dd{margin:0;color:var(--muted)}
 .sugs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
 
 /* Navegação inferior */
-.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--nav) 92%,transparent);backdrop-filter:blur(8px);border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--nav) 97%,transparent);border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
 .bnav-in{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .bnav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;color:var(--muted);font-family:var(--num);font-size:16px;letter-spacing:.06em;text-transform:uppercase;line-height:1}
 .bnav button svg{width:24px;height:24px}
@@ -1424,7 +1424,8 @@ const bg = document.createElement('canvas'); bg.width = W*K; bg.height = H*K; co
 let sceneKey = '';
 function resizeScene(){
   const st = $('.stage'), cw = st ? st.clientWidth : 0; if (!cw) return;
-  const w = cw >= 900 ? 400 : 320, k = clamp(Math.ceil(cw*(window.devicePixelRatio || 1)/w), 1, 8), key = w + 'x' + k;
+  /* A pixel art é ampliada pelo CSS (image-rendering: pixelated). Mais que 3x só gasta placa de vídeo. */
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5), w = cw >= 900 ? 400 : 320, k = clamp(Math.ceil(cw*dpr/w), 1, PERF.lvl ? 2 : 3), key = w + 'x' + k;
   if (key === sceneKey) return; sceneKey = key;
   W = w; OX = (W - 320)/2; K = k;
   cv.width = W*K; cv.height = H*K; bg.width = W*K; bg.height = H*K;
@@ -2315,7 +2316,7 @@ function drawSkyBg(now){
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js';
 const OPEN_REINO = location.hash === '#reino';
 const S3 = { T:null, r:null, sc:null, cam:null, world:null, upd:[], realm:'', loading:false, failed:false, on:false, last:0, t:0, mx:0, my:0, tx:0, ty:0, view:false };
-function want3d(){ return S.cfg.bg3d !== false && !S3.failed; }
+function want3d(){ return S.cfg.bg3d !== false && !S3.failed && !S3.lite; }
 function show3d(on){ S3.on = on; document.documentElement.classList.toggle('has3d', on); if (!on && S3.view) realmView(false); }
 async function init3d(){
   if (!want3d()) { show3d(false); return; }
@@ -2353,7 +2354,7 @@ async function init3d(){
 }
 function size3d(){
   if (!S3.r) return;
-  const px = S3.view ? 2 : 3, w = Math.max(80, Math.ceil(innerWidth/px)), h = Math.max(60, Math.ceil(innerHeight/px));
+  const px = (S3.view ? 2 : 3) + (PERF.lvl ? 1 : 0), w = Math.max(80, Math.ceil(innerWidth/px)), h = Math.max(60, Math.ceil(innerHeight/px));
   S3.r.setSize(w, h, false); S3.cam.aspect = w/h; S3.cam.updateProjectionMatrix(); S3.last = 0;
 }
 function rnd(seed){ let s = (seed*9973 + 7) % 2147483647 || 1; return () => (s = (s*16807) % 2147483647)/2147483647; }
@@ -2597,7 +2598,7 @@ const REALM3D = {
 function build3d(){
   const realm = REALM3D[S.cfg.scene] ? S.cfg.scene : 'dojo';
   if (!S3.r || (S3.realm === realm && S3.world)) return;
-  if (S3.world) { S3.sc.remove(S3.world); S3.world.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach(m => m.dispose()); }); }
+  if (S3.world) { S3.sc.remove(S3.world); S3.world.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); }); }
   S3.upd = []; S3.realm = realm;
   const D = S3.def = REALM3D[realm], G = new S3.T.Group();
   if (D.ground) { const gp = new S3.T.Mesh(new S3.T.PlaneGeometry(3000, 3000), ph(D.ground)); gp.rotation.x = -Math.PI/2; G.add(gp); }
@@ -2641,7 +2642,7 @@ function light3d(e){
   S3.stars.material.opacity = clamp((s.amb - 0.35)/0.65, 0, 1)*(1 - (P.clouds || 0)*0.85); S3.stars.visible = S3.stars.material.opacity > 0.01;
 }
 function frame3d(now){
-  if (S3.last && now - S3.last < (reduced ? 1500 : 33)) return;
+  if (S3.last && now - S3.last < (reduced ? 1500 : S3.view ? 33 : PERF.lvl ? 66 : 40)) return;
   const dt = S3.last ? Math.min(0.1, (now - S3.last)/1000) : 0; S3.last = now;
   const mdt = reduced ? 0 : dt; S3.t += mdt;
   const h = hourNow(), sky = skyAt(h), wx = WX[wxNow()], a = effAmb(sky.amb, wx), e = { h, sky, wx, amb:a, k:clamp((a - 0.3)/0.4, 0, 1) };
@@ -2662,9 +2663,42 @@ function realmView(on){
   size3d();
 }
 
-let lastFrame = performance.now();
+/* ---- desempenho: a cena em pixel art não precisa de 60 quadros por segundo ----
+   Nível 0: normal. Nível 1 (leve): cena e 3D com menos pixels e menos quadros.
+   Nível 2 (mínimo): o 3D fica desligado nesta sessão e o fundo volta para a pixel art.
+   O nível sobe sozinho quando o navegador não dá conta; nunca desce sozinho, para não ficar oscilando. */
+const PERF = { lvl:0, t0:0, n:0, prev:0, slow:0, told:false };
+const SCENE_MS = () => PERF.lvl ? 50 : 33;
+function perfSample(now){
+  /* Aba escondida ou janela que o navegador está freando de propósito (intervalos enormes): não conta. */
+  const gap = now - PERF.prev; PERF.prev = now;
+  if (document.hidden || gap > 250) { PERF.t0 = 0; return; }
+  if (!PERF.t0) { PERF.t0 = now; PERF.n = 0; return; }
+  PERF.n++;
+  const span = now - PERF.t0;
+  if (span < 3000) return;
+  const fps = PERF.n*1000/span; PERF.t0 = now; PERF.n = 0;
+  if (fps >= 18 || PERF.lvl >= 2) { PERF.slow = 0; return; }
+  if (++PERF.slow < 2) return;
+  PERF.slow = 0; perfLevel(PERF.lvl + 1);
+}
+function perfLevel(l){
+  PERF.lvl = l; sceneKey = ''; resizeScene(); size3d(); S3.last = 0;
+  if (l >= 2 && S3.on && !S3.view) {
+    S3.lite = true; show3d(false);
+    if (!PERF.told) { PERF.told = true; toast('O computador estava sofrendo, então pausei o reino 3D. Dá para religar em Jogo → Reino.'); }
+  }
+}
+
+let lastFrame = performance.now(), lastDraw = 0;
 function frame(now){
-  const dt = Math.min(0.05, (now - lastFrame)/1000); lastFrame = now;
+  requestAnimationFrame(frame);
+  perfSample(now);
+  if (S3.on) frame3d(now); else drawSkyBg(now);
+  if (S3.view) return; /* na visão do reino a cena fica escondida: não precisa desenhar */
+  if (now - lastDraw < SCENE_MS() - 2) return;
+  lastDraw = now;
+  const dt = Math.min(0.08, (now - lastFrame)/1000); lastFrame = now;
   if (bgDirty) { drawBG(hourNow()); bgDirty = false; }
   g.setTransform(K, 0, 0, K, 0, 0); g.imageSmoothingEnabled = false;
   g.drawImage(bg, 0, 0, W, H);
@@ -2681,8 +2715,6 @@ function frame(now){
   g.setTransform(K, 0, 0, K, 0, 0);
   if (flashA > 0) R(g, 0, 0, W, H, `rgba(255,255,255,${flashA})`);
   drawPortrait(now);
-  if (S3.on) frame3d(now); else drawSkyBg(now);
-  requestAnimationFrame(frame);
 }
 
 /* ---- previsão do tempo (Open-Meteo pelo navegador do app) ---- */
@@ -3317,7 +3349,7 @@ function wire(){
   $('#presets').addEventListener('click', e => { const b = e.target.closest('[data-preset]'); if (!b) return; const [f, s, l] = b.dataset.preset.split(',').map(Number); Object.assign(S.cfg, { focus:f, short:s, long:l }); applyLen(); renderAll(); save(); toast(`Ritmo ${f}/${s} aplicado.`); });
   ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } renderAll(); save(); }));
   $('#cfg-vol').addEventListener('input', e => { S.cfg.vol = +e.target.value; save(); });
-  $('#cfg-bg3d').addEventListener('change', e => { S.cfg.bg3d = e.target.checked; if (S.cfg.bg3d) { S3.failed = false; init3d(); } else show3d(false); save(); });
+  $('#cfg-bg3d').addEventListener('change', e => { S.cfg.bg3d = e.target.checked; if (S.cfg.bg3d) { S3.failed = false; S3.lite = false; if (PERF.lvl > 1) PERF.lvl = 1; init3d(); } else show3d(false); save(); });
   $('#realmBtn').addEventListener('click', () => realmView(true));
   $('#rvClose').addEventListener('click', () => realmView(false));
   const rvStep = d => { const ks = Object.keys(SCENES), i = ks.indexOf(S.cfg.scene); setScene(ks[(i + d + ks.length) % ks.length]); };

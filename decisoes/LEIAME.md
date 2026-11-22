@@ -7,3 +7,4 @@ Nome do arquivo: `AAAA-MM-DD-assunto.md`.
 | Data | Decisão |
 | --- | --- |
 | 2026-11-22 | [Separação entre criação e desenvolvimento](2026-11-22-separacao-criacao-desenvolvimento.md) |
+| 2026-11-22 | [Desempenho: menos trabalho para a placa de vídeo](2026-11-22-desempenho.md) |
