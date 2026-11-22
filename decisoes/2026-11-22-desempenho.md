@@ -34,7 +34,14 @@ Os níveis nunca descem sozinhos, para não oscilar. A aba escondida e os interv
 
 Numa cópia com medidores, no reino Ilhas flutuantes com tempestade e o foco rodando: o `renderer.render` do 3D caiu de ~125 ms para ~6 ms, com a mesma resolução do 3D (342×256).
 
-Limite da medição: o painel do navegador de teste estava escondido, e nesse estado o navegador freia os quadros de propósito. Por isso ainda falta medir os quadros por segundo de verdade, com a janela visível.
+Depois, no site publicado, no Chrome do Mac com Intel UHD 630 (janela de 1624×888, tela retina), no reino Ilhas flutuantes com o 3D ligado:
+
+| Situação | Quadros por segundo | Mediana | 95% dos quadros abaixo de | Quadros acima de 50 ms |
+| --- | --- | --- | --- | --- |
+| Céu limpo (8 s) | 58,5 | 16,7 ms | 17,4 ms | 2 |
+| Tempestade (10 s) | 47,9 | 17,0 ms | 33,4 ms | 4 |
+
+Nos dois casos o jogo ficou no nível 0: o modo leve não precisou entrar.
 
 ## Alternativas consideradas
 
