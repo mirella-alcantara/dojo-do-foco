@@ -240,9 +240,12 @@ scripts/build.js  gera a versão estática em dist/ para o Netlify
 netlify.toml      configuração de publicação no Netlify
 package.json      scripts npm start e npm run build
 docs/             capturas de tela e GIF deste README
+pesquisas/        estudos técnicos (bibliotecas, desempenho, acessibilidade)
+decisoes/         registro das decisões técnicas e do porquê
 .vscode/          configuração para rodar pelo VS Code
 ```
 
 <div align="center">
+<sub>As ideias de design (mundo, personagens, mecânicas) ficam numa pasta de criação separada, fora deste repositório.</sub><br>
 <sub>As capturas usam dados de exemplo. Sem pressa. Sem culpa. Só o próximo passo.</sub>
 </div>
