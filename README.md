@@ -22,7 +22,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 <br>
 
 <div align="center">
-  <img src="docs/demo.gif" alt="Animação: a personagem estuda e ataca o yōkai, toma chá com o mestre no bosque de bambu, entra no onsen debaixo de neve e escreve no jardim de sakura." width="88%">
+  <img src="docs/demo.gif" alt="Animação: batalha no dojo com chuva, chá no bosque de bambu, os reinos novos (floresta dos vagalumes, ilhas flutuantes, terraço neon, casa de chá nas nuvens, janela do Fuji e café do canal), o onsen com neve e o reino em 3D" width="88%">
 </div>
 
 <br>
@@ -97,7 +97,7 @@ Atrás do jogo, uma paisagem em 3D do mesmo reino se move devagar: ilhas que flu
   <img src="docs/telas/reino-3d.png" alt="Visão do reino em 3D: ilhas flutuantes à noite sobre um mar de nuvens, com aurora e lanternas" width="88%">
 </div>
 
-O 3D é feito com three.js, carregado do cdnjs. Se o computador ficar lento, desligue em **Jogo → Reino**. Sem internet ou sem WebGL, o jogo volta para o fundo em pixel art.
+O 3D é feito com three.js, carregado do cdnjs. Se o computador não der conta, o jogo entra sozinho num modo leve, com menos quadros e menos pixels. Se ainda assim travar, ele pausa o 3D e avisa. Também dá para desligar em **Jogo → Reino**. Sem internet ou sem WebGL, o jogo volta para o fundo em pixel art.
 
 <div align="center">
   <img src="docs/cenarios/tempestade.png" alt="Dojo ao pôr do sol durante uma tempestade" width="60%"><br>
