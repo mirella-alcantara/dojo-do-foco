@@ -2,6 +2,10 @@
 
 Estudos que ajudam a decidir **como** fazer algo no jogo. Um arquivo por assunto.
 
+| Data | Pesquisa |
+| --- | --- |
+| 2026-11-22 | [Melhorias para o Dojo do Foco](2026-11-22-melhorias-do-dojo.md): concorrentes, ciência, opinião de usuários, tendências, interface e parte técnica. As notas de cada fonte estão em [2026-11-22-melhorias-do-dojo/](2026-11-22-melhorias-do-dojo/) |
+
 Bons temas:
 
 - Bibliotecas e APIs usadas ou candidatas (three.js, Open-Meteo, Web Audio)
