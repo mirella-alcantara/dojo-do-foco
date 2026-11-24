@@ -113,7 +113,10 @@ Crie quantas personagens quiser, do zero ou a partir de **14 modelos prontos**, 
 - **Identidade:** nome, título, classe, arma, habilidade, personalidade, frase de efeito e história
 - **Aparência:** penteado, traje, acessório (laço, kanzashi, chapéu kasa, orelhas de raposa, chifres de oni...) e rosto
 - **Cores:** pele, cabelo, olhos, roupa, detalhes, arma e duas cores livres
+- **Roupa extra:** cachecol, capa ou os dois
 - **Desenho à mão:** a cabeça e o tronco pintados pixel por pixel
+
+As personagens são chibis de frente. As três opções de visual de cada modelo estão em [docs/personagens](docs/personagens/LEIAME.md) (gere de novo com `node scripts/opcoes-personagens.js`).
 - **Especificações:** 24 pontos para distribuir entre força, agilidade, mente e espírito
 
 <details>
@@ -237,10 +240,12 @@ index.html        o jogo inteiro: HTML, CSS e JavaScript, com a pixel art desenh
 server.js         servidor local e gravação no cofre do Obsidian
 lib/page.js       monta o documento completo (viewport, ícone) a partir do index.html
 scripts/build.js  gera a versão estática em dist/ para o Netlify
+scripts/opcoes-personagens.js  desenha as opções de visual dos modelos em docs/personagens/
 netlify.toml      configuração de publicação no Netlify
 package.json      scripts npm start e npm run build
 docs/             capturas de tela e GIF deste README
-pesquisas/        estudos técnicos (bibliotecas, desempenho, acessibilidade)
+docs/personagens/ opções de visual (A, B e C) de cada modelo
+pesquisas/        estudos técnicos e de produto, um arquivo por assunto
 decisoes/         registro das decisões técnicas e do porquê
 .vscode/          configuração para rodar pelo VS Code
 ```

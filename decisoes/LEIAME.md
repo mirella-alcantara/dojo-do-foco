@@ -8,3 +8,4 @@ Nome do arquivo: `AAAA-MM-DD-assunto.md`.
 | --- | --- |
 | 2026-11-22 | [Separação entre criação e desenvolvimento](2026-11-22-separacao-criacao-desenvolvimento.md) |
 | 2026-11-22 | [Desempenho: menos trabalho para a placa de vídeo](2026-11-22-desempenho.md) |
+| 2026-11-24 | [Personagens chibi de frente (prompt detalhado)](2026-11-24-prompt-personagens-de-frente.md) |

@@ -184,6 +184,10 @@ body.focusing .scene-pick{display:none}
 .attr{background:var(--panel2);border-radius:7px;padding:6px;text-align:center}
 .attr .v{font-family:var(--num);font-size:24px;line-height:1}
 .attr .k{font-size:11px;color:var(--muted)}
+.vis-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vis-opts button{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:14px;cursor:pointer}
+.vis-opts button[aria-pressed="true"]{border-color:#ff6fb5;box-shadow:0 0 0 2px color-mix(in srgb,#ff6fb5 30%,transparent)}
+.vis-opts canvas{width:36px;height:45px;image-rendering:pixelated}
 .cc-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
 /* Missão ativa e pergaminho (coluna esquerda) */
@@ -265,7 +269,7 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 
 .presets-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .pre{display:flex;flex-direction:column;align-items:center;gap:1px;border:2px solid var(--line);background:var(--panel2);border-radius:9px;padding:8px 4px}
-.pre canvas{width:50px;height:60px;image-rendering:pixelated}
+.pre canvas{width:48px;height:60px;image-rendering:pixelated}
 .pre b{font-family:var(--px);font-size:14px}
 .pre span{font-size:11px;color:var(--muted);text-align:center;line-height:1.3}
 .pre[aria-pressed="true"]{border-color:var(--pink)}
@@ -294,7 +298,7 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
 .col-grid input[type=color]{width:100%;height:36px;border:2px solid var(--line);border-radius:7px;background:var(--panel2);padding:2px;cursor:pointer}
 .px-wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
-.px-grid{display:grid;grid-template-columns:repeat(12,1fr);width:min(100%,300px);border:2px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;background:repeating-conic-gradient(var(--panel2) 0 25%,var(--panel) 0 50%) 0 0/12px 12px}
+.px-grid{display:grid;grid-template-columns:repeat(14,1fr);width:min(100%,300px);border:2px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;background:repeating-conic-gradient(var(--panel2) 0 25%,var(--panel) 0 50%) 0 0/12px 12px}
 .px-grid i{aspect-ratio:1;display:block;box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--line) 70%,transparent);cursor:crosshair}
 .pk{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}
 .pk button{display:flex;align-items:center;gap:6px;border:2px solid var(--line);background:var(--panel2);border-radius:7px;padding:4px 8px;font-size:13px}
@@ -305,7 +309,7 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .spec-row b{font-family:var(--num);font-size:20px;font-weight:400;text-align:right}
 .ros{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;border:2px solid transparent}
 .ros.editing{border-color:var(--violet)}
-.ros canvas{width:40px;height:48px;image-rendering:pixelated}
+.ros canvas{width:48px;height:60px;image-rendering:pixelated}
 .ros .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .spec-mini{display:flex;gap:8px;font-family:var(--num);font-size:15px;color:var(--muted);flex-wrap:wrap}
 
@@ -450,6 +454,7 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
           <div class="ccw">
             <div class="cc">
               <div class="cc-pic"><canvas id="portrait" width="64" height="51"></canvas></div>
+              <div id="ccVis"></div>
               <div class="cc-name"><h3 id="ccName"></h3><span class="lv" id="ccLv"></span></div>
               <div class="mono" id="ccSub" style="font-size:16px"></div>
               <div class="meters">
@@ -724,10 +729,11 @@ const CLASS_LOOK = {
   ronin:{ hs:'espetado', tr:'hakama', acc:'nenhum', face:'simples' }
 };
 const RANGED = ['arco','ofuda'];
-const HS = { curto:'Curto', longo:'Longo', rabo:'Rabo de cavalo', coque:'Coque', chiquinhas:'Maria-chiquinha', espetado:'Espetado', careca:'Careca' };
+const HS = { curto:'Curto', longo:'Longo', rabo:'Rabo de cavalo', coque:'Coque', chiquinhas:'Maria-chiquinha', espetado:'Espetado', bob:'Chanel', cacheado:'Cacheado', careca:'Careca' };
 const TR = { calca:'Calça', hakama:'Hakama (saia)', quimono:'Quimono longo' };
-const ACCS = { nenhum:'Nenhum', laco:'Laço', flor:'Flor de sakura', kanzashi:'Kanzashi', hachimaki:'Faixa hachimaki', kasa:'Chapéu kasa', raposa:'Orelhas e cauda de raposa', oni:'Chifres de oni' };
-const FACES = { simples:'Simples', delicado:'Cílios e blush' };
+const ACCS = { nenhum:'Nenhum', laco:'Laço', flor:'Flor de sakura', kanzashi:'Kanzashi', hachimaki:'Faixa hachimaki', kasa:'Chapéu kasa', raposa:'Orelhas e cauda de raposa', oni:'Chifres de oni', capuz:'Capuz com orelhinhas', eboshi:'Chapéu eboshi' };
+const EXS = { nenhum:'Nenhuma', cachecol:'Cachecol', capa:'Capa', capacachecol:'Capa e cachecol' };
+const FACES = { simples:'Simples', delicado:'Cílios e blush', oculos:'Óculos redondos' };
 const PERKS = {
   xp10:'+10% de XP em cada pomodoro.', ryo5:'+5 ryō por yōkai derrotado.', heal10:'Pausas recuperam +10 de energia.',
   quest20:'Missões concluídas dão +20 XP.', boss25:'Chefes dão +25% de XP.', breakRyo:'+3 ryō por pausa completa.',
@@ -763,6 +769,62 @@ const PRESETS = [
   { name:'Jin', cls:'ronin', persona:'seria', phrase:'Sem mestre, mas com constância.', spec:{ forca:7, agil:7, mente:5, espirito:5 } },
   { name:'Hoshi', cls:'onmyoji', look:{ hs:'curto', acc:'nenhum', face:'simples' }, col:{ h:'#2a1f1a', b:'#2d4a7e' }, persona:'gentil', phrase:'As estrelas também estudam à noite.', spec:{ forca:3, agil:5, mente:9, espirito:7 } }
 ];
+/* Três visuais para cada modelo, no estilo chibi de frente. O primeiro (A) é o visual do modelo no jogo.
+   O script scripts/opcoes-personagens.js desenha os três lado a lado em docs/personagens/. */
+const PRESET_OPTS = {
+  Sakura:[ { look:{ hs:'longo', acc:'laco', face:'delicado', ex:'cachecol' }, col:{ e:'#8a3a4a', x:'#f4b8c8' } },
+           { look:{ hs:'chiquinhas', acc:'flor', face:'delicado', ex:'capa' }, col:{ e:'#8a3a4a', y:'#c8442e' } },
+           { look:{ hs:'bob', acc:'kanzashi', face:'oculos', ex:'nenhum' }, col:{ e:'#5a3a6a', h:'#3a2430' } } ],
+  Aiko:[ { look:{ hs:'rabo', acc:'hachimaki', face:'delicado', ex:'capa' }, col:{ e:'#7a2d3a', y:'#2a1a2a' } },
+         { look:{ hs:'coque', acc:'kanzashi', face:'delicado', ex:'cachecol' }, col:{ e:'#7a2d3a', x:'#e1b85a' } },
+         { look:{ hs:'longo', acc:'oni', face:'simples', ex:'nenhum' }, col:{ e:'#7a2d3a', h:'#4a1a22' } } ],
+  Hana:[ { look:{ hs:'chiquinhas', acc:'nenhum', face:'delicado', ex:'cachecol' }, col:{ e:'#6a3a8a', x:'#ff6fb5' } },
+         { look:{ hs:'bob', acc:'capuz', face:'delicado', ex:'nenhum' }, col:{ e:'#6a3a8a' } },
+         { look:{ hs:'rabo', acc:'hachimaki', face:'delicado', ex:'capa' }, col:{ e:'#6a3a8a', y:'#5a3f8a' } } ],
+  Yuki:[ { look:{ hs:'longo', acc:'eboshi', face:'oculos', ex:'capa' }, col:{ e:'#5a4a9a', y:'#f4f2ec' } },
+         { look:{ hs:'cacheado', acc:'kanzashi', face:'delicado', ex:'capa' }, col:{ e:'#5a4a9a', y:'#2d4a7e' } },
+         { look:{ hs:'bob', acc:'capuz', face:'delicado', ex:'cachecol' }, col:{ e:'#5a4a9a', x:'#cdbdff' } } ],
+  Rin:[ { look:{ hs:'longo', acc:'flor', face:'delicado', ex:'capa' }, col:{ e:'#3c5aa8', y:'#3c5aa8' } },
+        { look:{ hs:'rabo', acc:'hachimaki', face:'delicado', ex:'nenhum' }, col:{ e:'#3c5aa8' } },
+        { look:{ hs:'bob', acc:'kasa', face:'delicado', ex:'cachecol' }, col:{ e:'#3c5aa8', x:'#8fc3d6' } } ],
+  Mei:[ { look:{ hs:'longo', tr:'hakama', acc:'flor', face:'delicado', ex:'capa' }, col:{ h:'#5a3a22', e:'#5a3a22', y:'#c8442e' } },
+        { look:{ hs:'chiquinhas', tr:'hakama', acc:'laco', face:'delicado', ex:'cachecol' }, col:{ h:'#5a3a22', e:'#5a3a22', x:'#ff6fb5' } },
+        { look:{ hs:'rabo', tr:'hakama', acc:'hachimaki', face:'delicado', ex:'nenhum' }, col:{ h:'#5a3a22', e:'#5a3a22' } } ],
+  Akane:[ { look:{ hs:'rabo', acc:'hachimaki', face:'delicado', ex:'cachecol' }, col:{ e:'#b0402e', x:'#e1b85a' } },
+          { look:{ hs:'cacheado', acc:'hachimaki', face:'delicado', ex:'nenhum' }, col:{ e:'#b0402e' } },
+          { look:{ hs:'bob', acc:'oni', face:'delicado', ex:'capa' }, col:{ e:'#b0402e', y:'#5a4a3a' } } ],
+  Kiko:[ { look:{ hs:'longo', acc:'raposa', face:'delicado', ex:'cachecol' }, col:{ e:'#c86a2a', x:'#c8442e' } },
+         { look:{ hs:'bob', acc:'raposa', face:'delicado', ex:'capa' }, col:{ e:'#c86a2a', y:'#c8442e' } },
+         { look:{ hs:'cacheado', acc:'raposa', face:'oculos', ex:'nenhum' }, col:{ e:'#c86a2a' } } ],
+  Nami:[ { look:{ hs:'chiquinhas', acc:'nenhum', face:'delicado', ex:'cachecol' }, col:{ h:'#3a5a9a', e:'#3a5a9a', x:'#5ce1e6' } },
+         { look:{ hs:'rabo', acc:'capuz', face:'delicado', ex:'nenhum' }, col:{ h:'#3a5a9a', e:'#3a5a9a' } },
+         { look:{ hs:'bob', acc:'laco', face:'delicado', ex:'capa' }, col:{ h:'#3a5a9a', e:'#3a5a9a', y:'#3a5a9a' } } ],
+  Sora:[ { look:{ hs:'curto', acc:'kasa', face:'simples', ex:'capa' }, col:{ e:'#4a5a3a', y:'#6b8e4e' } },
+         { look:{ hs:'cacheado', acc:'kasa', face:'simples', ex:'cachecol' }, col:{ e:'#4a5a3a', x:'#6b8e4e' } },
+         { look:{ hs:'espetado', acc:'hachimaki', face:'simples', ex:'nenhum' }, col:{ e:'#4a5a3a' } } ],
+  Kenji:[ { look:{ hs:'coque', tr:'hakama', acc:'nenhum', face:'simples', ex:'capa' }, col:{ e:'#2a2a3a', y:'#2b2f3a' } },
+          { look:{ hs:'curto', tr:'calca', acc:'hachimaki', face:'simples', ex:'nenhum' }, col:{ e:'#2a2a3a' } },
+          { look:{ hs:'espetado', tr:'hakama', acc:'kasa', face:'simples', ex:'cachecol' }, col:{ e:'#2a2a3a', x:'#c8442e' } } ],
+  Taro:[ { look:{ hs:'careca', acc:'nenhum', face:'oculos', ex:'cachecol' }, col:{ e:'#5a3a22', x:'#c8442e' } },
+         { look:{ hs:'careca', acc:'kasa', face:'simples', ex:'capa' }, col:{ e:'#5a3a22', y:'#8c4a1a' } },
+         { look:{ hs:'curto', acc:'capuz', face:'simples', ex:'nenhum' }, col:{ e:'#5a3a22' } } ],
+  Jin:[ { look:{ hs:'espetado', acc:'nenhum', face:'simples', ex:'capacachecol' }, col:{ e:'#3a3a44', x:'#8a2f3a', y:'#3a3a44' } },
+        { look:{ hs:'rabo', acc:'kasa', face:'simples', ex:'capa' }, col:{ e:'#3a3a44', y:'#2b2b33' } },
+        { look:{ hs:'bob', acc:'oni', face:'simples', ex:'cachecol' }, col:{ e:'#3a3a44', x:'#8a7a5a' } } ],
+  Hoshi:[ { look:{ hs:'cacheado', tr:'quimono', acc:'nenhum', face:'oculos', ex:'capa' }, col:{ h:'#2a1f1a', b:'#2d4a7e', e:'#2d4a7e', y:'#1c2a5a' } },
+          { look:{ hs:'curto', tr:'quimono', acc:'capuz', face:'simples', ex:'cachecol' }, col:{ h:'#2a1f1a', b:'#2d4a7e', e:'#2d4a7e', x:'#e1b85a' } },
+          { look:{ hs:'bob', tr:'quimono', acc:'eboshi', face:'simples', ex:'capa' }, col:{ h:'#2a1f1a', b:'#2d4a7e', e:'#2d4a7e', y:'#f4f2ec' } } ]
+};
+PRESETS.forEach(p => { const a = PRESET_OPTS[p.name][0]; p.look = Object.assign({}, a.look); p.col = Object.assign({}, a.col); });
+/* Toda personagem tem três visuais para escolher: os do modelo com o mesmo nome, ou os do primeiro modelo da classe. */
+function charOpts(ch){ const pr = PRESETS.find(p => p.name === ch.name && p.cls === ch.cls) || PRESETS.find(p => p.cls === ch.cls) || PRESETS[0]; return PRESET_OPTS[pr.name]; }
+function optPal(ch, o){ return charPal({ cls:ch.cls, look:Object.assign({}, o.look), col:Object.assign({}, ch.col, o.col) }); }
+function optOn(ch, o){ const L = charPal(ch).look; return Object.entries(o.look).every(([k, v]) => L[k] === v); }
+function applyOpt(ch, i){ const o = charOpts(ch)[i]; if (!o) return; ch.look = Object.assign({}, o.look); ch.col = Object.assign({}, ch.col, o.col); }
+function visHTML(ch, who){
+  return `<div class="vis-opts" role="group" aria-label="Visual da personagem">${charOpts(ch).map((o, i) => `<button type="button" data-vis="${i}" data-who="${who}" aria-pressed="${optOn(ch, o)}" title="Visual ${'ABC'[i]}"><canvas width="24" height="30"></canvas><span>${'ABC'[i]}</span></button>`).join('')}</div>`;
+}
+function visDraw(root, ch){ const os = charOpts(ch); root.querySelectorAll('[data-vis] canvas').forEach((cv, i) => { const c = cv.getContext('2d'); c.clearRect(0, 0, 24, 30); drawFront(c, 5, 29, { pal:optPal(ch, os[i]), legs:'stand', arm:'down', u:1 }); }); }
 const WX = {
   limpo:{ n:'Céu limpo', clouds:.12, grey:0 },
   parcial:{ n:'Poucas nuvens', clouds:.45, grey:.1 },
@@ -855,7 +917,7 @@ function newChar(base){
     weapon:base.weapon || gear[0], perk:base.perk || gear[1], persona:base.persona || 'gentil',
     phrase:base.phrase || '', story:base.story || '',
     look:Object.assign({}, base.look || {}), col:Object.assign({}, base.col || {}),
-    map:Array.isArray(base.map) ? base.map.slice() : null,
+    map:Array.isArray(base.map) ? base.map.slice() : null, fmap:Array.isArray(base.fmap) ? base.fmap.slice() : null,
     spec:Object.assign({ forca:6, agil:6, mente:6, espirito:6 }, base.spec || {}), created:Date.now()
   };
 }
@@ -865,7 +927,7 @@ function hasPerk(k){ return HERO().perk === k; }
 function fresh(){
   const c0 = newChar({ name:'Viajante', cls:'samurai' });
   return {
-    v:3,
+    v:4,
     chars:[c0], activeChar:c0.id, editChar:c0.id,
     wx:{ mode:'auto', manual:'limpo', city:'', geoCity:'', lat:null, lon:null, place:'', data:null, tabId:null, auto:false, status:'' },
     lvl:1, xp:0, hp:100, ryo:0,
@@ -901,6 +963,11 @@ function merge(o){
     delete out.hist; delete out.today;
     out.distr = (o.distr || []).map(x => Object.assign({ t:Date.now() }, x));
     out.v = 2;
+  }
+  if (!o.v || o.v < 4) {
+    /* Visual chibi de frente: modelos salvos ganham só as peças novas que faltam. O que a pessoa escolheu fica. */
+    out.chars.forEach(c => { const pr = PRESETS.find(p => p.name === c.name && p.cls === c.cls); if (!pr) return; c.look = Object.assign({}, pr.look, c.look); c.col = Object.assign({}, pr.col, c.col); });
+    out.v = 4;
   }
   out.tasks = (out.tasks || []).map(t => Object.assign({ cat:'ler', steps:[] }, t));
   Object.values(out.days || {}).forEach(x => { const b = newDay(x.date); Object.keys(b).forEach(k => { if (x[k] === undefined) x[k] = b[k]; }); });
@@ -997,12 +1064,13 @@ function pickBreakItems(p){
 }
 function charPal(ch){
   const p = Object.assign({}, HPAL[ch.cls] || HPAL.samurai), d = CLASS_LOOK[ch.cls] || CLASS_LOOK.samurai, L = ch.look || {}, C = ch.col || {};
-  p.look = { hs:L.hs || d.hs, tr:L.tr || d.tr, acc:L.acc || d.acc, face:L.face || d.face };
+  p.look = { hs:L.hs || d.hs, tr:L.tr || d.tr, acc:L.acc || d.acc, face:L.face || d.face, ex:L.ex || 'nenhum' };
   if (!C.h && ch.cls === 'monge' && p.look.hs !== 'careca') p.h = '#2a1f1a';
   Object.keys(C).forEach(k => { if (C[k]) p[k] = C[k]; });
   if (p.look.hs === 'careca') p.h = p.s;
   p.x = C.x || '#ff6fb5'; p.y = C.y || '#5ce1e6';
   p.map = Array.isArray(ch.map) && ch.map.length === 13 ? ch.map : null;
+  p.fmap = Array.isArray(ch.fmap) && ch.fmap.length === 17 ? ch.fmap : null;
   return p;
 }
 function pal(){ return charPal(HERO()); }
@@ -1326,7 +1394,6 @@ const WEAP_BY = {
   martelo:{ up:[[4,-2,1,5,'w'],[3,-4,3,2,'g']], slash:[[10,8,4,1,'w'],[14,7,2,3,'g']], raise:[[6,-3,1,5,'w'],[5,-5,3,2,'g']] },
   leque:{ up:[[3,0,3,2,'g'],[4,-1,1,1,'w']], slash:[[11,6,2,4,'g'],[13,7,1,2,'w']], raise:[[5,-1,3,2,'g'],[6,-2,1,1,'w']] }
 };
-const BACK = ['...hhhhhh...','..hhhhhhhh..','..hhhhhhhh..','..hhhhhhhh..','..shhhhhhs..','...hhhhhh...','....ssss....','..bbbbbbbb..','.bbbbggbbbb.','.bbbbggbbbb.','.bbbbbbbbbb.','.s.aaaaaa.s.','...bbbbbb...','...ll..ll...','...ll..ll...','...dd..dd...'];
 const YOKAI = ['...k....k...','...kk..kk...','...oooooo...','..oooooooo..','.oowwoowwoo.','.oowpoowpoo.','.oooooooooo.','.oottttttoo.','.ootmmmmtoo.','..oooooooo..','..oo.oo.oo..','.oo..oo..oo.'];
 const MASTER = ['....ww......','...wwww.....','..wwwwwww...','.sEsssswww..','.ssssssww...','.wwwsssw....','..wwwss.....','...gggggg...','..gggggggg..','..gggggggg..','..yyyyyyyy..','..gggggggg..','..gggggggg..','..llllllll..','llllllllldd.'];
 const MPAL = { w:'#e8e4dc', s:'#e6b98f', E:'#2a2a2a', g:'#4f7a4a', y:'#c8a24a', l:'#3d5a3a', d:'#e8e4dc' };
@@ -1378,35 +1445,149 @@ function drawSide(c, x, yb, o){
   if (o.weapon) ((WEAP_BY[o.cls] || WEAP_BY.katana)[o.arm] || []).forEach(([i,j,w,h,k]) => P(i, j, w, h, p[k]));
   return { top, P, u };
 }
-function drawBack(c, x, yb, o){
-  const u = o.u || 2, p = o.pal, look = p.look || CLASS_LOOK.samurai, top = Math.round(yb - BACK.length*u + (o.dy || 0));
-  const P = (i, j, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x + i*u), top + j*u, w*u, h*u); };
-  const map = BACK.slice();
-  if (look.tr === 'hakama') { map[13] = '..llllllll..'; map[14] = '..llllllll..'; }
-  if (look.tr === 'quimono') { map[12] = '..bbbbbbbb..'; map[13] = '..bbbbbbbb..'; map[14] = '..bbbbbbbb..'; }
-  const hc = p.h, dxh = o.look || 0;
-  if (look.hs === 'chiquinhas') { P(0 + dxh, 3, 2, 6, hc); P(10 + dxh, 3, 2, 6, hc); }
-  for (let j = 0; j < map.length; j++) for (let i = 0; i < 12; i++) {
-    let ch = map[j][i]; if (ch === '.') continue;
-    if (o.pose && j >= 8 && j <= 11 && (i === 1 || i === 10)) continue;
-    const dx = j <= 6 ? (o.look || 0) : 0;
-    P(i + dx, j, 1, 1, ch === 'g' ? p.a : p[ch]);
-  }
-  if (look.hs === 'longo') { P(2 + dxh, 5, 8, 5, hc); P(3 + dxh, 10, 6, 1, hc); }
-  if (look.hs === 'rabo') { P(5 + dxh, 6, 2, 5, hc); P(5 + dxh, 5, 2, 1, p.a); }
-  if (look.hs === 'coque') { P(4 + dxh, -2, 4, 2, hc); P(8 + dxh, -2, 1, 1, p.a); }
-  if (look.hs === 'chiquinhas') { P(1 + dxh, 3, 1, 1, p.a); P(10 + dxh, 3, 1, 1, p.a); }
-  if (look.acc === 'laco') P(4 + dxh, -1, 4, 1, p.a);
-  else if (look.acc === 'flor') { P(8 + dxh, 0, 2, 2, '#ffb7d0'); P(9 + dxh, 0, 1, 1, '#ff6fb5'); }
-  else if (look.acc === 'kanzashi') { P(7 + dxh, -1, 1, 2, '#e1b85a'); P(8 + dxh, -2, 1, 1, '#ff6fb5'); }
-  else if (look.acc === 'raposa') { P(2 + dxh, -2, 2, 2, hc); P(8 + dxh, -2, 2, 2, hc); P(5, 12, 2, 3, hc); P(4, 14, 4, 2, hc); P(5, 15, 2, 1, '#f4f2ec'); }
-  else if (look.acc === 'oni') { P(3 + dxh, -2, 1, 2, '#f0e6c8'); P(8 + dxh, -2, 1, 2, '#f0e6c8'); }
-  else if (look.acc === 'kasa') { P(-1 + dxh, 0, 14, 1, '#c9a24a'); P(1 + dxh, -1, 10, 1, '#d8b45a'); P(3 + dxh, -2, 6, 1, '#e3c26a'); }
-  else if (look.acc === 'hachimaki') { P(2 + dxh, 2, 8, 1, '#f4f2ec'); P(5 + dxh, 3, 1, 3, '#f4f2ec'); P(6 + dxh, 3, 1, 2, '#f4f2ec'); }
-  if (look.hs === 'espetado') { P(2 + dxh, -1, 1, 1, hc); P(4 + dxh, -2, 1, 2, hc); P(7 + dxh, -2, 1, 2, hc); P(9 + dxh, -1, 1, 1, hc); }
-  if (o.pose === 'up') { P(1,2,1,6,p.b); P(10,2,1,6,p.b); P(1,1,1,1,p.s); P(10,1,1,1,p.s); }
-  if (o.pose === 'out') { P(-2,8,3,1,p.b); P(11,8,3,1,p.b); P(-3,8,1,1,p.s); P(14,8,1,1,p.s); }
+/* sprite-frente:inicio
+   Personagem chibi de frente: 14 px de largura, cabeça grande, olhos com brilho, blush e contorno colorido.
+   Tudo é montado numa grade, recebe o contorno e só então vai para o canvas. O script scripts/opcoes-personagens.js reaproveita este bloco. */
+const F_BASE = [
+  '....hhhhhh....','..hhhhhhhhhh..','.hhhHHhhhhhhh.','hhhHhhhhhhhhhh','hhhhhhhhhhhhhh','hhshhhsshhhshh',
+  'hssssssssssssh','hssqqssssqqssh','hssWEssssWEssh','hssEEssssEEssh','.kksssmmssskk.','..ssssssssss..',
+  '....bbbbbb....','...bbbaabbb...','...bbbbbbbb...','...aaaaaaaa...','...bbbbbbbb...'
+];
+const F_LEGS = {
+  calca:['...llllllll...','...lll..lll...','...lll..lll...','...ddd..ddd...'],
+  hakama:['..llllllllll..','..llllllllll..','.llllllllllll.','...dd....dd...'],
+  quimono:['...bbbbbbbb...','...bbbbbbbb...','..bbbbbbbbbb..','...dd....dd...']
+};
+const F_SIT = { calca:['..llllllllll..','.llllllllllll.'], hakama:['..llllllllll..','.llllllllllll.'], quimono:['..bbbbbbbbbb..','.bbbbbbbbbbbb.'] };
+const F_ARMS = {
+  down:[[2,12,2,1,'b'],[10,12,2,1,'b'],[1,13,2,3,'b'],[11,13,2,3,'b'],[1,16,2,1,'s'],[11,16,2,1,'s']],
+  hold:[[2,12,2,3,'b'],[10,12,2,3,'b'],[4,15,2,1,'s'],[8,15,2,1,'s']],
+  write:[[2,12,2,1,'b'],[1,13,2,3,'b'],[1,16,2,1,'s'],[10,12,2,3,'b'],[9,15,2,1,'s']],
+  up:[[2,12,2,1,'b'],[1,13,2,3,'b'],[1,16,2,1,'s'],[11,12,3,1,'b'],[13,7,2,5,'b'],[13,5,2,2,'s']],
+  raise:[[2,12,2,1,'b'],[1,13,2,3,'b'],[1,16,2,1,'s'],[11,12,3,1,'b'],[13,6,2,6,'b'],[13,4,2,2,'s']],
+  slash:[[2,12,2,1,'b'],[1,13,2,3,'b'],[1,16,2,1,'s'],[11,12,2,1,'b'],[11,13,4,2,'b'],[15,13,2,2,'s']],
+  cup:[[2,12,2,1,'b'],[1,13,2,3,'b'],[1,16,2,1,'s'],[10,12,2,2,'b'],[9,11,2,1,'b'],[8,10,2,1,'s']],
+  stretch:[[1,12,2,1,'b'],[11,12,2,1,'b'],[-1,7,2,6,'b'],[13,7,2,6,'b'],[-1,5,2,2,'s'],[13,5,2,2,'s']]
+};
+/* Mãos de cada braço que segura arma: coluna, linha e direção (v = arma em pé, h = deitada para a direita). */
+const F_HAND = { up:[13,5,'v'], raise:[13,4,'v'], slash:[15,13,'h'] };
+/* Armas desenhadas em pé: [dx, dy a partir do topo da mão, largura, altura, cor]. Deitadas, os eixos trocam. */
+const F_WEAP = {
+  katana:[[1,-8,1,7,'w'],[0,-1,3,1,'g'],[1,2,1,2,'a']],
+  kunai:[[1,-4,1,3,'w'],[0,-1,3,1,'g'],[1,2,1,1,'a']],
+  naginata:[[1,-11,1,15,'w'],[1,-14,1,3,'g'],[0,-12,1,1,'g']],
+  cajado:[[1,-9,1,14,'w'],[0,-10,3,1,'w']],
+  gohei:[[1,-7,1,9,'w'],[2,-8,2,1,'g'],[2,-6,2,1,'g'],[2,-4,1,1,'g']],
+  martelo:[[1,-4,1,6,'w'],[-1,-7,5,3,'g']],
+  leque:[[-1,-4,5,3,'g'],[0,-5,3,1,'g'],[1,-1,1,1,'w'],[1,-4,1,3,'a']],
+  arco:[[3,-6,1,1,'w'],[2,-5,1,4,'w'],[2,1,1,4,'w'],[3,5,1,1,'w'],[4,-6,1,12,'g'],[1,-1,1,2,'w']],
+  ofuda:[[0,-4,2,3,'g'],[0,-3,2,1,'a'],[2,-6,2,3,'g'],[2,-5,2,1,'a']]
+};
+const F_HAIR = {
+  curto:{},
+  longo:{ back:[[-1,4,2,13,'h'],[13,4,2,13,'h'],[0,11,14,6,'h']] },
+  rabo:{ back:[[13,0,2,2,'h'],[14,2,2,7,'h'],[15,9,1,3,'h']], front:[[13,1,1,1,'a']] },
+  coque:{ back:[[5,-2,4,2,'h'],[4,-1,6,1,'h']], front:[[8,-2,1,1,'a'],[5,-2,1,1,'H']] },
+  chiquinhas:{ back:[[-2,5,2,7,'h'],[14,5,2,7,'h'],[-3,8,1,3,'h'],[16,8,1,3,'h']], front:[[-1,4,2,1,'a'],[13,4,2,1,'a']] },
+  espetado:{ back:[[1,0,1,1,'h'],[3,-1,2,1,'h'],[6,-2,2,2,'h'],[9,-1,2,1,'h'],[12,0,1,1,'h'],[-1,3,1,2,'h'],[14,3,1,2,'h']], front:[[4,6,1,1,'h'],[9,6,1,1,'h']] },
+  careca:{},
+  bob:{ back:[[0,10,2,2,'h'],[12,10,2,2,'h']], front:[[1,5,12,1,'h'],[0,6,1,6,'h'],[13,6,1,6,'h']] },
+  cacheado:{ back:[[-1,0,16,11,'h'],[-2,2,1,7,'h'],[15,2,1,7,'h'],[1,-1,3,1,'h'],[5,-2,4,1,'h'],[10,-1,3,1,'h'],[-1,11,3,2,'h'],[12,11,3,2,'h']], front:[[2,6,1,1,'h'],[11,6,1,1,'h'],[6,6,2,1,'h'],[1,-1,1,1,'H'],[5,-2,2,1,'H'],[-1,3,1,2,'H']] }
+};
+const F_ACC = {
+  nenhum:{},
+  laco:{ front:[[3,-1,3,2,'a'],[8,-1,3,2,'a'],[6,0,2,1,'a'],[4,-1,1,1,'W']] },
+  flor:{ front:[[10,1,2,2,'#ffb7d0'],[10,1,1,1,'#ff6fb5'],[12,2,1,1,'#ffd6e4']] },
+  kanzashi:{ front:[[11,-1,1,3,'#e1b85a'],[10,-2,1,1,'#ff6fb5'],[12,-2,1,1,'#ff6fb5'],[11,-3,1,1,'#ff6fb5'],[13,2,1,3,'#e1b85a']] },
+  hachimaki:{ front:[[0,4,14,1,'#f4f2ec'],[6,4,2,1,'#c8442e'],[14,4,2,1,'#f4f2ec'],[15,5,1,2,'#f4f2ec']] },
+  kasa:{ front:[[-3,1,20,1,'#b8913a'],[-2,0,18,1,'#c9a24a'],[0,-1,14,1,'#d8b45a'],[3,-2,8,1,'#e3c26a'],[5,-3,4,1,'#ecd07a']] },
+  raposa:{ back:[[12,14,3,3,'h'],[14,11,3,4,'h'],[15,9,2,2,'#f4f2ec']], front:[[0,-2,3,3,'h'],[11,-2,3,3,'h'],[1,-3,1,1,'h'],[12,-3,1,1,'h'],[1,-1,1,1,'#ffb7d0'],[12,-1,1,1,'#ffb7d0']] },
+  oni:{ front:[[2,-2,1,2,'#f0e6c8'],[11,-2,1,2,'#f0e6c8'],[2,-3,1,1,'#f0e6c8'],[11,-3,1,1,'#f0e6c8']] },
+  capuz:{ back:[[-1,1,16,13,'b']], front:[[1,-1,12,1,'b'],[0,0,14,3,'b'],[0,3,14,1,'a'],[-1,3,1,9,'b'],[14,3,1,9,'b'],[0,-3,3,2,'b'],[11,-3,3,2,'b'],[1,-4,1,1,'b'],[12,-4,1,1,'b'],[1,-2,1,1,'a'],[12,-2,1,1,'a']] },
+  eboshi:{ front:[[4,-6,6,6,'#1e1e26'],[5,-7,4,1,'#1e1e26'],[3,-1,8,1,'#2a2a34'],[5,-5,1,3,'#3a3a48'],[1,6,1,5,'#f4f2ec'],[12,6,1,5,'#f4f2ec']] }
+};
+const F_EX = {
+  nenhum:{},
+  cachecol:{ front:[[2,11,10,2,'x'],[2,12,10,1,'X'],[9,13,2,3,'x'],[9,16,1,1,'X']] },
+  capa:{ back:[[1,12,12,9,'y'],[0,14,1,6,'y'],[13,14,1,6,'y'],[1,20,12,1,'Y']], front:[[2,12,3,1,'y'],[9,12,3,1,'y'],[6,12,2,1,'g']] },
+  capacachecol:{ back:[[1,12,12,9,'y'],[0,14,1,6,'y'],[13,14,1,6,'y'],[1,20,12,1,'Y']], front:[[2,11,10,2,'x'],[2,12,10,1,'X'],[9,13,2,3,'x'],[9,16,1,1,'X']] }
+};
+function fHex(c){ const v = parseInt(c.slice(1), 16); return [v >> 16 & 255, v >> 8 & 255, v & 255]; }
+function fMix(a, b, t){ const A = fHex(a), B = fHex(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v)*t).toString(16).padStart(2, '0')).join(''); }
+const F_LINE = new Map();
+function fLine(c){ let v = F_LINE.get(c); if (!v) { v = fMix(c, '#1c1228', 0.62); F_LINE.set(c, v); } return v; }
+/* Cores que o sprite de frente usa além das da classe: brilho, pupila, blush, boca e as sombras. */
+function frontPal(p){
+  if (p.q) return p;
+  const look = p.look || {};
+  p.W = '#ffffff'; p.q = fMix(p.e, '#000000', 0.55); p.m = fMix(p.s, '#a8404a', 0.55);
+  p.k = fMix(p.s, '#ff8fa0', look.face === 'delicado' ? 0.55 : 0.3);
+  p.H = fMix(p.h, '#ffffff', 0.3); p.X = fMix(p.x, '#000000', 0.2); p.Y = fMix(p.y, '#000000', 0.25);
+  return p;
 }
+function frontGrid(p, o){
+  const look = p.look || {}, OXG = 6, OYG = 12, GW = 36, GH = 36;
+  const cells = new Array(GW*GH).fill(null);
+  const col = k => k[0] === '#' ? k : p[k];
+  const put = (i, j, w, h, k) => { const c = col(k); if (!c) return; for (let y = j; y < j + h; y++) for (let x = i; x < i + w; x++) { const gx = x + OXG, gy = y + OYG; if (gx >= 0 && gx < GW && gy >= 0 && gy < GH) cells[gy*GW + gx] = c; } };
+  const rects = list => (list || []).forEach(([i, j, w, h, k]) => put(i, j, w, h, k));
+  const tr = F_LEGS[look.tr] ? look.tr : 'calca', mode = o.legs || 'stand';
+  let legs = mode === 'sit' ? F_SIT[tr] : F_LEGS[tr];
+  if (mode === 'walkA' || mode === 'walkB') {
+    const L = legs.slice(), n = L.length - 1, lo = mode === 'walkA' ? 0 : 7, hi = lo + 7, inF = i => i >= lo && i < hi;
+    L[n - 1] = [...L[n - 1]].map((ch, i) => inF(i) && L[n][i] !== '.' ? L[n][i] : ch).join('');
+    L[n] = [...L[n]].map((ch, i) => inF(i) ? '.' : ch).join('');
+    legs = L;
+  }
+  const hs = F_HAIR[look.hs] || F_HAIR.curto, acc = F_ACC[look.acc] || F_ACC.nenhum, ex = F_EX[look.ex] || F_EX.nenhum;
+  const hood = look.acc === 'capuz', hat = look.acc === 'kasa' || look.acc === 'eboshi';
+  rects(ex.back); if (!hood) rects(hs.back); rects(acc.back);
+  const base = (p.fmap && p.fmap.length === F_BASE.length ? p.fmap : F_BASE).concat(legs), EYE = 'WqE';
+  if (o.look) for (const j of [7, 8, 9]) {
+    const row = [...base[j]], res = row.map(ch => EYE.includes(ch) ? 's' : ch);
+    row.forEach((ch, i) => { if (EYE.includes(ch)) res[i + o.look] = ch; });
+    base[j] = res.join('');
+  }
+  for (let j = 0; j < base.length; j++) for (let i = 0; i < 14; i++) {
+    let k = base[j][i]; if (k === '.') continue;
+    if (o.blink && (j === 7 || j === 8) && EYE.includes(k)) k = 's';
+    else if (o.blink && j === 9 && k === 'E') k = 'q';
+    if (p.mask && j >= 10 && j <= 11 && i >= 1 && i <= 12) k = 'b';
+    put(i, j, 1, 1, k);
+  }
+  if (!p.mask && !o.blink) { if (look.face === 'delicado') { put(2, 7, 1, 1, 'q'); put(11, 7, 1, 1, 'q'); } }
+  if (look.face === 'oculos') { [[2, 6, 4, 1], [2, 10, 4, 1], [1, 7, 1, 3], [6, 7, 1, 3], [8, 6, 4, 1], [8, 10, 4, 1], [7, 7, 1, 3], [12, 7, 1, 3]].forEach(([i, j, w, h]) => put(i, j, w, h, '#c9a24a')); }
+  if (!hood && !hat) rects(hs.front);
+  else if (look.hs !== 'careca') rects((hs.front || []).filter(r => r[1] >= 5));
+  rects(ex.front); rects(acc.front);
+  if (o.towel) { put(2, -1, 10, 2, '#f4f2ec'); put(3, -2, 8, 1, '#ffffff'); }
+  const arm = F_ARMS[o.arm] ? o.arm : 'down';
+  rects(F_ARMS[arm]);
+  if (o.weapon && F_HAND[arm]) {
+    const [hx, hy, dir] = F_HAND[arm], wp = F_WEAP[o.cls] || F_WEAP.katana;
+    wp.forEach(([dx, dy, w, h, k]) => dir === 'v' ? put(hx + dx - 1, hy + dy, w, h, k) : put(hx - dy - h + 1, hy + dx - 1, h, w, k));
+    rects(F_ARMS[arm].filter(r => r[4] === 's'));
+  }
+  const out = cells.slice();
+  for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) {
+    if (cells[y*GW + x]) continue;
+    const n = (x > 0 && cells[y*GW + x - 1]) || (x < GW - 1 && cells[y*GW + x + 1]) || (y > 0 && cells[(y - 1)*GW + x]) || (y < GH - 1 && cells[(y + 1)*GW + x]);
+    if (n) out[y*GW + x] = fLine(n);
+  }
+  return { cells:out, GW, GH, OXG, OYG, rows:base.length };
+}
+function drawFront(c, x, yb, o){
+  const u = o.u || 2, p = frontPal(o.pal), G = frontGrid(p, o);
+  const top = Math.round(yb - G.rows*u + (o.dy || 0));
+  for (let gy = 0; gy < G.GH; gy++) for (let gx = 0; gx < G.GW; gx++) {
+    const col = G.cells[gy*G.GW + gx]; if (!col) continue;
+    const i = gx - G.OXG, j = gy - G.OYG;
+    c.fillStyle = col; c.fillRect(Math.round(o.flip ? x + (13 - i)*u : x + i*u), top + j*u, u, u);
+  }
+  const P = (i, j, w, h, col) => { if (!col) return; c.fillStyle = col; c.fillRect(Math.round(o.flip ? x + (14 - i - w)*u : x + i*u), top + j*u, w*u, h*u); };
+  return { top, P, u };
+}
+/* sprite-frente:fim */
 function drawMap(c, map, palette, x, y, s, flash){
   for (let j = 0; j < map.length; j++) for (let i = 0; i < map[j].length; i++) {
     const ch = map[j][i]; if (ch === '.') continue;
@@ -2037,8 +2218,8 @@ function drawIdle(now){
   if (t > 8 && t < 9.5) look = -1; else if (t > 9.5 && t < 11) look = 1;
   else if (t > 11 && t < 12.6) { pose = 'up'; b = 'ふぁ〜'; }
   const breathe = reduced ? 0 : (Math.floor(now/900) % 2);
-  drawBack(g, 148, FLOOR, { pal:P, look, pose, dy:breathe ? 0 : 0 });
-  if (b) bubble(166, 128, b);
+  drawFront(g, 146, FLOOR, { pal:P, look, arm:pose === 'up' ? 'stretch' : 'down', blink:pose === 'up' || heroBlink(now), dy:breathe });
+  if (b) bubble(168, 120, b);
   drawYokaiIdle(now, false);
 }
 function drawStudy(now){
@@ -2048,13 +2229,11 @@ function drawStudy(now){
     const left = (T.endAt - Date.now())/1000, el = T.total - left, idx = Math.floor(el/ATK_EVERY);
     if (idx > atkIdx && left > 4) { atkIdx = idx; atkStart = now; }
   }
-  const e = enemy(), yp = yokaiPos(e), tx = yp.x - 26;
+  const e = enemy(), yp = yokaiPos(e), tx = yp.x - 30;
   const a = now - atkStart;
-  desk(66);
   const blink = heroBlink(now);
   if (a < 2400) {
-    drawDeskProps(now, catK, false);
-    let x = 40, legs = 'stand', arm = 'down', flip = false;
+    let x = DESK_X, legs = 'stand', arm = 'down', flip = false;
     const hit = () => { if (hitAt < atkStart) { hitAt = now; sfx('hit'); const dmg = Math.max(1, Math.round(enemyMax()*ATK_EVERY/T.total)); spawn({ type:'text', txt:'-' + dmg, x:yp.x + 12*yp.s/2, y:yp.y - 12, vy:-18, life:1.1, col:'#ffe39a' }); for (let i = 0; i < 8; i++) spawn({ x:yp.x + 4, y:yp.y + 10, vx:Math.random()*80, vy:(Math.random()-0.5)*80, life:0.35, size:1, col:i % 2 ? '#ffffff' : '#ffe39a' }); } };
     if (RANGED.includes(cls)) {
       if (a >= 250 && a < 900) arm = 'up';
@@ -2066,38 +2245,41 @@ function drawStudy(now){
       else if (a >= 1300) { hit(); if (a > 2000) legs = 'sit'; }
     }
     else if (a < 250) {}
-    else if (a < 850) { x = lerp(40, tx, (a - 250)/600); legs = Math.floor(a/80) % 2 ? 'walkA' : 'walkB'; }
+    else if (a < 850) { x = lerp(DESK_X, tx, (a - 250)/600); legs = Math.floor(a/80) % 2 ? 'walkA' : 'walkB'; }
     else if (a < 1200) { x = tx; arm = 'up'; }
     else if (a < 1450) {
       x = tx; arm = 'slash';
       if (hitAt < atkStart) { hitAt = now; sfx('hit'); const dmg = Math.max(1, Math.round(enemyMax()*ATK_EVERY/T.total)); spawn({ type:'text', txt:'-' + dmg, x:yp.x + 12*yp.s/2, y:yp.y - 12, vy:-18, life:1.1, col:'#ffe39a' }); for (let i = 0; i < 8; i++) spawn({ x:yp.x + 4, y:yp.y + 10, vx:(Math.random())*80, vy:(Math.random()-0.5)*80, life:0.35, size:1, col:i % 2 ? '#ffffff' : '#ffe39a' }); }
-      g.save(); g.globalAlpha = 1 - (a - 1200)/250; g.strokeStyle = '#ffffff'; g.lineWidth = 2; g.beginPath(); g.arc(tx + 22, FLOOR - 18, 16, -1.2, 1.1); g.stroke(); g.restore();
+      g.save(); g.globalAlpha = 1 - (a - 1200)/250; g.strokeStyle = '#ffffff'; g.lineWidth = 2; g.beginPath(); g.arc(tx + 34, FLOOR - 20, 16, -1.2, 1.1); g.stroke(); g.restore();
     }
-    else if (a < 2050) { x = lerp(tx, 40, (a - 1450)/600); legs = Math.floor(a/80) % 2 ? 'walkA' : 'walkB'; flip = true; }
+    else if (a < 2050) { x = lerp(tx, DESK_X, (a - 1450)/600); legs = Math.floor(a/80) % 2 ? 'walkA' : 'walkB'; flip = true; }
     else { legs = 'sit'; }
-    drawSide(g, x, FLOOR, { pal:P, legs, arm, flip, weapon:arm === 'up' || arm === 'slash', cls, blink });
+    const hero = () => drawFront(g, x, legs === 'sit' ? DESK_SIT : FLOOR, { pal:P, legs, arm, flip, weapon:arm === 'up' || arm === 'slash', cls, blink, dy:legs === 'walkA' ? -1 : 0 });
+    if (legs === 'sit') { hero(); desk(66); drawDeskProps(now, catK, false); }
+    else { desk(66); drawDeskProps(now, catK, false); hero(); }
   } else {
     drawStudyHero(now, catK, P, blink, T.running);
   }
   drawYokaiIdle(now, T.running);
-  if (!T.running && T.started && !T.miniDone) bubble(56, 124, 'pausa…');
+  if (!T.running && T.started && !T.miniDone) bubble(86, 114, 'pausa…');
 }
+/* A personagem senta de frente, atrás da mesinha. Os objetos ficam entre ela e quem olha. */
+const DESK_X = 71, DESK_SIT = 166;
 function drawDeskProps(now, catK, held){
-  if (catK === 'programar') { R(g, 70, 158, 20, 2, '#9aa0b0'); R(g, 72, 146, 16, 12, '#3a3f52'); R(g, 73, 147, 14, 10, '#0c1a1c'); if (held) codeLines(now); }
+  if (catK === 'programar') {
+    R(g, 74, 158, 24, 2, '#9aa0b0'); R(g, 76, 146, 20, 12, '#3a3f52'); R(g, 77, 147, 18, 10, '#4a5068'); R(g, 85, 151, 2, 2, '#ff6fb5');
+    if (held && amb > 0.4) { g.save(); g.globalAlpha = 0.22; circ(g, 85, 140, 12, '#5ce1e6'); g.restore(); }
+    if (held && (Math.floor(now/500) % 2)) R(g, 93, 155, 1, 1, '#8fd18b');
+  }
   else if (catK === 'exercicios') { abacus(now, held); }
-  else if (catK === 'escrever') { R(g, 66, 157, 28, 3, '#efe4c8'); R(g, 64, 156, 2, 5, '#8a5c34'); R(g, 94, 156, 2, 5, '#8a5c34'); }
-  else if (catK === 'revisar') { R(g, 78, 156, 12, 4, '#f4efe2'); R(g, 78, 155, 12, 1, '#c9bfa8'); }
-  else if (!held && catK === 'ler') { R(g, 74, 157, 14, 3, '#6d4ad8'); R(g, 74, 157, 14, 1, '#f4efe2'); }
-  R(g, 92, 155, 4, 5, '#d9e8f0'); R(g, 92, 155, 4, 1, '#8fc3d6');
-}
-function codeLines(now){
-  const cols = ['#5ce1e6','#ff6fb5','#8fd18b','#f5c66b'], off = Math.floor(now/320);
-  for (let i = 0; i < 4; i++) { const n = (i + off) % 7; R(g, 74, 148 + i*2, 3 + (n*5) % 9, 1, cols[(n + i) % 4]); }
-  if (amb > 0.5) { g.save(); g.globalAlpha = 0.25; circ(g, 80, 152, 10, '#5ce1e6'); g.restore(); }
+  else if (catK === 'escrever') { R(g, 72, 157, 26, 3, '#efe4c8'); R(g, 70, 156, 2, 5, '#8a5c34'); R(g, 98, 156, 2, 5, '#8a5c34'); }
+  else if (catK === 'revisar' && !held) { R(g, 80, 156, 12, 4, '#f4efe2'); R(g, 80, 155, 12, 1, '#c9bfa8'); }
+  else if (!held && catK === 'ler') { R(g, 78, 157, 14, 3, '#6d4ad8'); R(g, 78, 157, 14, 1, '#f4efe2'); }
+  R(g, 98, 155, 4, 5, '#d9e8f0'); R(g, 98, 155, 4, 1, '#8fc3d6');
 }
 function abacus(now, held){
-  R(g, 70, 150, 22, 10, '#6a4428'); R(g, 72, 152, 18, 6, '#2a1a12');
-  for (let r = 0; r < 3; r++) { R(g, 72, 153 + r*2, 18, 1, '#a08060'); const shift = held ? (Math.floor(now/700 + r) % 3) * 2 : 0; for (let b = 0; b < 3; b++) R(g, 73 + b*2 + shift + (b > 1 ? 6 : 0), 152 + r*2, 2, 2, r === 1 ? '#ff6fb5' : '#f5c66b'); }
+  R(g, 74, 150, 22, 10, '#6a4428'); R(g, 76, 152, 18, 6, '#2a1a12');
+  for (let r = 0; r < 3; r++) { R(g, 76, 153 + r*2, 18, 1, '#a08060'); const shift = held ? (Math.floor(now/700 + r) % 3) * 2 : 0; for (let b = 0; b < 3; b++) R(g, 77 + b*2 + shift + (b > 1 ? 6 : 0), 152 + r*2, 2, 2, r === 1 ? '#ff6fb5' : '#f5c66b'); }
 }
 function drawStudyHero(now, catK, P, blink, running){
   let arm = 'down', dy = 0, eyes = blink;
@@ -2107,31 +2289,32 @@ function drawStudyHero(now, catK, P, blink, running){
   else if (catK === 'revisar') arm = 'hold';
   else eyes = true;
   if (!running) { arm = 'down'; eyes = blink; }
-  const r = drawSide(g, 40, FLOOR, { pal:P, legs:'sit', arm, blink:eyes, dy:(!reduced && running && Math.floor(now/2000) % 2) ? 1 : 0 });
+  drawFront(g, DESK_X, DESK_SIT, { pal:P, legs:'sit', arm, blink:eyes, dy:(!reduced && running && Math.floor(now/2000) % 2) ? 1 : 0 });
+  desk(66);
   drawDeskProps(now, catK, running);
   if (!running) return;
   if (catK === 'ler') {
+    /* Livro aberto virado para ela: daqui se vê a capa. */
     const flip = (now % 5000) < 400;
-    R(g, 58, 147, 14, 9, '#f4efe2'); R(g, 64, 147, 1, 9, '#a08060'); R(g, 57, 147, 1, 9, '#6d4ad8'); R(g, 72, 147, 1, 9, '#6d4ad8');
-    for (let i = 0; i < 3; i++) { R(g, 59, 149 + i*2, 4, 1, '#b8ae98'); R(g, 66, 149 + i*2, 5, 1, '#b8ae98'); }
-    if (flip) { const w = Math.round(6 * (1 - ((now % 5000)/400))); R(g, 65, 146, Math.max(1, w), 10, '#ffffff'); }
+    R(g, 77, 150, 16, 9, '#6d4ad8'); R(g, 84, 150, 2, 9, '#4a2f9a'); R(g, 77, 150, 16, 1, '#f4efe2'); R(g, 79, 153, 4, 3, '#e1b85a'); R(g, 88, 153, 3, 1, '#cdbdff');
+    if (flip) { const w = Math.round(7 * (1 - ((now % 5000)/400))); R(g, 85, 149, Math.max(1, w), 2, '#ffffff'); }
   } else if (catK === 'escrever') {
-    const frac = S.timer.total ? 1 - S.timer.left/S.timer.total : 0, n = Math.floor(frac*12);
-    for (let i = 0; i < n; i++) R(g, 68 + i*2, 157 + (i % 2), 1, 2, '#1a1020');
-    const bx = reduced ? 0 : Math.round((Math.sin(now/500) + 1) * 3);
-    g.strokeStyle = '#6a4428'; g.lineWidth = 1; g.beginPath(); g.moveTo(60, 160); g.lineTo(66 + bx + n, 156); g.stroke();
-    R(g, 66 + bx + n, 156, 1, 1, '#1a1020');
+    const frac = S.timer.total ? 1 - S.timer.left/S.timer.total : 0, n = Math.floor(frac*11);
+    for (let i = 0; i < n; i++) R(g, 74 + i*2, 157 + (i % 2), 1, 2, '#1a1020');
+    const bx = reduced ? 0 : Math.round((Math.sin(now/500) + 1) * 2);
+    g.strokeStyle = '#6a4428'; g.lineWidth = 1; g.beginPath(); g.moveTo(90, 152); g.lineTo(74 + bx + n*2, 157); g.stroke();
+    R(g, 74 + bx + n*2, 157, 1, 1, '#1a1020');
   } else if (catK === 'revisar') {
-    const ph = (now % 3000)/3000, sc = Math.abs(Math.cos(ph*Math.PI)), w = Math.max(1, Math.round(10*sc));
-    R(g, 61 + (10 - w)/2, 146, w, 7, ph < 0.5 ? '#f4efe2' : '#a07fff');
+    const ph = (now % 3000)/3000, sc = Math.abs(Math.cos(ph*Math.PI)), w = Math.max(1, Math.round(12*sc));
+    R(g, 79 + (12 - w)/2, 150, w, 8, ph < 0.5 ? '#f4efe2' : '#a07fff');
   } else if (catK === null) {
-    if (!reduced) { const y = 128 + Math.sin(now/700)*2; g.save(); g.globalAlpha = 0.7; g.font = '9px DotGothic16, monospace'; g.fillStyle = '#cdbdff'; g.fillText('〜', 52, y); g.restore(); }
+    if (!reduced) { const y = 124 + Math.sin(now/700)*2; g.save(); g.globalAlpha = 0.7; g.font = '9px DotGothic16, monospace'; g.fillStyle = '#cdbdff'; g.fillText('〜', 104, y); g.restore(); }
   }
 }
 function drawVictory(now){
   const P = pal(), a = now - victory.t;
   desk(66);
-  drawSide(g, 206, FLOOR, { pal:P, legs:'stand', arm:'raise', weapon:true, cls:HERO().weapon, dy:(!reduced && a < 600) ? -Math.round(Math.sin(a/600*Math.PI)*6) : 0 });
+  drawFront(g, 200, FLOOR, { pal:P, legs:'stand', arm:'raise', weapon:true, cls:HERO().weapon, dy:(!reduced && a < 600) ? -Math.round(Math.sin(a/600*Math.PI)*6) : 0 });
   if (a < 220) { const e = victory.e, p = yokaiPos(e); drawYokai(g, e, p.x, p.y, p.s, true); }
 }
 function drawTea(now){
@@ -2147,7 +2330,7 @@ function drawTea(now){
   else if (c < 9500) { heroArm = 'cup'; cupAt = 'mouth'; }
   else if (c < 11000) { heroArm = 'down'; cupAt = 'table'; }
   const blink = heroBlink(now);
-  const hp = drawSide(g, 118, FLOOR, { pal:P, legs:'sit', arm:heroArm, blink:cupAt === 'mouth' ? true : blink });
+  const hp = drawFront(g, 113, FLOOR, { pal:P, legs:'sit', arm:heroArm, blink:cupAt === 'mouth' ? true : blink });
   const mt = FLOOR - MASTER.length*2;
   drawMap(g, MASTER, Object.assign({}, MPAL, { E:heroBlink(now + 2000) ? MPAL.s : MPAL.E }), 176, mt, 2);
   const MP = (i, j, w, h, col) => R(g, 176 + i*2, mt + j*2, w*2, h*2, col);
@@ -2161,8 +2344,8 @@ function drawTea(now){
   } else if (mArm === 'reach') { MP(-4, 8, 4, 3, iron); MP(-3, 7, 2, 1, '#55555f'); MP(-6, 9, 2, 1, iron); }
   else { R(g, 158, 154, 8, 6, iron); R(g, 160, 153, 4, 1, '#55555f'); R(g, 154, 156, 4, 1, iron); }
   if (cupAt === 'table') { R(g, 146, 157, 6, 5, '#e9e2cf'); R(g, 147, 157, 4, 1, fill > 0.5 ? '#6b9e4e' : '#c9c2ae'); steamCol(149, 155, now); }
-  else { const cx = 118 + 9*2, cy = hp.top + 5*2; R(g, cx, cy, 5, 4, '#e9e2cf'); R(g, cx + 1, cy, 3, 1, '#6b9e4e'); steamCol(cx + 2, cy - 2, now); }
-  if (c > 9500 && c < 11000) bubble(102, 116, 'ふぅ… delícia');
+  else { const cx = 113 + 7*2, cy = hp.top + 19; R(g, cx, cy, 5, 4, '#e9e2cf'); R(g, cx + 1, cy, 3, 1, '#6b9e4e'); steamCol(cx + 2, cy - 2, now); }
+  if (c > 9500 && c < 11000) bubble(110, 112, 'ふぅ… delícia');
   if (!T.running && T.started) bubble(150, 112, 'pausa…');
 }
 function steamCol(x, y, now){ if (reduced) return; g.globalAlpha = 0.55; for (let i = 0; i < 4; i++) { const k = ((now/80) + i*5) % 18; R(g, x + Math.round(Math.sin(now/380 + i)*1.5), y - k, 1, 2, '#ffffff'); } g.globalAlpha = 1; }
@@ -2174,16 +2357,16 @@ function drawOnsen(now, dt){
   if (!reduced) for (let i = 0; i < 6; i++) R(g, 104 + ((i*31 + Math.floor(now/90)) % 160), 164 + (i % 3)*4, 5, 1, dn('#9fd4e8','#3d7a9a'));
   const el = T.running ? (now - phaseStartPerf)/1000 : 0;
   if (!T.started) {
-    drawSide(g, 64, FLOOR, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now) }); R(g, 72, FLOOR - 22, 4, 6, '#ffffff');
+    drawFront(g, 64, FLOOR, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now) }); R(g, 86, FLOOR - 12, 4, 7, '#ffffff'); R(g, 86, FLOOR - 12, 4, 1, '#d8e2e4');
   } else if (el < 4 && !reduced) {
-    drawSide(g, lerp(40, 150, el/4), FLOOR, { pal:P, legs:Math.floor(now/90) % 2 ? 'walkA' : 'walkB', arm:'down', blink:false });
+    drawFront(g, lerp(40, 150, el/4), FLOOR, { pal:P, legs:Math.floor(now/90) % 2 ? 'walkA' : 'walkB', arm:'down', blink:false });
   } else if (el < 7 && !reduced) {
     const sink = lerp(0, 22, (el - 4)/3);
-    g.save(); g.beginPath(); g.rect(-OX, 0, W, 161); g.clip(); drawSide(g, 150, FLOOR + sink, { pal:P, legs:'stand', arm:'down' }); g.restore();
+    g.save(); g.beginPath(); g.rect(-OX, 0, W, 161); g.clip(); drawFront(g, 150, FLOOR + sink, { pal:P, legs:'stand', arm:'down' }); g.restore();
   } else {
     const bob = reduced ? 0 : Math.round(Math.sin(now/900));
-    g.save(); g.beginPath(); g.rect(-OX, 0, W, 162); g.clip(); drawSide(g, 150, 180 + 8 + bob, { pal:P, legs:'stand', arm:'down', blink:true, towel:true }); g.restore();
-    R(g, 146, 162, 32, 1, dn('#9fd4e8','#3d7a9a'));
+    g.save(); g.beginPath(); g.rect(-OX, 0, W, 162); g.clip(); drawFront(g, 150, 184 + bob, { pal:P, legs:'stand', arm:'down', blink:true, towel:true }); g.restore();
+    R(g, 144, 162, 36, 1, dn('#9fd4e8','#3d7a9a'));
     if ((now % 16000) < 1800) bubble(170, 124, '♨ ahh…');
   }
   if (!reduced && Math.random() < dt*14) spawn({ x:104 + Math.random()*160, y:162, vy:-10 - Math.random()*8, life:2.6, size:2, col:'rgba(255,255,255,.35)', sway:2, seed:Math.random()*6 });
@@ -2799,11 +2982,11 @@ function drawPortrait(now){
   const c = $('#portrait').getContext('2d'); c.clearRect(0, 0, 64, 51);
   const P = pal(), sp = (now % 3000) < 1500;
   c.fillStyle = 'rgba(255,255,255,.7)'; [[8,8],[54,14],[12,38],[50,40]].forEach(([x, y], i) => { if ((i + (sp ? 1 : 0)) % 2) { c.fillRect(x, y, 1, 3); c.fillRect(x - 1, y + 1, 3, 1); } });
-  drawSide(c, 20, 47, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
+  drawFront(c, 18, 59, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
   if (S.view === 'perfil') {
     const bc2 = $('#bigPortrait'), b = bc2 && bc2.getContext('2d'); if (!b) return; b.clearRect(0, 0, 96, 60);
     const EP = charPal(EC());
-    drawSide(b, 30, 57, { pal:EP, legs:'stand', arm:(now % 6000) < 1500 ? 'raise' : 'down', weapon:(now % 6000) < 1500, cls:HERO().weapon, blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
+    drawFront(b, 34, 58, { pal:EP, legs:'stand', arm:(now % 6000) < 1500 ? 'raise' : 'down', weapon:(now % 6000) < 1500, cls:HERO().weapon, blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
   }
 }
 
@@ -2925,6 +3108,8 @@ function renderCard(){
   $('#xpTxt').textContent = `${S.xp}/${need(S.lvl)}`; $('#xpFill').style.width = (S.xp/need(S.lvl)*100) + '%';
   $('#hpTxt').textContent = `${S.hp}/100`; const hf = $('#hpFill'); hf.style.width = S.hp + '%'; hf.classList.toggle('low', S.hp < 30);
   $('#attrs').innerHTML = [['Foco','foco'],['Disciplina','disc'],['Vitalidade','vit']].map(([n, k]) => `<div class="attr"><div class="v">${S.stats[k]}</div><div class="k">${n}</div></div>`).join('');
+  const vis = $('#ccVis'), vk = HERO().id + JSON.stringify([HERO().look, HERO().col]);
+  if (vis.dataset.k !== vk) { vis.dataset.k = vk; vis.innerHTML = visHTML(HERO(), 'hero'); visDraw(vis, HERO()); }
   const q = $('#quote');
   if (!q.dataset.talk) q.textContent = '“' + heroLine() + '”';
 }
@@ -2970,15 +3155,15 @@ function renderMissoes(){
   $('#log').innerHTML = S.log.map(l => `<li><time>${hm(l.t)}</time><span class="${l.c}">${esc(l.txt)}</span></li>`).join('');
 }
 const COLS = [['s','Pele'],['h','Cabelo'],['e','Olhos'],['b','Roupa'],['a','Detalhe'],['l','Calça ou hakama'],['d','Sapatos'],['w','Arma'],['g','Lâmina e enfeites'],['x','Cor livre 1'],['y','Cor livre 2']];
-const PXK = [['.','Apagar'],['h','Cabelo'],['s','Pele'],['E','Olho'],['b','Roupa'],['a','Detalhe'],['l','Calça'],['x','Livre 1'],['y','Livre 2']];
+const PXK = [['.','Apagar'],['h','Cabelo'],['H','Brilho do cabelo'],['s','Pele'],['k','Blush'],['E','Olho'],['q','Pupila'],['W','Brilho do olho'],['m','Boca'],['b','Roupa'],['a','Detalhe'],['l','Calça'],['x','Livre 1'],['y','Livre 2']];
 let paintKey = 'h', edOpen = { id:true, look:true, col:false, px:false, spec:true }, delArmed = null;
 function pxColor(P, k){ return k === '.' ? 'transparent' : k === 'E' ? P.e : (P[k] || 'transparent'); }
 function hex6(v){ return /^#[0-9a-f]{6}$/i.test(v || '') ? v : '#888888'; }
 function renderEditor(){
-  const ch = EC(), P = charPal(ch), L = P.look, active = ch.id === S.activeChar;
+  const ch = EC(), P = frontPal(charPal(ch)), L = P.look, active = ch.id === S.activeChar;
   const opt = (obj, cur) => Object.entries(obj).map(([v, n]) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${esc(n)}</option>`).join('');
-  const grp = (k, m) => `<div class="ed-label">${{ hs:'Penteado', tr:'Traje', acc:'Acessório', face:'Rosto' }[k]}</div><div class="opts">${Object.entries(m).map(([v, n]) => `<button type="button" data-look="${k}" data-v="${v}" aria-pressed="${L[k] === v}">${n}</button>`).join('')}</div>`;
-  const map = P.map || UP, spent = Object.keys(SPEC).reduce((a, k) => a + (+ch.spec[k] || 0), 0);
+  const grp = (k, m) => `<div class="ed-label">${{ hs:'Penteado', tr:'Traje', acc:'Acessório', face:'Rosto', ex:'Roupa extra' }[k]}</div><div class="opts">${Object.entries(m).map(([v, n]) => `<button type="button" data-look="${k}" data-v="${v}" aria-pressed="${L[k] === v}">${n}</button>`).join('')}</div>`;
+  const map = P.fmap || F_BASE, spent = Object.keys(SPEC).reduce((a, k) => a + (+ch.spec[k] || 0), 0);
   $('#editor').innerHTML = `
     <div class="ed-head"><h3>Editando: ${esc(ch.name || 'Sem nome')}</h3>${active ? '<span class="tagon">NO DOJO</span>' : '<button class="btn primary sm" data-ed="activate" type="button">Usar no dojo</button>'}</div>
     <div class="p-portrait"><canvas id="bigPortrait" width="96" height="60"></canvas></div>
@@ -2996,19 +3181,22 @@ function renderEditor(){
       <p class="small" style="margin-top:8px">Trocar a classe volta a arma, a habilidade e a aparência para o padrão daquela classe.</p>
     </details>
     <details class="ed-sec" data-sec="look" ${edOpen.look ? 'open' : ''}><summary>Aparência</summary>
-      ${grp('hs', HS)}${grp('tr', TR)}${grp('acc', ACCS)}${grp('face', FACES)}
+      <div class="ed-label">Visual pronto</div>${visHTML(ch, 'ed')}
+      <p class="small" style="margin:6px 0 10px">Escolha A, B ou C e ajuste o resto como quiser. As cores que você mudou ficam.</p>
+      ${grp('hs', HS)}${grp('tr', TR)}${grp('acc', ACCS)}${grp('face', FACES)}${grp('ex', EXS)}
+      <p class="small" style="margin-top:8px">O cachecol usa a Cor livre 1 e a capa, a Cor livre 2.</p>
     </details>
     <details class="ed-sec" data-sec="col" ${edOpen.col ? 'open' : ''}><summary>Cores</summary>
       <div class="col-grid">${COLS.map(([k, n]) => `<label>${n}<input type="color" data-col="${k}" value="${hex6(k === 'e' ? P.e : P[k])}"></label>`).join('')}</div>
       <div style="margin-top:10px"><button class="btn sm" data-ed="resetcol" type="button">Voltar às cores da classe</button></div>
     </details>
     <details class="ed-sec" data-sec="px" ${edOpen.px ? 'open' : ''}><summary>Desenho à mão</summary>
-      <p class="small" style="margin-bottom:10px">Pinte a cabeça e o tronco pixel por pixel. Braços, pernas, penteado e acessório continuam por cima. ${P.map ? 'Este desenho é seu.' : 'Agora mostra o desenho padrão.'}</p>
+      <p class="small" style="margin-bottom:10px">Pinte a cabeça e o tronco pixel por pixel. Braços, pernas, penteado, acessório e roupa extra continuam por cima, e o contorno aparece sozinho. ${P.fmap ? 'Este desenho é seu.' : 'Agora mostra o desenho padrão.'}</p>
       <div class="px-wrap">
         <div class="px-grid" id="pxGrid">${map.map((row, j) => [...row].map((k, i2) => `<i data-px="${i2},${j}" style="background:${pxColor(P, k)}"></i>`).join('')).join('')}</div>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div class="pk">${PXK.map(([k, n]) => `<button type="button" data-pk="${k}" aria-pressed="${paintKey === k}"><i style="background:${k === '.' ? 'transparent' : pxColor(P, k)}"></i>${n}</button>`).join('')}</div>
-          <div><button class="btn sm" data-ed="pxreset" type="button" ${P.map ? '' : 'disabled'}>Voltar ao desenho padrão</button></div>
+          <div><button class="btn sm" data-ed="pxreset" type="button" ${P.fmap ? '' : 'disabled'}>Voltar ao desenho padrão</button></div>
         </div>
       </div>
     </details>
@@ -3020,21 +3208,22 @@ function renderEditor(){
       <button class="btn sm" data-ed="dup" type="button">Duplicar</button>
       <button class="btn sm warn" data-ed="del" type="button" ${S.chars.length < 2 ? 'disabled title="É preciso ter pelo menos uma personagem"' : ''}>${delArmed === ch.id ? 'Clique de novo para excluir' : 'Excluir personagem'}</button>
     </div>`;
+  visDraw($('#editor'), ch);
 }
 function renderRoster(){
   $('#roster').innerHTML = S.chars.map(ch => {
     const C = CLASSES[ch.cls] || CLASSES.samurai, act = ch.id === S.activeChar;
-    return `<li class="row-item ros ${ch.id === S.editChar ? 'editing' : ''}" data-id="${ch.id}"><canvas width="20" height="24"></canvas>
+    return `<li class="row-item ros ${ch.id === S.editChar ? 'editing' : ''}" data-id="${ch.id}"><canvas width="24" height="30"></canvas>
       <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small">${esc(ch.title || C.n)} · ${WEAPONS[ch.weapon] || ''}</span>
       <div class="spec-mini">${Object.entries(SPEC).map(([k, n]) => `<span>${n.slice(0, 3).toUpperCase()} ${ch.spec[k]}</span>`).join('')}</div></div>
       <div class="acts"><button class="btn sm" data-r="edit">Editar</button>${act ? '' : '<button class="btn sm primary" data-r="use">Usar</button>'}</div></li>`;
   }).join('');
-  $$('#roster .ros').forEach(li => { const ch = S.chars.find(c => c.id === li.dataset.id); drawSide(li.querySelector('canvas').getContext('2d'), 4, 23, { pal:charPal(ch), legs:'stand', arm:'down', u:1 }); });
+  $$('#roster .ros').forEach(li => { const ch = S.chars.find(c => c.id === li.dataset.id); drawFront(li.querySelector('canvas').getContext('2d'), 5, 29, { pal:charPal(ch), legs:'stand', arm:'down', u:1 }); });
 }
 function renderPerfil(){
   renderEditor(); renderRoster();
-  $('#presetsGrid').innerHTML = PRESETS.map((p, i) => `<button type="button" class="pre" data-preset="${i}"><canvas width="20" height="24"></canvas><b>${esc(p.name)}</b><span>${CLASSES[p.cls].n}</span></button>`).join('');
-  $$('#presetsGrid .pre').forEach(b => drawSide(b.querySelector('canvas').getContext('2d'), 4, 23, { pal:charPal(PRESETS[+b.dataset.preset]), legs:'stand', arm:'down', u:1 }));
+  $('#presetsGrid').innerHTML = PRESETS.map((p, i) => `<button type="button" class="pre" data-preset="${i}"><canvas width="24" height="30"></canvas><b>${esc(p.name)}</b><span>${CLASSES[p.cls].n}</span></button>`).join('');
+  $$('#presetsGrid .pre').forEach(b => drawFront(b.querySelector('canvas').getContext('2d'), 5, 29, { pal:charPal(PRESETS[+b.dataset.preset]), legs:'stand', arm:'down', u:1 }));
   $('#path').innerHTML = TITLES.map((t, i) => { const nx = TITLES[i+1]; const now = S.lvl >= t[0] && (!nx || S.lvl < nx[0]); return `<li class="${now ? 'now' : S.lvl >= t[0] ? 'got' : ''}"><span>${t[1]} <span class="jp">${t[2]}</span></span><span class="mono" style="font-size:16px">Nível ${t[0]}</span></li>`; }).join('');
   $('#stats4').innerHTML = [['Foco 集','foco','pomodoros completos'],['Sabedoria 知','sab','missões e revisões'],['Disciplina 律','disc','ciclos e metas'],['Vitalidade 気','vit','pausas feitas']].map(([n, k, s]) => `<div class="attr" style="text-align:left;padding:10px"><div class="k">${n}</div><div class="v">${S.stats[k]}</div><div class="k">${s}</div></div>`).join('');
   const n = ACH.filter(a => S.ach[a.id]).length; $('#achCount').textContent = `${n}/${ACH.length}`;
@@ -3282,7 +3471,7 @@ function wire(){
     const a = b.dataset.ed;
     if (a === 'activate') { S.activeChar = ch.id; addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); renderAll(); save(); }
     if (a === 'resetcol') { ch.col = {}; edChanged(true); }
-    if (a === 'pxreset') { ch.map = null; edChanged(true); }
+    if (a === 'pxreset') { ch.fmap = null; ch.map = null; edChanged(true); }
     if (a === 'dup') { const c = newChar(JSON.parse(JSON.stringify(ch))); c.name = (ch.name || 'Personagem') + ' (cópia)'; S.chars.push(c); S.editChar = c.id; renderPerfil(); save(); toast('Cópia criada.'); }
     if (a === 'del') {
       if (S.chars.length < 2) return;
@@ -3296,10 +3485,10 @@ function wire(){
   const paintAt = (el) => {
     if (!el || !el.dataset || !el.dataset.px) return;
     const ch = EC(), [i, j] = el.dataset.px.split(',').map(Number);
-    if (!ch.map) ch.map = UP.slice();
-    const row = ch.map[j]; if (row[i] === paintKey) return;
-    ch.map[j] = row.slice(0, i) + paintKey + row.slice(i + 1);
-    el.style.background = pxColor(charPal(ch), paintKey);
+    if (!ch.fmap) ch.fmap = F_BASE.slice();
+    const row = ch.fmap[j]; if (row[i] === paintKey) return;
+    ch.fmap[j] = row.slice(0, i) + paintKey + row.slice(i + 1);
+    el.style.background = pxColor(frontPal(charPal(ch)), paintKey);
   };
   ED.addEventListener('pointerdown', e => { const c = e.target.closest('[data-px]'); if (!c) return; e.preventDefault(); painting = true; paintAt(c); });
   ED.addEventListener('pointermove', e => { if (!painting) return; paintAt(document.elementFromPoint(e.clientX, e.clientY)); });
@@ -3310,6 +3499,12 @@ function wire(){
     if (b.dataset.r === 'edit') { S.editChar = id; renderPerfil(); $('#editor').scrollIntoView({ behavior:reduced ? 'auto' : 'smooth', block:'start' }); }
     if (b.dataset.r === 'use') { S.activeChar = id; S.editChar = id; const ch = HERO(); addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); toast(`${ch.name || 'Personagem'} está no dojo.`); renderAll(); }
     save();
+  });
+  document.addEventListener('click', e => {
+    const v = e.target.closest('[data-vis]'); if (!v) return;
+    const ch = v.dataset.who === 'ed' ? EC() : HERO();
+    applyOpt(ch, +v.dataset.vis); renderAll(); save();
+    toast(`${ch.name || 'Personagem'} agora usa o visual ${'ABC'[+v.dataset.vis]}.`);
   });
   $('#newChar').addEventListener('click', () => { const c = newChar({ name:'Nova personagem', cls:'samurai' }); S.chars.push(c); S.activeChar = c.id; S.editChar = c.id; edOpen.id = true; renderAll(); save(); toast('Personagem criada. Dê um nome e monte o visual.'); });
   $('#presetsGrid').addEventListener('click', e => {
