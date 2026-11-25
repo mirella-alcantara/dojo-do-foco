@@ -1,11 +1,12 @@
 {
   "name": "dojo-do-foco",
   "version": "1.0.0",
-  "description": "Pomodoro de estudos em pixel art japonesa, com salvamento num cofre do Obsidian e publicação no Netlify.",
+  "description": "Pomodoro de estudos em pixel art japonesa, com salvamento num cofre do Obsidian e publicação no Firebase Hosting.",
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "deploy": "npm run build && npx firebase-tools deploy --only hosting"
   },
   "engines": {
     "node": ">=18"
