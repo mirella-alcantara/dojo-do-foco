@@ -699,7 +699,7 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
   <div class="gate-box" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <h1 id="gateTitle">Dojo do Foco</h1>
     <p class="gate-jp">道場</p>
-    <p class="small" id="gateLead">Entre para guardar o seu progresso na nuvem. Ele fica só na sua conta e volta em qualquer aparelho.</p>
+    <p class="small" id="gateLead">Crie uma conta com e-mail e senha, ou entre com a que você já tem. O progresso fica só na sua conta e volta em qualquer aparelho.</p>
     <form id="gateForm" novalidate>
       <label>E-mail<input type="email" id="gateEmail" autocomplete="email" required maxlength="254" inputmode="email"></label>
       <label>Senha<input type="password" id="gatePass" autocomplete="current-password" minlength="8" maxlength="72"></label>
@@ -707,10 +707,9 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
         <button class="btn primary" type="submit" id="gateIn">Entrar</button>
         <button class="btn" type="button" id="gateUp">Criar conta</button>
       </div>
-      <button class="btn ghost sm" type="button" id="gateLink">Prefiro receber um link de entrada no e-mail</button>
     </form>
     <p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
-    <p class="gate-foot">A senha é guardada com criptografia pelo Supabase e nunca passa pelo jogo. Ninguém além de você consegue ler o seu progresso.</p>
+    <p class="gate-foot">A senha vai direto para o Supabase, que a guarda com criptografia. O jogo não guarda a senha, e ninguém além de você consegue ler o seu progresso.</p>
   </div>
 </div>
 
@@ -1100,13 +1099,12 @@ const AUTH_MSG = [
   [/rate limit|too many|security purposes/i, 'Muitas tentativas seguidas. Espere um minuto e tente de novo.'],
   [/password.*(at least|short|weak|characters)/i, 'A senha precisa ter pelo menos 8 caracteres, com letras e números.'],
   [/invalid.*email|email.*invalid/i, 'Esse e-mail não parece válido.'],
-  [/expired|otp/i, 'O link expirou ou já foi usado. Peça um novo.'],
   [/signups not allowed/i, 'Novas contas estão fechadas neste dojo.'],
   [/failed to fetch|network/i, 'Sem conexão com o serviço de login. Verifique a internet.']
 ];
 const authMsg = e => { const m = String((e && (e.message || e)) || ''); const f = AUTH_MSG.find(x => x[0].test(m)); return f ? f[1] : 'Não deu certo. Tente de novo em instantes.'; };
 function gateMsg(txt, err){ const el = $('#gateMsg'); el.textContent = txt || ''; el.classList.toggle('err', !!err); }
-function gateBusy(on){ ['#gateIn','#gateUp','#gateLink'].forEach(q => { $(q).disabled = on; }); }
+function gateBusy(on){ ['#gateIn','#gateUp'].forEach(q => { $(q).disabled = on; }); }
 /* Mostra a tela de entrada até existir uma sessão. Resolve com o usuário. */
 async function cloudGate(){
   const gate = $('#gate'); gate.hidden = false;
@@ -1124,7 +1122,6 @@ async function cloudGate(){
   return new Promise(resolve => {
     const email = () => $('#gateEmail').value.trim().toLowerCase();
     const pass = () => $('#gatePass').value;
-    const redirect = location.origin + location.pathname;
     const okEmail = () => { if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) return true; gateMsg('Digite um e-mail válido.', true); $('#gateEmail').focus(); return false; };
     const okPass = () => { if (pass().length >= 8) return true; gateMsg('A senha precisa ter pelo menos 8 caracteres.', true); $('#gatePass').focus(); return false; };
     sb.auth.onAuthStateChange((ev, session) => { if (session && ev === 'SIGNED_IN') { gate.hidden = true; resolve(session.user); } });
@@ -1137,17 +1134,11 @@ async function cloudGate(){
     $('#gateUp').addEventListener('click', async () => {
       if (!okEmail() || !okPass()) return;
       gateBusy(true); gateMsg('Criando a conta…');
-      const { data:d, error } = await sb.auth.signUp({ email:email(), password:pass(), options:{ emailRedirectTo:redirect } });
+      /* Sem confirmação de e-mail: a conta nasce pronta e o Supabase já devolve a sessão (o SIGNED_IN fecha a tela). */
+      const { data:d, error } = await sb.auth.signUp({ email:email(), password:pass() });
       gateBusy(false);
       if (error) gateMsg(authMsg(error), true);
-      else if (!d.session) gateMsg('Quase lá! Enviamos um link de confirmação para ' + email() + '. Abra o e-mail e clique nele.');
-    });
-    $('#gateLink').addEventListener('click', async () => {
-      if (!okEmail()) return;
-      gateBusy(true); gateMsg('Enviando o link…');
-      const { error } = await sb.auth.signInWithOtp({ email:email(), options:{ emailRedirectTo:redirect } });
-      gateBusy(false);
-      gateMsg(error ? authMsg(error) : 'Pronto! Se existir uma conta com ' + email() + ', o link de entrada chega em instantes.', !!error);
+      else if (!d.session) gateMsg('Conta criada. Agora clique em Entrar.');
     });
   });
 }
