@@ -12,7 +12,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { wrapPage } = require('./lib/page');
+const { wrapPage, cloudConfig } = require('./lib/page');
 
 const ROOT = __dirname;
 let config = {};
@@ -23,6 +23,7 @@ const VAULT = path.resolve(expandHome(process.env.DOJO_VAULT || config.vaultPath
 const PORT = Number(process.env.PORT || config.port || 4321);
 const SAVE = path.join(VAULT, '_dados', 'dojo-save.json');
 const MAX_BODY = 8 * 1024 * 1024;
+const CLOUD = cloudConfig(config);
 
 /* ---------- arquivos ---------- */
 function writeIfChanged(file, content) {
@@ -170,7 +171,7 @@ function writeNotes(state) {
 // O index.html é escrito sem <head>, no formato que o claude.ai publica. Aqui ele ganha
 // o documento completo, com a meta viewport que o celular precisa.
 function page() {
-  return wrapPage(fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'));
+  return wrapPage(fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'), CLOUD);
 }
 
 /* ---------- http ---------- */
@@ -219,4 +220,5 @@ server.listen(PORT, '127.0.0.1', () => {
   fs.mkdirSync(path.join(VAULT, '_dados'), { recursive: true });
   console.log(`Dojo do Foco rodando em http://localhost:${PORT}`);
   console.log(`Cofre do Obsidian: ${VAULT}`);
+  console.log(CLOUD ? `Login na nuvem ligado: ${CLOUD.url}` : 'Login na nuvem desligado (sem SUPABASE_URL).');
 });
