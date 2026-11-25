@@ -188,6 +188,7 @@ body.focusing .scene-pick{display:none}
 .vis-opts button{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:14px;cursor:pointer}
 .vis-opts button[aria-pressed="true"]{border-color:#ff6fb5;box-shadow:0 0 0 2px color-mix(in srgb,#ff6fb5 30%,transparent)}
 .vis-opts canvas{width:36px;height:45px;image-rendering:pixelated}
+#clockPill.fixed{cursor:pointer;border-color:#f5c66b}
 .cc-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
 /* Missão ativa e pergaminho (coluna esquerda) */
@@ -297,13 +298,6 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .ed-label{font-size:13px;color:var(--muted);margin:10px 0 5px}
 .col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
 .col-grid input[type=color]{width:100%;height:36px;border:2px solid var(--line);border-radius:7px;background:var(--panel2);padding:2px;cursor:pointer}
-.px-wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
-.px-grid{display:grid;grid-template-columns:repeat(14,1fr);width:min(100%,300px);border:2px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;background:repeating-conic-gradient(var(--panel2) 0 25%,var(--panel) 0 50%) 0 0/12px 12px}
-.px-grid i{aspect-ratio:1;display:block;box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--line) 70%,transparent);cursor:crosshair}
-.pk{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}
-.pk button{display:flex;align-items:center;gap:6px;border:2px solid var(--line);background:var(--panel2);border-radius:7px;padding:4px 8px;font-size:13px}
-.pk button i{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);display:block}
-.pk button[aria-pressed="true"]{border-color:var(--violet)}
 .spec-row{display:grid;grid-template-columns:90px minmax(0,1fr) 30px;gap:10px;align-items:center;font-size:14px}
 .spec-row input{accent-color:var(--violet);width:100%}
 .spec-row b{font-family:var(--num);font-size:20px;font-weight:400;text-align:right}
@@ -917,7 +911,6 @@ function newChar(base){
     weapon:base.weapon || gear[0], perk:base.perk || gear[1], persona:base.persona || 'gentil',
     phrase:base.phrase || '', story:base.story || '',
     look:Object.assign({}, base.look || {}), col:Object.assign({}, base.col || {}),
-    map:Array.isArray(base.map) ? base.map.slice() : null, fmap:Array.isArray(base.fmap) ? base.fmap.slice() : null,
     spec:Object.assign({ forca:6, agil:6, mente:6, espirito:6 }, base.spec || {}), created:Date.now()
   };
 }
@@ -927,7 +920,7 @@ function hasPerk(k){ return HERO().perk === k; }
 function fresh(){
   const c0 = newChar({ name:'Viajante', cls:'samurai' });
   return {
-    v:4,
+    v:5,
     chars:[c0], activeChar:c0.id, editChar:c0.id,
     wx:{ mode:'auto', manual:'limpo', city:'', geoCity:'', lat:null, lon:null, place:'', data:null, tabId:null, auto:false, status:'' },
     lvl:1, xp:0, hp:100, ryo:0,
@@ -951,7 +944,7 @@ function merge(o){
     const c = newChar({ name:h.name || 'Viajante', cls:h.cls, look:{ hs:h.hs, tr:h.tr, acc:h.acc, face:h.face }, col:{ h:h.hair, b:h.outfit, a:h.accent } });
     out.chars = [c]; out.activeChar = c.id; out.editChar = c.id;
   }
-  out.chars = out.chars.map(c => { const n = newChar({ cls:c.cls }); return Object.assign(n, c, { look:Object.assign({}, c.look), col:Object.assign({}, c.col), spec:Object.assign(n.spec, c.spec) }); });
+  out.chars = out.chars.map(c => { const n = newChar({ cls:c.cls }); delete c.map; delete c.fmap; return Object.assign(n, c, { look:Object.assign({}, c.look), col:Object.assign({}, c.col), spec:Object.assign(n.spec, c.spec) }); });
   if (!out.chars.find(c => c.id === out.activeChar)) out.activeChar = out.chars[0].id;
   if (!out.chars.find(c => c.id === out.editChar)) out.editChar = out.activeChar;
   delete out.hero;
@@ -969,6 +962,7 @@ function merge(o){
     out.chars.forEach(c => { const pr = PRESETS.find(p => p.name === c.name && p.cls === c.cls); if (!pr) return; c.look = Object.assign({}, pr.look, c.look); c.col = Object.assign({}, pr.col, c.col); });
     out.v = 4;
   }
+  if (out.v < 5) { out.cfg.sky = 'auto'; out.v = 5; } /* o céu fixo ficava salvo e escondia o horário real */
   out.tasks = (out.tasks || []).map(t => Object.assign({ cat:'ler', steps:[] }, t));
   Object.values(out.days || {}).forEach(x => { const b = newDay(x.date); Object.keys(b).forEach(k => { if (x[k] === undefined) x[k] = b[k]; }); });
   return out;
@@ -1069,8 +1063,6 @@ function charPal(ch){
   Object.keys(C).forEach(k => { if (C[k]) p[k] = C[k]; });
   if (p.look.hs === 'careca') p.h = p.s;
   p.x = C.x || '#ff6fb5'; p.y = C.y || '#5ce1e6';
-  p.map = Array.isArray(ch.map) && ch.map.length === 13 ? ch.map : null;
-  p.fmap = Array.isArray(ch.fmap) && ch.fmap.length === 17 ? ch.fmap : null;
   return p;
 }
 function pal(){ return charPal(HERO()); }
@@ -1415,7 +1407,7 @@ const HPAL = {
 function drawSide(c, x, yb, o){
   const u = o.u || 2, p = o.pal, look = p.look || CLASS_LOOK.samurai;
   const LS = look.tr === 'hakama' ? LEGS_H : look.tr === 'quimono' ? LEGS_K : LEGS;
-  const legs = LS[o.legs || 'stand'], map = (p.map || UP).concat(legs);
+  const legs = LS[o.legs || 'stand'], map = UP.concat(legs);
   const top = Math.round(yb - map.length*u + (o.dy || 0));
   const P = (i, j, w, h, col) => { if (!col) return; c.fillStyle = col; c.fillRect(Math.round(o.flip ? x + (12 - i - w)*u : x + i*u), top + j*u, w*u, h*u); };
   for (let j = 0; j < map.length; j++) for (let i = 0; i < 12; i++) {
@@ -1542,7 +1534,7 @@ function frontGrid(p, o){
   const hs = F_HAIR[look.hs] || F_HAIR.curto, acc = F_ACC[look.acc] || F_ACC.nenhum, ex = F_EX[look.ex] || F_EX.nenhum;
   const hood = look.acc === 'capuz', hat = look.acc === 'kasa' || look.acc === 'eboshi';
   rects(ex.back); if (!hood) rects(hs.back); rects(acc.back);
-  const base = (p.fmap && p.fmap.length === F_BASE.length ? p.fmap : F_BASE).concat(legs), EYE = 'WqE';
+  const base = F_BASE.concat(legs), EYE = 'WqE';
   if (o.look) for (const j of [7, 8, 9]) {
     const row = [...base[j]], res = row.map(ch => EYE.includes(ch) ? 's' : ch);
     row.forEach((ch, i) => { if (EYE.includes(ch)) res[i + o.look] = ch; });
@@ -2993,7 +2985,9 @@ function drawPortrait(now){
 /* ================= Render ================= */
 function renderHeader(){
   const h = hourNow(), n = new Date();
-  $('#clockPill').innerHTML = `<b>${pad(n.getHours())}:${pad(n.getMinutes())}</b> ${todName(h)}${S.cfg.sky !== 'auto' ? ' (fixo)' : ''}`;
+  const fixed = S.cfg.sky !== 'auto', real = n.getHours() + n.getMinutes()/60, cp = $('#clockPill');
+  cp.innerHTML = `<b>${pad(n.getHours())}:${pad(n.getMinutes())}</b> ${todName(real)}${fixed ? ` · céu fixo: ${todName(h).toLowerCase()}` : ''}`;
+  cp.classList.toggle('fixed', fixed); cp.title = fixed ? 'Clique para a cena voltar a seguir o horário real' : 'A cena segue o horário real';
   const wd = S.wx.mode === 'auto' && S.wx.data && Date.now() - S.wx.data.at < 6*3600e3 ? S.wx.data : null;
   $('#wxPill').innerHTML = `${wd ? `<b>${Math.round(wd.temp)}°</b> ` : ''}${WX[wxNow()].n}`;
   const d = day(), st = streak();
@@ -3155,15 +3149,13 @@ function renderMissoes(){
   $('#log').innerHTML = S.log.map(l => `<li><time>${hm(l.t)}</time><span class="${l.c}">${esc(l.txt)}</span></li>`).join('');
 }
 const COLS = [['s','Pele'],['h','Cabelo'],['e','Olhos'],['b','Roupa'],['a','Detalhe'],['l','Calça ou hakama'],['d','Sapatos'],['w','Arma'],['g','Lâmina e enfeites'],['x','Cor livre 1'],['y','Cor livre 2']];
-const PXK = [['.','Apagar'],['h','Cabelo'],['H','Brilho do cabelo'],['s','Pele'],['k','Blush'],['E','Olho'],['q','Pupila'],['W','Brilho do olho'],['m','Boca'],['b','Roupa'],['a','Detalhe'],['l','Calça'],['x','Livre 1'],['y','Livre 2']];
-let paintKey = 'h', edOpen = { id:true, look:true, col:false, px:false, spec:true }, delArmed = null;
-function pxColor(P, k){ return k === '.' ? 'transparent' : k === 'E' ? P.e : (P[k] || 'transparent'); }
+let edOpen = { id:true, look:true, col:false, spec:true }, delArmed = null;
 function hex6(v){ return /^#[0-9a-f]{6}$/i.test(v || '') ? v : '#888888'; }
 function renderEditor(){
-  const ch = EC(), P = frontPal(charPal(ch)), L = P.look, active = ch.id === S.activeChar;
+  const ch = EC(), P = charPal(ch), L = P.look, active = ch.id === S.activeChar;
   const opt = (obj, cur) => Object.entries(obj).map(([v, n]) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${esc(n)}</option>`).join('');
   const grp = (k, m) => `<div class="ed-label">${{ hs:'Penteado', tr:'Traje', acc:'Acessório', face:'Rosto', ex:'Roupa extra' }[k]}</div><div class="opts">${Object.entries(m).map(([v, n]) => `<button type="button" data-look="${k}" data-v="${v}" aria-pressed="${L[k] === v}">${n}</button>`).join('')}</div>`;
-  const map = P.fmap || F_BASE, spent = Object.keys(SPEC).reduce((a, k) => a + (+ch.spec[k] || 0), 0);
+  const spent = Object.keys(SPEC).reduce((a, k) => a + (+ch.spec[k] || 0), 0);
   $('#editor').innerHTML = `
     <div class="ed-head"><h3>Editando: ${esc(ch.name || 'Sem nome')}</h3>${active ? '<span class="tagon">NO DOJO</span>' : '<button class="btn primary sm" data-ed="activate" type="button">Usar no dojo</button>'}</div>
     <div class="p-portrait"><canvas id="bigPortrait" width="96" height="60"></canvas></div>
@@ -3189,16 +3181,6 @@ function renderEditor(){
     <details class="ed-sec" data-sec="col" ${edOpen.col ? 'open' : ''}><summary>Cores</summary>
       <div class="col-grid">${COLS.map(([k, n]) => `<label>${n}<input type="color" data-col="${k}" value="${hex6(k === 'e' ? P.e : P[k])}"></label>`).join('')}</div>
       <div style="margin-top:10px"><button class="btn sm" data-ed="resetcol" type="button">Voltar às cores da classe</button></div>
-    </details>
-    <details class="ed-sec" data-sec="px" ${edOpen.px ? 'open' : ''}><summary>Desenho à mão</summary>
-      <p class="small" style="margin-bottom:10px">Pinte a cabeça e o tronco pixel por pixel. Braços, pernas, penteado, acessório e roupa extra continuam por cima, e o contorno aparece sozinho. ${P.fmap ? 'Este desenho é seu.' : 'Agora mostra o desenho padrão.'}</p>
-      <div class="px-wrap">
-        <div class="px-grid" id="pxGrid">${map.map((row, j) => [...row].map((k, i2) => `<i data-px="${i2},${j}" style="background:${pxColor(P, k)}"></i>`).join('')).join('')}</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div class="pk">${PXK.map(([k, n]) => `<button type="button" data-pk="${k}" aria-pressed="${paintKey === k}"><i style="background:${k === '.' ? 'transparent' : pxColor(P, k)}"></i>${n}</button>`).join('')}</div>
-          <div><button class="btn sm" data-ed="pxreset" type="button" ${P.fmap ? '' : 'disabled'}>Voltar ao desenho padrão</button></div>
-        </div>
-      </div>
     </details>
     <details class="ed-sec" data-sec="spec" ${edOpen.spec ? 'open' : ''}><summary>Especificações</summary>
       <p class="small" style="margin-bottom:10px">Distribua até ${SPEC_BUDGET} pontos. <span id="specLeft">Restam ${SPEC_BUDGET - spent}.</span></p>
@@ -3466,12 +3448,10 @@ function wire(){
   ED.addEventListener('click', e => {
     const ch = EC();
     const lk = e.target.closest('[data-look]'); if (lk) { ch.look[lk.dataset.look] = lk.dataset.v; edChanged(true); return; }
-    const pk = e.target.closest('[data-pk]'); if (pk) { paintKey = pk.dataset.pk; $$('#editor [data-pk]').forEach(b => b.setAttribute('aria-pressed', b === pk)); return; }
     const b = e.target.closest('[data-ed]'); if (!b) return;
     const a = b.dataset.ed;
     if (a === 'activate') { S.activeChar = ch.id; addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); renderAll(); save(); }
     if (a === 'resetcol') { ch.col = {}; edChanged(true); }
-    if (a === 'pxreset') { ch.fmap = null; ch.map = null; edChanged(true); }
     if (a === 'dup') { const c = newChar(JSON.parse(JSON.stringify(ch))); c.name = (ch.name || 'Personagem') + ' (cópia)'; S.chars.push(c); S.editChar = c.id; renderPerfil(); save(); toast('Cópia criada.'); }
     if (a === 'del') {
       if (S.chars.length < 2) return;
@@ -3481,18 +3461,6 @@ function wire(){
       S.editChar = S.activeChar; addLog(`${ch.name || 'Uma personagem'} saiu do elenco.`); renderAll(); save();
     }
   });
-  let painting = false;
-  const paintAt = (el) => {
-    if (!el || !el.dataset || !el.dataset.px) return;
-    const ch = EC(), [i, j] = el.dataset.px.split(',').map(Number);
-    if (!ch.fmap) ch.fmap = F_BASE.slice();
-    const row = ch.fmap[j]; if (row[i] === paintKey) return;
-    ch.fmap[j] = row.slice(0, i) + paintKey + row.slice(i + 1);
-    el.style.background = pxColor(frontPal(charPal(ch)), paintKey);
-  };
-  ED.addEventListener('pointerdown', e => { const c = e.target.closest('[data-px]'); if (!c) return; e.preventDefault(); painting = true; paintAt(c); });
-  ED.addEventListener('pointermove', e => { if (!painting) return; paintAt(document.elementFromPoint(e.clientX, e.clientY)); });
-  window.addEventListener('pointerup', () => { if (painting) { painting = false; const btn = $('#editor [data-ed=pxreset]'); if (btn) btn.disabled = false; edChanged(false); } });
   $('#roster').addEventListener('click', e => {
     const b = e.target.closest('[data-r]'); if (!b) return;
     const id = b.closest('.ros').dataset.id;
@@ -3558,6 +3526,7 @@ function wire(){
   });
   document.addEventListener('pointerdown', () => { if (!MUS.on) musicSync(); }, { passive:true });
   $('#testSound').addEventListener('click', () => { unlockAudio(); sfx('chime'); setTimeout(() => sfx('rin'), 500); });
+  $('#clockPill').addEventListener('click', () => { if (S.cfg.sky === 'auto') return; S.cfg.sky = 'auto'; applyUI(); renderAll(); save(); toast('A cena voltou a seguir o horário real.'); });
   $('#skyOpts').addEventListener('click', e => { const b = e.target.closest('[data-sky]'); if (!b) return; S.cfg.sky = b.dataset.sky; applyUI(); renderAll(); save(); });
   $('#cfg-summaryAt').addEventListener('change', e => { S.cfg.summaryAt = e.target.value || '22:00'; day().notified = false; save(); minuteTick(); });
   let resetArmed = false;

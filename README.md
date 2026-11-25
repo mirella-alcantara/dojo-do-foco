@@ -114,7 +114,6 @@ Crie quantas personagens quiser, do zero ou a partir de **14 modelos prontos**, 
 - **Aparência:** penteado, traje, acessório (laço, kanzashi, chapéu kasa, orelhas de raposa, chifres de oni...) e rosto
 - **Cores:** pele, cabelo, olhos, roupa, detalhes, arma e duas cores livres
 - **Roupa extra:** cachecol, capa ou os dois
-- **Desenho à mão:** a cabeça e o tronco pintados pixel por pixel
 
 As personagens são chibis de frente. As três opções de visual de cada modelo estão em [docs/personagens](docs/personagens/LEIAME.md) (gere de novo com `node scripts/opcoes-personagens.js`).
 - **Especificações:** 24 pontos para distribuir entre força, agilidade, mente e espírito
