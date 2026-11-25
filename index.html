@@ -1198,7 +1198,7 @@ function setPhase(p){
   const T = S.timer;
   Object.assign(T, { phase:p, running:false, started:false, total:phaseLen(p), left:phaseLen(p), endAt:0, mini:false, miniDone:false, warned:false });
   if (p !== 'focus') pickBreakItems(p);
-  disarm(); sceneReset(); renderAll(); save();
+  momentsReset(); disarm(); sceneReset(); renderAll(); save();
 }
 function start(){
   unlockAudio();
@@ -1208,6 +1208,7 @@ function start(){
     S.cur = { t:Date.now(), plan:S.draft.plan.trim(), taskId:t ? t.id : null, taskName:t ? t.name : '', cat:t ? t.cat : null, energy:S.draft.energy };
     if (S.draft.energy) day().energy.push({ t:Date.now(), v:S.draft.energy });
     addLog(`Batalha contra ${enemy().n}${S.cur.plan ? ': ' + S.cur.plan : ''}.`);
+    momentsReset(); planSurprises(0);
   }
   if (T.phase !== 'focus' && !T.started) S.pendingReview = null;
   T.running = true; T.started = true; T.endAt = Date.now() + T.left*1000;
@@ -2215,14 +2216,14 @@ function startVictory(e){
 
 /* ---- cenas ---- */
 function heroBlink(now){ return (now % 4200) < 140; }
-function yokaiPos(e){ return e.boss ? { x:234, y:FLOOR - 36, s:3 } : { x:240, y:FLOOR - 24, s:2 }; }
+function yokaiPos(e){ return e.boss ? { x:234 - yokaiShift, y:FLOOR - 36, s:3 } : { x:240 - yokaiShift, y:FLOOR - 24, s:2 }; }
 function drawYokaiIdle(now, running){
   const e = enemy(), p = yokaiPos(e), w = 12*p.s, T = S.timer;
   const bob = reduced ? 0 : Math.floor(now/(running ? 380 : 600)) % 2;
   const rec = now - hitAt < 320 ? 5 : 0;
   const hop = (!reduced && !running && (now % 9000) < 400) ? -3 : 0;
   drawYokai(g, e, p.x + rec, p.y - bob + hop, p.s, now - hitAt < 120);
-  const frac = T.started ? (T.total ? T.left/T.total : 1) : 1;
+  const frac = T.started ? (T.total ? Math.max(0.02, T.left/T.total - stepBonus) : 1) : 1;
   R(g, p.x, p.y - 8, w, 4, 'rgba(10,8,25,.7)'); R(g, p.x + 1, p.y - 7, Math.max(0, Math.ceil((w - 2)*frac)), 2, frac > .3 ? '#ff6f5a' : '#f5c66b');
 }
 function drawIdle(now){
@@ -2235,6 +2236,93 @@ function drawIdle(now){
   if (b) bubble(168, 120, b);
   drawYokaiIdle(now, false);
 }
+/* ---- Momentos do foco: golpe especial ao marcar passo, reação ao voltar para a aba e surpresas ---- */
+const SPECIALS = {
+  samurai:['Corte do sol!','#ffffff','slash'], ninja:['Chuva de shurikens!','#d0d5e0','star'], miko:['Ofuda sagrado!','#f8f2e0','ofuda'],
+  monge:['Palma dourada!','#f5c66b','orb'], onna:['Vento da naginata!','#ffffff','slash'], kunoichi:['Dança das sombras!','#ff6fb5','star'],
+  kyudo:['Flecha certeira!','#fff4c6','arrow'], onmyoji:['Selo de cinco pontas!','#e1b85a','ring'], ferreira:['Martelo de brasa!','#ffb35c','orb'],
+  kitsune:['Fogo de raposa!','#9fe4ff','fire'], yamabushi:['Sopro da montanha!','#cfe0ff','orb'], ronin:['Corte da lua!','#f4efe2','slash']
+};
+const SURPRISES = { gato:'Miau! +3 ryō', petala:'Pétala dourada! +5 XP', pergaminho:'Um pergaminho! +2 XP', estrela:'Fiz um pedido! +3 XP' };
+let special = null, stepBonus = 0, wakeAnim = null, awayAt = 0, surp = null, surpAnim = null, yokaiShift = 0, heroArmOverride = null, heroEyesClosed = false;
+function momentsReset(){ special = null; stepBonus = 0; wakeAnim = null; awayAt = 0; surp = null; surpAnim = null; }
+function triggerSpecial(){ special = { t0:performance.now(), cls:HERO().cls, hit:false }; stepBonus = Math.min(0.3, stepBonus + 0.05); }
+function planSurprises(from){
+  const pool = ['gato', 'petala', 'pergaminho'].concat(amb > 0.5 ? ['estrela'] : []), pick = () => pool.splice(Math.floor(Math.random()*pool.length), 1)[0];
+  surp = [{ at:0.4 + Math.random()*0.2, type:pick() }, { at:0.85 + Math.random()*0.08, type:pick() }].filter(x => x.at > (from || 0));
+}
+function focusFrac(){ const T = S.timer; return T.total ? 1 - Math.max(0, (T.endAt - Date.now())/1000)/T.total : 0; }
+function momentsPre(now){
+  heroArmOverride = null; heroEyesClosed = false; yokaiShift = 0;
+  if (wakeAnim) {
+    const e = now - wakeAnim.t0, mx = Math.min(36, 8 + wakeAnim.away/1000);
+    if (e > 4200) wakeAnim = null;
+    else { if (e < 1400) heroEyesClosed = true; else if (e < 3600) heroArmOverride = 'raise'; yokaiShift = reduced ? 0 : e < 1800 ? mx : e < 3000 ? mx*(1 - (e - 1800)/1200) : 0; }
+  }
+  if (special) { const e = now - special.t0; if (e < 500) heroArmOverride = 'up'; else if (e < 850) heroArmOverride = 'slash'; }
+}
+function specialShape(sh, x, y, col, now){
+  g.save(); g.globalAlpha = 0.5; circ(g, x, y, 6, col); g.globalAlpha = 1;
+  if (sh === 'star') { const r = Math.floor(now/60) % 2; R(g, x - 3, y - (r ? 0 : 1), 7, 1, col); R(g, x - (r ? 0 : 1), y - 3, 1, 7, col); R(g, x - 1, y - 1, 2, 2, '#30364a'); }
+  else if (sh === 'ofuda') { R(g, x - 2, y - 4, 5, 9, col); R(g, x - 2, y - 4, 5, 1, '#c8442e'); R(g, x, y - 2, 1, 5, '#c8442e'); }
+  else if (sh === 'arrow') { R(g, x - 10, y, 12, 1, col); R(g, x + 2, y - 1, 2, 3, '#d8dde6'); R(g, x - 11, y - 1, 2, 3, '#c8442e'); }
+  else if (sh === 'ring') { g.strokeStyle = col; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, 6, 0, Math.PI*2); g.stroke(); g.beginPath(); for (let k = 0; k <= 5; k++) { const an = -Math.PI/2 + k*4*Math.PI/5; k ? g.lineTo(x + Math.cos(an)*6, y + Math.sin(an)*6) : g.moveTo(x + Math.cos(an)*6, y + Math.sin(an)*6); } g.stroke(); }
+  else if (sh === 'fire') { g.fillStyle = col; g.beginPath(); g.moveTo(x, y - 7); g.quadraticCurveTo(x + 5, y, x, y + 3); g.quadraticCurveTo(x - 5, y, x, y - 7); g.fill(); R(g, x, y, 1, 1, '#ffffff'); }
+  else if (sh === 'slash') { g.strokeStyle = col; g.lineWidth = 2; g.beginPath(); g.arc(x - 4, y, 8, -1.1, 1.1); g.stroke(); }
+  else circ(g, x, y, 3, col);
+  g.restore();
+}
+function momentsPost(now){
+  const T = S.timer, hx = DESK_X + 14, e0 = enemy(), yp = yokaiPos(e0), ex = yp.x + 6*yp.s, ey = yp.y + 6*yp.s;
+  if (wakeAnim) { const e = now - wakeAnim.t0; bubble(hx + 8, 112, e < 1400 ? 'zzz…' : 'Voltou! Bora continuar.'); }
+  if (special) {
+    const e = now - special.t0, [name, col, sh] = SPECIALS[special.cls] || SPECIALS.samurai;
+    if (e < 1100 && !wakeAnim) bubble(hx + 8, 112, name);
+    if (e >= 500 && e < 1100 && !reduced) {
+      const t = (e - 500)/600, x = lerp(hx + 14, ex, t), y = lerp(140, ey, t) - Math.sin(t*Math.PI)*20;
+      specialShape(sh, x, y, col, now); spawn({ x, y, vx:-20, vy:(Math.random() - 0.5)*10, life:0.3, size:1, col });
+    }
+    if (e >= (reduced ? 0 : 1100) && !special.hit) {
+      special.hit = true; hitAt = now; sfx('hit');
+      const dmg = Math.max(1, Math.round(enemyMax()*0.05));
+      spawn({ type:'text', txt:'-' + dmg + '!', x:ex, y:yp.y - 14, vy:-20, life:1.3, col });
+      for (let i = 0; i < 14; i++) { const an = i/14*Math.PI*2; spawn({ x:ex, y:ey, vx:Math.cos(an)*60, vy:Math.sin(an)*60, life:0.45, size:2, col:i % 2 ? col : '#ffffff' }); }
+      renderStage();
+    }
+    if (e > 1700) special = null;
+  }
+  if (!T.running || T.phase !== 'focus') return;
+  if (!surp) planSurprises(focusFrac());
+  if (!surpAnim && !special && !wakeAnim) {
+    const fr = focusFrac(), s2 = surp.find(x => !x.done && fr >= x.at);
+    if (s2) {
+      s2.done = true; surpAnim = { t0:now, type:s2.type };
+      if (s2.type === 'gato') { addRyo(3); addLog('O gato trouxe um ryō. +3 ryō.', 'gold'); }
+      else if (s2.type === 'petala') { addXP(5); addLog('Uma pétala dourada caiu no dojo. +5 XP.', 'gold'); }
+      else if (s2.type === 'pergaminho') { addXP(2); addLog('Um pergaminho com uma dica apareceu. +2 XP.', 'gold'); toast('Dica do pergaminho: ' + TALK[Math.floor(Math.random()*TALK.length)]); }
+      else { addXP(3); addLog('Uma estrela cadente passou pelo céu. +3 XP.', 'gold'); }
+      sfx('step'); renderCard(); save();
+    }
+  }
+  if (surpAnim) {
+    const e = now - surpAnim.t0, ty = surpAnim.type, txt = SURPRISES[ty];
+    if (e > 3600) { surpAnim = null; return; }
+    if (ty === 'gato') { const bob = Math.floor(now/250) % 2; R(g, cat.x + 6, FLOOR - 24 - bob, 5, 5, '#f5c66b'); R(g, cat.x + 8, FLOOR - 23 - bob, 1, 3, '#a8741a'); bubble(cat.x - 12, FLOOR - 42, txt); }
+    else if (ty === 'petala') {
+      const t = Math.min(1, e/2000), x = hx + Math.sin(e/250)*10*(1 - t), y = lerp(8, 126, t);
+      R(g, x, y, 3, 2, '#f5c66b'); R(g, x + 1, y + 2, 1, 1, '#ffe39a');
+      if (e > 2000) { if (Math.random() < 0.3) spawn({ x:hx + (Math.random() - 0.5)*20, y:124, vy:-14, life:0.6, size:1, col:'#ffe39a' }); bubble(hx + 8, 106, txt); }
+    } else if (ty === 'pergaminho') {
+      const t = Math.min(1, e/1500), y = lerp(10, 150, t);
+      R(g, hx + 12, y, 10, 6, '#efe4c8'); R(g, hx + 11, y, 1, 6, '#8a5c34'); R(g, hx + 22, y, 1, 6, '#8a5c34'); R(g, hx + 14, y + 2, 6, 1, '#c8442e');
+      if (e > 1500) bubble(hx + 8, 112, txt);
+    } else {
+      const t = Math.min(1, e/900);
+      if (t < 1) { const x = lerp(20, 220, t), y = lerp(14, 54, t); g.save(); g.globalAlpha = 0.5; R(g, x - 24, y - 5, 24, 1, '#fff4c6'); g.restore(); R(g, x, y, 2, 2, '#ffffff'); }
+      bubble(hx + 8, 112, txt);
+    }
+  }
+}
 function drawStudy(now){
   const T = S.timer, P = pal(), cls = HERO().weapon;
   const t = activeTask(), catK = (S.cur && S.cur.cat) || (t && t.cat) || null;
@@ -2242,9 +2330,11 @@ function drawStudy(now){
     const left = (T.endAt - Date.now())/1000, el = T.total - left, idx = Math.floor(el/ATK_EVERY);
     if (idx > atkIdx && left > 4) { atkIdx = idx; atkStart = now; }
   }
+  momentsPre(now);
   const e = enemy(), yp = yokaiPos(e), tx = yp.x - 30;
   const a = now - atkStart;
   const blink = heroBlink(now);
+  if (a < 2400 && special && !special.hit && now - special.t0 < 500) special.t0 = now; /* espera o ataque normal acabar */
   if (a < 2400) {
     let x = DESK_X, legs = 'stand', arm = 'down', flip = false;
     const hit = () => { if (hitAt < atkStart) { hitAt = now; sfx('hit'); const dmg = Math.max(1, Math.round(enemyMax()*ATK_EVERY/T.total)); spawn({ type:'text', txt:'-' + dmg, x:yp.x + 12*yp.s/2, y:yp.y - 12, vy:-18, life:1.1, col:'#ffe39a' }); for (let i = 0; i < 8; i++) spawn({ x:yp.x + 4, y:yp.y + 10, vx:Math.random()*80, vy:(Math.random()-0.5)*80, life:0.35, size:1, col:i % 2 ? '#ffffff' : '#ffe39a' }); } };
@@ -2274,6 +2364,7 @@ function drawStudy(now){
     drawStudyHero(now, catK, P, blink, T.running);
   }
   drawYokaiIdle(now, T.running);
+  momentsPost(now);
   if (!T.running && T.started && !T.miniDone) bubble(86, 114, 'pausa…');
 }
 /* A personagem senta de frente, atrás da mesinha. Os objetos ficam entre ela e quem olha. */
@@ -2302,6 +2393,7 @@ function drawStudyHero(now, catK, P, blink, running){
   else if (catK === 'revisar') arm = 'hold';
   else eyes = true;
   if (!running) { arm = 'down'; eyes = blink; }
+  if (heroArmOverride) arm = heroArmOverride; if (heroEyesClosed) eyes = true;
   drawFront(g, DESK_X, DESK_SIT, { pal:P, legs:'sit', arm, blink:eyes, dy:(!reduced && running && Math.floor(now/2000) % 2) ? 1 : 0 });
   desk(66);
   drawDeskProps(now, catK, running);
@@ -2398,7 +2490,7 @@ function seasonal(dt){
 function updateCat(dt, now){
   const T = S.timer, ph = T.phase;
   let min = 10, max = 300;
-  if (ph === 'focus' && T.started) { cat.mode = 'sleep'; cat.x += (106 - cat.x)*Math.min(1, dt*2); return; }
+  if (ph === 'focus' && T.started) { cat.mode = surpAnim && surpAnim.type === 'gato' ? 'sit' : 'sleep'; cat.x += (106 - cat.x)*Math.min(1, dt*2); return; }
   if (ph === 'short') { min = 214; max = 300; } else if (ph === 'long') { min = 4; max = 84; }
   if (now > cat.until) {
     const r = Math.random();
@@ -3086,7 +3178,7 @@ function updateClock(){
   $('#clockTime').textContent = str;
   $('#clockLabel').textContent = `${P.k} · ${P.name.toUpperCase()}${!T.running && T.started ? ' · PAUSADO' : ''}`;
   $('#tbar').style.width = (T.total ? T.left/T.total*100 : 100) + '%';
-  const eh = $('#eHP'); if (eh) eh.textContent = `${T.started ? Math.ceil(enemyMax()*T.left/T.total) : enemyMax()}/${enemyMax()}`;
+  const eh = $('#eHP'); if (eh) eh.textContent = `${T.started ? Math.ceil(enemyMax()*Math.max(0.02, T.left/T.total - stepBonus)) : enemyMax()}/${enemyMax()}`;
   document.title = T.started ? `${str} ${P.k} · Dojo do Foco` : 'Dojo do Foco';
   renderNext();
 }
@@ -3439,7 +3531,7 @@ function addDistr(txt){
 function toggleStep(taskId, stepId, ok){
   const t = S.tasks.find(x => x.id === taskId); if (!t) return;
   const s = t.steps.find(x => x.id === stepId); if (!s) return;
-  if (ok && !s.ok) { const sx = hasPerk('step2') ? 4 : 2; s.ok = true; S.totals.steps++; day().steps++; addRyo(1); addXP(sx); sfx('step'); addLog(`Passo feito: ${s.txt}. +${sx} XP, +1 ryō.`, 'good'); checkAch(); }
+  if (ok && !s.ok) { const sx = hasPerk('step2') ? 4 : 2; s.ok = true; S.totals.steps++; day().steps++; addRyo(1); addXP(sx); sfx('step'); addLog(`Passo feito: ${s.txt}. +${sx} XP, +1 ryō.`, 'good'); checkAch(); if (S.timer.phase === 'focus' && S.timer.running) triggerSpecial(); }
   else if (!ok) s.ok = false;
   renderMissionCard(); renderCard(); if (S.view === 'missoes') renderMissoes(); save();
 }
@@ -3637,7 +3729,13 @@ function wire(){
     S = fresh(); S.view = 'jogo'; resetArmed = false; e.target.textContent = 'Apagar progresso'; checkDay(); applyUI(); renderAll(); save(); toast('Progresso apagado. Um novo caminho começa.');
   });
   $('#daySel').addEventListener('change', e => { sumDay = e.target.value; renderResumo(); });
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (S.timer.running) wake(); tick(); minuteTick(); } });
+  document.addEventListener('visibilitychange', () => {
+    const T = S.timer, focusing = T.running && T.phase === 'focus';
+    if (document.visibilityState === 'hidden') { if (focusing) awayAt = Date.now(); return; }
+    if (awayAt && focusing && Date.now() - awayAt > 4000) wakeAnim = { t0:performance.now(), away:Date.now() - awayAt };
+    awayAt = 0;
+    if (T.running) wake(); tick(); minuteTick();
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { bgDirty = true; });
 }
 
