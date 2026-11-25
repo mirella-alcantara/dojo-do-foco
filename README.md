@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/banner.png" alt="A miko Sakura estuda numa mesinha em frente ao dojo, à noite, debaixo de chuva, com letreiros de neon e um yōkai à direita. O timer marca 16:49." width="100%">
+<img src="docs/banner.png" alt="A miko Sakura, chibi e de frente, lê um livro atrás da mesinha em frente ao dojo, à noite, debaixo de chuva, com letreiros de neon e um yōkai à direita. O timer marca 24:38." width="100%">
 
 # Dojo do Foco 道場
 
@@ -22,7 +22,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 <br>
 
 <div align="center">
-  <img src="docs/demo.gif" alt="Animação: batalha no dojo com chuva, chá no bosque de bambu, os reinos novos (floresta dos vagalumes, ilhas flutuantes, terraço neon, casa de chá nas nuvens, janela do Fuji e café do canal), o onsen com neve e o reino em 3D" width="88%">
+  <img src="docs/demo.gif" alt="Animação com dez reinos e uma personagem diferente em cada: Sakura no dojo com chuva, Kiko tomando chá no bambu, Sora no templo, Hana na floresta dos vagalumes, Rin nas ilhas flutuantes, Nami no terraço neon, Taro na casa de chá nas nuvens, Hoshi na janela do Fuji, Akane no café do canal e Yuki no onsen com neve" width="88%">
 </div>
 
 <br>
@@ -41,7 +41,7 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 
 ## 🎮 O jogo
 
-<img src="docs/telas/dojo.png" alt="Tela do Dojo: cena do dojo à noite com chuva, timer, caixa de diálogo com o plano da batalha, cartão da personagem e próxima ação." width="100%">
+<img src="docs/telas/dojo.png" alt="Tela do Dojo: cena do dojo à noite com chuva e a Sakura lendo de frente atrás da mesinha, timer, caixa de diálogo com o plano da batalha, a carta da personagem e a próxima ação." width="100%">
 
 | | |
 | --- | --- |
@@ -70,28 +70,28 @@ São 11 reinos. Troque no seletor acima da cena ou na aba **Jogo**. Todos acompa
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/cenarios/dojo.png" alt="Dojo da cidade à noite com chuva"><br><b>Dojo da cidade</b> · letreiros de neon e lanternas</td>
-    <td width="50%"><img src="docs/cenarios/bambu.png" alt="Bosque de bambu de dia, com a personagem tomando chá com o mestre"><br><b>Bosque de bambu</b> · lanternas de pedra e vaga-lumes à noite</td>
+    <td width="50%"><img src="docs/cenarios/dojo.png" alt="Dojo da cidade à noite com chuva, com a Sakura lendo"><br><b>Dojo da cidade</b> · letreiros de neon e lanternas</td>
+    <td width="50%"><img src="docs/cenarios/bambu.png" alt="Bosque de bambu de dia, com o Kiko tomando chá com o mestre"><br><b>Bosque de bambu</b> · lanternas de pedra e vaga-lumes à noite</td>
   </tr>
   <tr>
-    <td><img src="docs/cenarios/templo.png" alt="Templo na montanha ao pôr do sol, com torii vermelho e monte Fuji"><br><b>Templo na montanha</b> · torii, escadaria e o monte Fuji</td>
-    <td><img src="docs/cenarios/rua.png" alt="Rua de Tóquio à noite com prédios iluminados e placas de neon"><br><b>Rua de Tóquio</b> · placas de neon, máquina de bebidas e poste</td>
+    <td><img src="docs/cenarios/templo.png" alt="Templo na montanha ao pôr do sol, com torii vermelho, monte Fuji e o Sora escrevendo"><br><b>Templo na montanha</b> · torii, escadaria e o monte Fuji</td>
+    <td><img src="docs/cenarios/rua.png" alt="Rua de Tóquio à noite com prédios iluminados, placas de neon e o Jin no notebook"><br><b>Rua de Tóquio</b> · placas de neon, máquina de bebidas e poste</td>
   </tr>
   <tr>
-    <td><img src="docs/cenarios/sakura.png" alt="Jardim de sakura de dia com cerejeira, ponte vermelha e lago"><br><b>Jardim de sakura</b> · pétalas caindo, lago com carpas e ponte</td>
-    <td><img src="docs/cenarios/onsen-neve.png" alt="Onsen à noite com neve caindo no templo"><br><b>Onsen com neve</b> · a pausa longa, em qualquer reino</td>
+    <td><img src="docs/cenarios/sakura.png" alt="Jardim de sakura de dia com cerejeira, ponte vermelha, lago e a Mei lendo"><br><b>Jardim de sakura</b> · pétalas caindo, lago com carpas e ponte</td>
+    <td><img src="docs/cenarios/onsen-neve.png" alt="Onsen à noite com neve caindo no templo, com a Yuki na água quente"><br><b>Onsen com neve</b> · a pausa longa, em qualquer reino</td>
   </tr>
   <tr>
-    <td><img src="docs/cenarios/floresta.png" alt="Floresta dos vagalumes à noite, com a árvore gigante de janela acesa e porta azul brilhante"><br><b>Floresta dos vagalumes</b> · árvore-casa, lago e vaga-lumes</td>
-    <td><img src="docs/cenarios/ilhas.png" alt="Ilhas flutuantes ao pôr do sol, com castelo, cachoeiras e mar de nuvens"><br><b>Ilhas flutuantes</b> · castelo, cachoeiras, lanternas e aurora à noite</td>
+    <td><img src="docs/cenarios/floresta.png" alt="Floresta dos vagalumes à noite, com a árvore gigante de janela acesa, porta azul brilhante e a Hana revisando cartões"><br><b>Floresta dos vagalumes</b> · árvore-casa, lago e vaga-lumes</td>
+    <td><img src="docs/cenarios/ilhas.png" alt="Ilhas flutuantes ao pôr do sol, com castelo, cachoeiras, mar de nuvens e a Rin erguendo o arco contra o yōkai"><br><b>Ilhas flutuantes</b> · castelo, cachoeiras, lanternas e aurora à noite</td>
   </tr>
   <tr>
-    <td><img src="docs/cenarios/neon.png" alt="Terraço neon à noite com garoa, prédios iluminados e torre vermelha"><br><b>Terraço neon</b> · a cidade vista do telhado, com a torre ao fundo</td>
-    <td><img src="docs/cenarios/cha.png" alt="Casa de chá nas nuvens ao pôr do sol, com lanternas e carpas nadando nas nuvens"><br><b>Casa de chá nas nuvens</b> · lanternas e carpas nadando no céu</td>
+    <td><img src="docs/cenarios/neon.png" alt="Terraço neon à noite com garoa, prédios iluminados, torre vermelha e a Nami no notebook"><br><b>Terraço neon</b> · a cidade vista do telhado, com a torre ao fundo</td>
+    <td><img src="docs/cenarios/cha.png" alt="Casa de chá nas nuvens ao pôr do sol, com lanternas, carpas nadando nas nuvens e o Taro tomando chá com o mestre"><br><b>Casa de chá nas nuvens</b> · lanternas e carpas nadando no céu</td>
   </tr>
   <tr>
-    <td><img src="docs/cenarios/janela.png" alt="Janela do Fuji de dia, uma sala com shoji olhando o monte Fuji, a vila e um pagode"><br><b>Janela do Fuji</b> · sala de tatame com vista para o monte</td>
-    <td><img src="docs/cenarios/canal.png" alt="Café do canal de dia, com café de madeira, bicicleta, cerejeiras e canal de pedras"><br><b>Café do canal</b> · café, bicicleta e cerejeiras na beira da água</td>
+    <td><img src="docs/cenarios/janela.png" alt="Janela do Fuji de dia, uma sala com shoji olhando o monte Fuji, a vila, um pagode e o Hoshi escrevendo"><br><b>Janela do Fuji</b> · sala de tatame com vista para o monte</td>
+    <td><img src="docs/cenarios/canal.png" alt="Café do canal de dia, com café de madeira, bicicleta, cerejeiras, canal de pedras e a Akane atacando o yōkai com o martelo"><br><b>Café do canal</b> · café, bicicleta e cerejeiras na beira da água</td>
   </tr>
 </table>
 
@@ -106,13 +106,13 @@ Atrás do jogo, uma paisagem em 3D do mesmo reino se move devagar: ilhas que flu
 O 3D é feito com three.js, carregado do cdnjs. Se o computador não der conta, o jogo entra sozinho num modo leve, com menos quadros e menos pixels. Se ainda assim travar, ele pausa o 3D e avisa. Também dá para desligar em **Jogo → Reino**. Sem internet ou sem WebGL, o jogo volta para o fundo em pixel art.
 
 <div align="center">
-  <img src="docs/cenarios/tempestade.png" alt="Dojo ao pôr do sol durante uma tempestade" width="60%"><br>
-  <sub>O clima muda tudo: aqui, uma tempestade no fim da tarde.</sub>
+  <img src="docs/cenarios/tempestade.png" alt="Dojo ao pôr do sol durante uma tempestade, com a Aiko escrevendo" width="60%"><br>
+  <sub>O clima muda tudo: aqui, uma tempestade no fim da tarde, com a Aiko.</sub>
 </div>
 
 ## 🥷 Personagens
 
-<img src="docs/telas/personagens.png" alt="Tela de Personagens: editor com retrato, identidade, classe, arma e habilidade, e ao lado o elenco com seis personagens." width="100%">
+<img src="docs/telas/personagens.png" alt="Tela de Personagens: editor com o retrato chibi da Sakura, identidade, classe, arma e habilidade, e ao lado o elenco com Sakura, Kiko, Yuki, Kenji, Hana e Taro." width="100%">
 
 Crie quantas personagens quiser, do zero ou a partir de **14 modelos prontos**, e mude tudo nelas:
 
@@ -186,9 +186,9 @@ Na aba **Jogo** você ajusta os tempos (15/5, 25/5, 50/10 ou do seu jeito), a me
 ### No celular
 
 <p align="center">
-  <img src="docs/telas/celular-dia.png" alt="Jogo no celular de dia, no jardim de sakura" width="260">
+  <img src="docs/telas/celular-dia.png" alt="Jogo no celular de dia, no jardim de sakura, com a Mei lendo" width="260">
   &nbsp;&nbsp;
-  <img src="docs/telas/celular-noite.png" alt="Jogo no celular à noite, no dojo com chuva" width="260">
+  <img src="docs/telas/celular-noite.png" alt="Jogo no celular à noite, no dojo com chuva, com a Sakura escrevendo" width="260">
 </p>
 
 ## 📁 Salvamento no Obsidian
