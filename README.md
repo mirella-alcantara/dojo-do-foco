@@ -47,7 +47,7 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 | --- | --- |
 | ⏱️ **Pomodoro completo** | Foco, pausa curta e pausa longa a cada ciclo, com o chefe no último pomodoro |
 | ✍️ **Plano e revisão** | Antes de cada batalha você escreve o que vai fazer. Depois, conta se conseguiu tudo, parte ou se travou |
-| 🌗 **Hora e clima de verdade** | A cena escurece com o dia, os neons acendem à noite e o clima da sua cidade aparece, pela [Open-Meteo](https://open-meteo.com): chuva, neve, neblina, tempestade |
+| 🌗 **Hora e clima de verdade** | A cena escurece com o dia, os neons acendem à noite e o clima da sua cidade aparece, pela [Open-Meteo](https://open-meteo.com): chuva, neve, neblina, tempestade. Se o céu estiver fixo, um clique no relógio volta ao horário real |
 | 🧠 **Feito para TDAH** | Uma ação de cada vez, botão "Só 5 minutos", aviso 1 minuto antes do fim, modo foco e nenhuma bronca |
 | 🌄 **Reinos em 3D** | 11 reinos em pixel art, cada um com uma paisagem em 3D ([three.js](https://threejs.org)) animada no fundo e uma visão sem distrações para as pausas |
 | 🎵 **Música nas pausas** | Uma música lo-fi aconchegante, composta no próprio jogo, começa com a pausa e para quando ela acaba. Mais lenta no onsen |
@@ -56,7 +56,13 @@ Abra **<http://localhost:4321>**. No VS Code também dá para usar **Executar e 
 
 ### Durante o foco, a pausa e o onsen
 
-A personagem não fica parada. Ela estuda conforme o tipo de missão: lê um livro, escreve com pincel, usa o ábaco, programa no notebook ou revisa cartões. A cada 40 segundos corre até o yōkai e ataca. Na casa de chá o mestre serve o chá e ela bebe. No onsen ela entra devagar na água quente.
+A personagem não fica parada. Ela estuda de frente para você, atrás da mesinha, conforme o tipo de missão: lê um livro, escreve com pincel, usa o ábaco, programa no notebook ou revisa cartões. A cada 40 segundos corre até o yōkai e ataca. Na casa de chá o mestre serve o chá e ela bebe. No onsen ela entra devagar na água quente.
+
+Durante o foco ela também reage ao que você faz, sem pedir nenhum clique a mais:
+
+- **Golpe especial:** marcar um passo da missão solta o poder da classe no yōkai ("Fogo de raposa!", "Corte do sol!", "Selo de cinco pontas!"...). Cada passo tira 5% da vida dele, até 30% por foco.
+- **Voltou da aba?** Se você sai do dojo por mais de alguns segundos, ela aparece cochilando e o yōkai chega mais perto. Ela acorda, acena e diz "Voltou! Bora continuar.". Sem castigo.
+- **Surpresas:** duas por foco, em momentos sorteados: o gato traz um ryō, cai uma pétala dourada, desce um pergaminho com uma dica ou, à noite, passa uma estrela cadente.
 
 ## 🏯 Reinos
 
@@ -111,12 +117,32 @@ O 3D é feito com three.js, carregado do cdnjs. Se o computador não der conta, 
 Crie quantas personagens quiser, do zero ou a partir de **14 modelos prontos**, e mude tudo nelas:
 
 - **Identidade:** nome, título, classe, arma, habilidade, personalidade, frase de efeito e história
-- **Aparência:** penteado, traje, acessório (laço, kanzashi, chapéu kasa, orelhas de raposa, chifres de oni...) e rosto
-- **Cores:** pele, cabelo, olhos, roupa, detalhes, arma e duas cores livres
+- **Visual pronto:** três opções (A, B e C) para cada personagem, em Perfil → Aparência
+- **Aparência:** penteado (até Chanel e cacheado), traje, acessório (laço, kanzashi, chapéu kasa, eboshi, capuz com orelhinhas, orelhas de raposa, chifres de oni...) e rosto (com cílios ou óculos redondos)
 - **Roupa extra:** cachecol, capa ou os dois
-
-As personagens são chibis de frente. As três opções de visual de cada modelo estão em [docs/personagens](docs/personagens/LEIAME.md) (gere de novo com `node scripts/opcoes-personagens.js`).
+- **Cores:** pele, cabelo, olhos, roupa, detalhes, arma e duas cores livres
 - **Especificações:** 24 pontos para distribuir entre força, agilidade, mente e espírito
+
+As personagens são chibis em pixel art, sempre de frente na tela. As três opções de visual de cada modelo estão em [docs/personagens](docs/personagens/LEIAME.md) (gere de novo com `node scripts/opcoes-personagens.js`).
+
+### 🃏 A carta da personagem
+
+Ao lado da cena, a personagem ativa aparece numa carta colecionável: nome, kanji da classe, estrelas, arte, classe e arma, habilidade, frase, LV, ATQ e DEF. O ATQ vem da força e da agilidade, e a DEF, da mente e do espírito.
+
+<img src="docs/telas/cartas.jpg" alt="Os 14 modelos prontos em cartas, com molduras de raridades diferentes e o efeito de poder de cada classe na arte" width="100%">
+
+A carta **sobe de raridade conforme você conclui missões**, e a arte segue a hora real:
+
+| Raridade | Missões | Moldura |
+| --- | --- | --- |
+| Comum | 0 | cinza |
+| Incomum | 1 | verde |
+| Rara | 3 | azul |
+| Épica | 6 | roxa, com brilho holográfico |
+| Lendária | 10 | dourada, com brilho holográfico |
+| Mítica | 20 | rosa, com brilho holográfico |
+
+Cada classe tem um efeito de poder na arte: corte e sol vermelho (samurai), fumaça e shurikens (ninja), ofudas e espíritos (miko), auréola dourada (monge), vento e pétalas (onna-bugeisha), clones de sombra (kunoichi), alvo e flecha (arqueira), círculo mágico (onmyōji), brasas da forja (ferreira), fogo de raposa (kitsune), montanhas na névoa (yamabushi) e lua com folhas caindo (rōnin).
 
 <details>
 <summary><b>As 12 classes e suas habilidades</b></summary>
