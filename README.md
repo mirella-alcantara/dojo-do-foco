@@ -266,7 +266,7 @@ Sem essas variáveis, o jogo funciona como antes, sem login, com o progresso no 
 
 Na primeira vez que alguém entra, o progresso que já estava naquele navegador vai para a conta dela. Se o mesmo dojo ficar aberto em dois aparelhos ao mesmo tempo, vale o último salvamento.
 
-Como não há e-mail de confirmação, também não existe "esqueci a senha" pelo jogo. Se alguém esquecer, dá para trocar a senha pelo painel do Supabase, em **Authentication** → **Users**.
+**Esqueci minha senha:** na tela de entrada, a pessoa digita o e-mail e clica em **Esqueci minha senha**. Chega um link no e-mail, que abre o dojo pedindo uma senha nova. É o único e-mail que o jogo manda, e só quando alguém pede. O servidor de e-mail grátis do Supabase só entrega para os e-mails da equipe do projeto e tem um limite baixo por hora. Para outras pessoas receberem o link, configure um SMTP próprio em **Authentication** → **Emails** → **SMTP Settings** (por exemplo, com o Resend, que tem plano grátis).
 
 ## 🌐 Publicar no Netlify
 

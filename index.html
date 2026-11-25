@@ -707,6 +707,12 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
         <button class="btn primary" type="submit" id="gateIn">Entrar</button>
         <button class="btn" type="button" id="gateUp">Criar conta</button>
       </div>
+      <button class="btn ghost sm" type="button" id="gateForgot">Esqueci minha senha</button>
+    </form>
+    <form id="gateNew" novalidate hidden>
+      <label>Senha nova<input type="password" id="gateNew1" autocomplete="new-password" minlength="8" maxlength="72"></label>
+      <label>Repita a senha nova<input type="password" id="gateNew2" autocomplete="new-password" minlength="8" maxlength="72"></label>
+      <button class="btn primary" type="submit" id="gateNewSave">Salvar senha nova e entrar</button>
     </form>
     <p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
     <p class="gate-foot">A senha vai direto para o Supabase, que a guarda com criptografia. O jogo não guarda a senha, e ninguém além de você consegue ler o seu progresso.</p>
@@ -1100,11 +1106,33 @@ const AUTH_MSG = [
   [/password.*(at least|short|weak|characters)/i, 'A senha precisa ter pelo menos 8 caracteres, com letras e números.'],
   [/invalid.*email|email.*invalid/i, 'Esse e-mail não parece válido.'],
   [/signups not allowed/i, 'Novas contas estão fechadas neste dojo.'],
+  [/should be different|same.*password/i, 'A senha nova precisa ser diferente da antiga.'],
+  [/link is invalid|has expired|expired/i, 'O link expirou ou já foi usado. Peça outro em Esqueci minha senha.'],
   [/failed to fetch|network/i, 'Sem conexão com o serviço de login. Verifique a internet.']
 ];
 const authMsg = e => { const m = String((e && (e.message || e)) || ''); const f = AUTH_MSG.find(x => x[0].test(m)); return f ? f[1] : 'Não deu certo. Tente de novo em instantes.'; };
 function gateMsg(txt, err){ const el = $('#gateMsg'); el.textContent = txt || ''; el.classList.toggle('err', !!err); }
-function gateBusy(on){ ['#gateIn','#gateUp'].forEach(q => { $(q).disabled = on; }); }
+function gateBusy(on){ ['#gateIn','#gateUp','#gateForgot','#gateNewSave'].forEach(q => { $(q).disabled = on; }); }
+/* Volta do link "Esqueci minha senha": a sessão já existe, falta escolher a senha nova. */
+function gateNewPassword(sb){
+  $('#gate').hidden = false; $('#gateForm').hidden = true; $('#gateNew').hidden = false;
+  $('#gateLead').textContent = 'Escolha uma senha nova para a sua conta. O seu progresso continua todo lá.';
+  gateMsg(''); $('#gateNew1').focus();
+  return new Promise(resolve => {
+    $('#gateNew').addEventListener('submit', async e => {
+      e.preventDefault();
+      const a = $('#gateNew1').value, b = $('#gateNew2').value;
+      if (a.length < 8) { gateMsg('A senha precisa ter pelo menos 8 caracteres.', true); $('#gateNew1').focus(); return; }
+      if (a !== b) { gateMsg('As duas senhas estão diferentes.', true); $('#gateNew2').focus(); return; }
+      gateBusy(true); gateMsg('Salvando a senha nova…');
+      const { error } = await sb.auth.updateUser({ password:a });
+      gateBusy(false);
+      if (error) { gateMsg(authMsg(error), true); return; }
+      $('#gateNew1').value = $('#gateNew2').value = '';
+      resolve();
+    });
+  });
+}
 /* Mostra a tela de entrada até existir uma sessão. Resolve com o usuário. */
 async function cloudGate(){
   const gate = $('#gate'); gate.hidden = false;
@@ -1113,10 +1141,15 @@ async function cloudGate(){
   catch(e) { gateMsg('Não consegui abrir o serviço de login. Verifique a internet e recarregue a página.', true); gateBusy(true); return new Promise(() => {}); }
   const sb = window.supabase.createClient(CLOUD_CFG.url, CLOUD_CFG.key, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
   cloud.sb = sb;
-  sb.auth.onAuthStateChange((ev, session) => { cloud.token = session ? session.access_token : ''; });
+  let recovering = new URLSearchParams(location.hash.slice(1)).get('type') === 'recovery';
+  sb.auth.onAuthStateChange((ev, session) => { cloud.token = session ? session.access_token : ''; if (ev === 'PASSWORD_RECOVERY') recovering = true; });
   const { data } = await sb.auth.getSession();
   if (/access_token|error_description|type=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
-  if (data && data.session) { cloud.token = data.session.access_token; gate.hidden = true; return data.session.user; }
+  if (data && data.session) {
+    cloud.token = data.session.access_token;
+    if (recovering) { await gateNewPassword(sb); toast('Senha nova salva. Que bom te ver de novo no dojo!'); }
+    gate.hidden = true; return data.session.user;
+  }
   if (urlErr) gateMsg(authMsg(urlErr), true);
   $('#gateEmail').focus();
   return new Promise(resolve => {
@@ -1139,6 +1172,13 @@ async function cloudGate(){
       gateBusy(false);
       if (error) gateMsg(authMsg(error), true);
       else if (!d.session) gateMsg('Conta criada. Agora clique em Entrar.');
+    });
+    $('#gateForgot').addEventListener('click', async () => {
+      if (!okEmail()) return;
+      gateBusy(true); gateMsg('Enviando o link…');
+      const { error } = await sb.auth.resetPasswordForEmail(email(), { redirectTo:location.origin });
+      gateBusy(false);
+      gateMsg(error ? authMsg(error) : 'Se existir uma conta com ' + email() + ', o link para criar uma senha nova chega em instantes. Olhe também o spam.', !!error);
     });
   });
 }
