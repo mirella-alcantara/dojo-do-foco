@@ -251,7 +251,9 @@ Com o login ligado, o jogo pede e-mail e senha (ou um link de entrada no e-mail)
 2. Em **SQL Editor** → **New query**, cole o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
 3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (por exemplo `https://dojo-do-foco.netlify.app`). Em **Redirect URLs**, adicione esse mesmo endereço e `http://localhost:4321`.
 4. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
-5. No Netlify, em **Site configuration** → **Environment variables**, crie `SUPABASE_URL` e `SUPABASE_ANON_KEY` com esses valores e publique de novo (**Deploys** → **Trigger deploy**).
+5. Coloque os dois valores no `netlify.toml`, em `[build.environment]`, como `SUPABASE_URL` e `SUPABASE_ANON_KEY` (ou crie essas variáveis no painel do Netlify). O próximo `git push` publica com o login ligado.
+
+Este projeto já está configurado: o `netlify.toml` aponta para o projeto `nxtecdtjrxmzdubkmjrh` do Supabase.
 
 Para o servidor local, coloque as duas no `dojo.config.json`:
 
