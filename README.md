@@ -15,7 +15,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 
 ### [▶ Jogar agora: dojodofoco.com](https://dojodofoco.com)
 
-[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Reinos](#-reinos) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
+[Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Reinos](#-reinos) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-firebase-hosting)
 
 </div>
 
@@ -249,12 +249,12 @@ Com o login ligado, o jogo pede e-mail e senha antes de abrir o dojo: dá para c
 
 1. Crie uma conta e um projeto grátis em <https://supabase.com>.
 2. Em **SQL Editor** → **New query**, cole o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
-3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (aqui, `https://dojodofoco.com`). Em **Redirect URLs**, adicione esse endereço, a versão com `www`, o endereço `.netlify.app` e `http://localhost:4321`.
+3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (aqui, `https://dojodofoco.com`). Em **Redirect URLs**, adicione esse endereço, a versão com `www`, `https://dojodofoco.web.app` e `http://localhost:4321`.
 4. Em **Authentication** → **Sign In / Providers**, desligue **Confirm email** e clique em **Save changes**. Assim a conta fica pronta na hora, sem e-mail de confirmação.
 5. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
-6. Coloque os dois valores no `netlify.toml`, em `[build.environment]`, como `SUPABASE_URL` e `SUPABASE_ANON_KEY` (ou crie essas variáveis no painel do Netlify). O próximo `git push` publica com o login ligado.
+6. Coloque os dois valores em [`supabase/config.json`](supabase/config.json), como `supabaseUrl` e `supabaseAnonKey`. A próxima publicação já sai com o login ligado.
 
-Este projeto já está configurado: o `netlify.toml` aponta para o projeto `nxtecdtjrxmzdubkmjrh` do Supabase.
+Este projeto já está configurado: o `supabase/config.json` aponta para o projeto `nxtecdtjrxmzdubkmjrh` do Supabase. Variáveis de ambiente `SUPABASE_URL` e `SUPABASE_ANON_KEY`, ou o `dojo.config.json`, têm prioridade sobre ele.
 
 Para o servidor local, coloque as duas no `dojo.config.json`:
 
@@ -268,17 +268,21 @@ Na primeira vez que alguém entra, o progresso que já estava naquele navegador 
 
 **Esqueci minha senha:** na tela de entrada, a pessoa digita o e-mail e clica em **Esqueci minha senha**. Chega um link no e-mail, que abre o dojo pedindo uma senha nova. É o único e-mail que o jogo manda, e só quando alguém pede. O servidor de e-mail grátis do Supabase só entrega para os e-mails da equipe do projeto e tem um limite baixo por hora. Para outras pessoas receberem o link, configure um SMTP próprio em **Authentication** → **Emails** → **SMTP Settings** (por exemplo, com o Resend, que tem plano grátis).
 
-## 🌐 Publicar no Netlify
+## 🌐 Publicar no Firebase Hosting
 
-O projeto já vem pronto para o [Netlify](https://www.netlify.com), que é gratuito e funciona com repositório privado. O `netlify.toml` diz tudo o que ele precisa: roda `npm run build` e publica a pasta `dist/`.
+O site fica no [Firebase Hosting](https://firebase.google.com/docs/hosting), no plano grátis Spark, no projeto `dojodofoco`. O `firebase.json` publica a pasta `dist/` com os cabeçalhos de segurança, e o `.firebaserc` aponta para o projeto.
 
-1. Entre em <https://app.netlify.com> com a sua conta do GitHub.
-2. Clique em **Add new site** (ou **Add new project**) → **Import an existing project** → **GitHub** e autorize o acesso ao repositório `dojo-do-foco`.
-3. Escolha o repositório. O comando de build e a pasta de publicação já aparecem preenchidos pelo `netlify.toml`. Clique em **Deploy**.
-4. Nas configurações do site, troque o nome para ganhar um endereço como `dojo-do-foco.netlify.app`.
-5. Para ter um domínio próprio, compre-o em **Domain management** → **Add a domain** (este projeto usa `dojodofoco.com`, com o DNS no próprio Netlify). O cadeado HTTPS é emitido sozinho, e o `netlify.toml` redireciona o endereço `.netlify.app` para o domínio.
+Para publicar uma versão nova:
 
-Depois disso, cada `git push` publica uma versão nova sozinho.
+```bash
+npm run deploy
+```
+
+O comando gera o `dist/` e envia para o Firebase. Na primeira vez, faça login com `npx firebase-tools login`.
+
+- **Endereço:** <https://dojodofoco.com>. Também abre em `dojodofoco.web.app`.
+- **Domínio:** comprado pelo Netlify, com o DNS no Netlify. Os registros apontam para o Firebase.
+- **Antes:** o site ficava no Netlify. O plano grátis de lá passou a funcionar por créditos, e as publicações pararam quando os créditos acabaram. O `netlify.toml` ficou só para o endereço antigo `dojo-do-foco.netlify.app` continuar levando para o domínio.
 
 | | No site publicado | Rodando `npm start` |
 | --- | --- | --- |
@@ -301,9 +305,11 @@ index.html        o jogo inteiro: HTML, CSS e JavaScript, com a pixel art desenh
 server.js         servidor local e gravação no cofre do Obsidian
 lib/page.js       monta o documento completo (viewport, ícone, config da nuvem) a partir do index.html
 supabase/schema.sql  tabela de progresso e regras de acesso (RLS) do login
-scripts/build.js  gera a versão estática em dist/ para o Netlify
+scripts/build.js  gera a versão estática em dist/ para o Firebase Hosting
 scripts/opcoes-personagens.js  desenha as opções de visual dos modelos em docs/personagens/
-netlify.toml      configuração de publicação no Netlify
+firebase.json     configuração de publicação no Firebase Hosting (.firebaserc aponta para o projeto)
+netlify.toml      só redireciona o endereço antigo do Netlify para o domínio
+supabase/config.json  URL e chave pública do Supabase usadas no build
 package.json      scripts npm start e npm run build
 docs/             capturas de tela e GIF deste README
 docs/personagens/ opções de visual (A, B e C) de cada modelo

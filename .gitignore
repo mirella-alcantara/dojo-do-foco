@@ -6,3 +6,7 @@ dist/
 
 # Pesquisas ficam só no computador, fora do GitHub.
 pesquisas/
+
+# Cache local do Firebase CLI.
+.firebase/
+firebase-debug.log
