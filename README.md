@@ -235,11 +235,11 @@ DOJO_VAULT=/caminho/do/cofre PORT=4321 npm start
 
 ## 🔐 Login e progresso na nuvem
 
-Com o login ligado, o jogo pede e-mail e senha (ou um link de entrada no e-mail) antes de abrir o dojo. O progresso de cada pessoa fica na conta dela, no [Supabase](https://supabase.com), e volta em qualquer aparelho. Cada pessoa só vê o próprio progresso.
+Com o login ligado, o jogo pede e-mail e senha antes de abrir o dojo: dá para criar uma conta na hora, sem e-mail de confirmação, ou entrar com uma que já existe. O progresso de cada pessoa fica na conta dela, no [Supabase](https://supabase.com), e volta em qualquer aparelho. Cada pessoa só vê o próprio progresso.
 
 **Como os dados ficam protegidos**
 
-- As senhas ficam com o Supabase, guardadas com criptografia. O jogo nunca as recebe.
+- A senha vai pela conexão segura (HTTPS) direto para o Supabase, que a guarda com criptografia. O jogo não guarda a senha.
 - A tabela `saves` tem RLS (Row Level Security): o banco só entrega a linha da conta que fez o pedido. Quem abrir o código do site e tentar pedir os dados de outra pessoa recebe uma resposta vazia.
 - A página só recebe a chave **pública** (`anon` / `publishable`). Ela foi feita para ficar no navegador. O build se recusa a usar a chave `service_role`, que é secreta e nunca deve sair do painel do Supabase.
 - O cliente do Supabase é carregado com verificação de integridade (SRI): se o arquivo da CDN for alterado, o navegador não o executa.
@@ -250,8 +250,9 @@ Com o login ligado, o jogo pede e-mail e senha (ou um link de entrada no e-mail)
 1. Crie uma conta e um projeto grátis em <https://supabase.com>.
 2. Em **SQL Editor** → **New query**, cole o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
 3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (aqui, `https://dojodofoco.com`). Em **Redirect URLs**, adicione esse endereço, a versão com `www`, o endereço `.netlify.app` e `http://localhost:4321`.
-4. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
-5. Coloque os dois valores no `netlify.toml`, em `[build.environment]`, como `SUPABASE_URL` e `SUPABASE_ANON_KEY` (ou crie essas variáveis no painel do Netlify). O próximo `git push` publica com o login ligado.
+4. Em **Authentication** → **Sign In / Providers**, desligue **Confirm email** e clique em **Save changes**. Assim a conta fica pronta na hora, sem e-mail de confirmação.
+5. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
+6. Coloque os dois valores no `netlify.toml`, em `[build.environment]`, como `SUPABASE_URL` e `SUPABASE_ANON_KEY` (ou crie essas variáveis no painel do Netlify). O próximo `git push` publica com o login ligado.
 
 Este projeto já está configurado: o `netlify.toml` aponta para o projeto `nxtecdtjrxmzdubkmjrh` do Supabase.
 
@@ -264,6 +265,8 @@ Para o servidor local, coloque as duas no `dojo.config.json`:
 Sem essas variáveis, o jogo funciona como antes, sem login, com o progresso no navegador. Com login ligado no servidor local, o progresso vem da conta, e o cofre do Obsidian só recebe uma cópia de quem estiver conectado.
 
 Na primeira vez que alguém entra, o progresso que já estava naquele navegador vai para a conta dela. Se o mesmo dojo ficar aberto em dois aparelhos ao mesmo tempo, vale o último salvamento.
+
+Como não há e-mail de confirmação, também não existe "esqueci a senha" pelo jogo. Se alguém esquecer, dá para trocar a senha pelo painel do Supabase, em **Authentication** → **Users**.
 
 ## 🌐 Publicar no Netlify
 
