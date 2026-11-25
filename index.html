@@ -167,6 +167,32 @@ body.focusing .scene-pick{display:none}
 .ccw{position:relative;padding:0 8px 8px 0}
 .ccw::before{content:"";position:absolute;inset:12px 0 0 12px;border:2px solid var(--line);background:var(--panel2);border-radius:14px;transform:rotate(2.5deg)}
 .cc{position:relative;background:var(--panel);border:2px solid color-mix(in srgb,var(--ink) 55%,transparent);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.tcg{--tier:#9aa0ac;border:3px solid var(--tier);box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 5px color-mix(in srgb,var(--tier) 45%,transparent);gap:8px;padding:12px 12px 10px}
+.tcg-top{display:flex;align-items:center;gap:8px}
+.tcg-top h3{flex:1;min-width:0;font-family:var(--px);font-weight:700;font-size:20px;line-height:1.1;margin:0;overflow-wrap:anywhere}
+.tcg-tier{font-family:var(--px);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px 6px 6px 99px;background:var(--tier);color:#160f2b;white-space:nowrap}
+.tcg-type{width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:14px;background:var(--tier);color:#160f2b;box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--tier)}
+.tcg-art{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:120/112;border:3px solid color-mix(in srgb,var(--tier) 70%,#ffffff);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.tcg-art canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.tcg-holo{position:absolute;inset:0;pointer-events:none;opacity:0}
+.tcg[data-holo="1"] .tcg-holo{opacity:1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 42%,rgba(160,127,255,.22) 50%,rgba(92,225,230,.2) 56%,transparent 68%);background-size:250% 100%;mix-blend-mode:screen;animation:holo 5s ease-in-out infinite}
+@keyframes holo{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.tcg.up{animation:cardUp .9s ease-out}
+@keyframes cardUp{0%{transform:scale(1)}30%{transform:scale(1.04) rotate(-1deg);box-shadow:0 0 40px var(--tier)}100%{transform:scale(1)}}
+.tcg-sub{font-family:var(--px);font-size:13px;color:var(--muted);text-align:center;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--tier) 22%,transparent),transparent);padding:2px 0;margin-top:-2px}
+.tcg-move{display:flex;align-items:center;gap:8px;padding:4px 2px;border-bottom:2px solid var(--line)}
+.tcg-move .cost{display:flex;gap:3px}
+.tcg-move .cost i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;background:var(--tier);color:#160f2b}
+.tcg-move b{flex:1;font-family:var(--px);font-size:17px}
+.tcg-move .pow{font-family:var(--num);font-size:24px;line-height:1}
+.tcg-rule{font-size:12.5px;line-height:1.4;border:2px solid color-mix(in srgb,var(--tier) 55%,var(--line));border-radius:8px 8px 8px 2px;padding:6px 9px;background:var(--panel2)}
+.tcg-rule em{font-family:var(--px);font-style:normal;color:var(--tier);margin-right:4px}
+.tcg-foot{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted)}
+.tcg-foot .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tcg-foot .stars{color:var(--tier);letter-spacing:1px;font-size:13px}
+.tcg-foot .track{height:6px;border-width:1px}
+.tcg-foot .fill{background:var(--tier)}
+.tcg .quote{min-height:0;font-size:14px;padding:7px 10px}
 .cc-pic{position:relative;border-radius:9px;overflow:hidden;background:radial-gradient(circle at 50% 70%,color-mix(in srgb,var(--violet) 55%,transparent),transparent 65%),linear-gradient(#1c1438,#2a1d55);aspect-ratio:5/4}
 .cc-pic canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 .cc-name{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -446,17 +472,20 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
 
         <aside class="dojo-right">
           <div class="ccw">
-            <div class="cc">
-              <div class="cc-pic"><canvas id="portrait" width="64" height="51"></canvas></div>
-              <div id="ccVis"></div>
-              <div class="cc-name"><h3 id="ccName"></h3><span class="lv" id="ccLv"></span></div>
-              <div class="mono" id="ccSub" style="font-size:16px"></div>
+            <div class="cc tcg" id="cc">
+              <div class="tcg-top"><span class="tcg-tier" id="ccTier"></span><h3 id="ccName"></h3><span class="lv" id="ccLv"></span><span class="tcg-type" id="ccType"></span></div>
+              <div class="tcg-art"><canvas id="portrait" width="120" height="112"></canvas><div class="tcg-holo" aria-hidden="true"></div></div>
+              <div class="tcg-sub" id="ccSub"></div>
+              <div class="tcg-move" id="ccMove"></div>
               <div class="meters">
                 <div class="meter"><div class="meter-top"><span>XP</span><b id="xpTxt"></b></div><div class="track"><div class="fill xp" id="xpFill"></div></div></div>
                 <div class="meter"><div class="meter-top"><span>Energia</span><b id="hpTxt"></b></div><div class="track"><div class="fill hp" id="hpFill"></div></div></div>
               </div>
               <div class="attrs" id="attrs"></div>
+              <div class="tcg-rule" id="ccRule"></div>
               <p class="quote" id="quote"></p>
+              <div class="tcg-foot" id="ccFoot"></div>
+              <div id="ccVis"></div>
               <div class="cc-btns">
                 <button class="btn primary sm" id="talkBtn">Conversar</button>
                 <button class="btn outline sm" data-go="perfil">Perfil</button>
@@ -1309,7 +1338,7 @@ function tick(){
   if (m !== lastMinute) { lastMinute = m; minuteTick(); }
 }
 function minuteTick(){
-  checkDay(); applyUI(); renderHeader();
+  checkDay(); applyUI(); renderHeader(); drawCardArt();
   if (S.wx.auto && (S.wx.city || S.wx.geoCity === '@geo') && !wxBusy && (!S.wx.data || Date.now() - S.wx.data.at > 3600e3)) fetchWeather(false);
   const d = day(), [hh, mm] = (S.cfg.summaryAt || '22:00').split(':').map(Number), now = new Date();
   if (!d.notified && (now.getHours() > hh || (now.getHours() === hh && now.getMinutes() >= mm))) {
@@ -2971,10 +3000,6 @@ async function fetchWeather(manual, useGeo){
   } finally { wxBusy = false; save(); }
 }
 function drawPortrait(now){
-  const c = $('#portrait').getContext('2d'); c.clearRect(0, 0, 64, 51);
-  const P = pal(), sp = (now % 3000) < 1500;
-  c.fillStyle = 'rgba(255,255,255,.7)'; [[8,8],[54,14],[12,38],[50,40]].forEach(([x, y], i) => { if ((i + (sp ? 1 : 0)) % 2) { c.fillRect(x, y, 1, 3); c.fillRect(x - 1, y + 1, 3, 1); } });
-  drawFront(c, 18, 59, { pal:P, legs:'stand', arm:'down', blink:heroBlink(now), dy:(!reduced && Math.floor(now/900) % 2) ? 1 : 0 });
   if (S.view === 'perfil') {
     const bc2 = $('#bigPortrait'), b = bc2 && bc2.getContext('2d'); if (!b) return; b.clearRect(0, 0, 96, 60);
     const EP = charPal(EC());
@@ -3094,11 +3119,62 @@ function renderMissionCard(){
     <div class="toms" title="${t.done} feitos de ${t.est} estimados">${tm}</div>
     ${t.steps.length ? `<ul class="steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label></li>`).join('')}</ul>` : '<p class="small">Sem passos. Adicione passos pequenos na aba Missões.</p>'}`;
 }
+/* Carta da personagem: sobe de raridade conforme as missões concluídas. */
+const CARD_TIERS = [[0,'Comum','#a9aebb'],[1,'Incomum','#8fd18b'],[3,'Rara','#6cb4ff'],[6,'Épica','#b98cff'],[10,'Lendária','#f5c66b'],[20,'Mítica','#ff6fb5']];
+function cardTier(){ const q = S.totals.quests || 0; let i = 0; CARD_TIERS.forEach((t, k) => { if (q >= t[0]) i = k; }); return i; }
+let artKey = '';
+function drawCardArt(force){
+  const cv = $('#portrait'); if (!cv) return;
+  const ch = HERO(), ti = cardTier(), h = hourNow(), sky = skyAt(h), a = effAmb(sky.amb, WX[wxNow()]), tc = CARD_TIERS[ti][2];
+  const key = JSON.stringify([ch.id, ch.cls, ch.look, ch.col, ti, Math.round(h*4), a.toFixed(2)]);
+  if (!force && key === artKey) return; artKey = key;
+  const c = cv.getContext('2d'), W2 = 120, H2 = 112, fx = (x, y, w, h2, col) => { c.fillStyle = col; c.fillRect(x, y, w, h2); };
+  c.imageSmoothingEnabled = false; c.clearRect(0, 0, W2, H2);
+  const gr = c.createLinearGradient(0, 0, 0, 84); gr.addColorStop(0, sky.top); gr.addColorStop(1, sky.bot); c.fillStyle = gr; c.fillRect(0, 0, W2, H2);
+  const leaf = mix('#8fc46a', '#1f3a34', a), leafD = mix('#5f9a4e', '#142822', a), trunk = mix('#8a6040', '#2a1e26', a);
+  /* árvores ao fundo */
+  [[4, 16, 10], [100, 14, 12]].forEach(([x, w, top]) => { fx(x, top, w, 84, mix(trunk, sky.bot, 0.35)); });
+  for (let i = 0; i < 9; i++) { const x = (i*29) % 120 - 8, y = 4 + (i*13) % 22; c.fillStyle = mix(leafD, sky.bot, 0.45); c.beginPath(); c.arc(x, y, 12 + (i % 3)*3, 0, Math.PI*2); c.fill(); }
+  if (a < 0.5) { /* raios de sol */
+    c.save(); c.globalAlpha = 0.16*(1 - a*2); c.fillStyle = '#fff6c8';
+    for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(18 + i*16, 0); c.lineTo(30 + i*16, 0); c.lineTo(70 + i*20, H2); c.lineTo(52 + i*20, H2); c.closePath(); c.fill(); }
+    c.restore();
+  } else { /* estrelas e lua */
+    c.fillStyle = '#f4efe2'; [[10, 8], [30, 20], [52, 6], [78, 18], [100, 9], [66, 28]].forEach(([x, y]) => fx(x, y, 1, 1, '#f4efe2'));
+    c.beginPath(); c.arc(92, 16, 6, 0, Math.PI*2); c.fill(); c.fillStyle = sky.top; c.beginPath(); c.arc(95, 14, 5, 0, Math.PI*2); c.fill();
+  }
+  /* brilho da raridade atrás da personagem */
+  const halo = c.createRadialGradient(60, 64, 6, 60, 64, 52); halo.addColorStop(0, tc + 'aa'); halo.addColorStop(1, tc + '00'); c.fillStyle = halo; c.fillRect(0, 0, W2, H2);
+  /* morrinho de grama */
+  c.fillStyle = leaf; c.beginPath(); c.ellipse(60, 122, 76, 28, 0, 0, Math.PI*2); c.fill();
+  fx(0, 104, W2, 8, leafD);
+  for (let x = 2; x < W2; x += 5) fx(x, 96 + ((x*7) % 5), 1, 3, mix(leaf, '#ffffff', 0.25));
+  [[16, 100], [96, 98], [84, 104], [28, 106]].forEach(([x, y], i) => { fx(x, y, 2, 2, i % 2 ? '#fff4c6' : tc); fx(x, y + 2, 1, 2, leafD); });
+  c.save(); c.globalAlpha = 0.3; c.fillStyle = '#000'; c.beginPath(); c.ellipse(60, 106, 24, 4, 0, 0, Math.PI*2); c.fill(); c.restore();
+  drawFront(c, 32, 106, { pal:pal(), legs:'stand', arm:'down', u:4 });
+  /* folhas desfocadas na frente, como numa ilustração */
+  c.save(); c.globalAlpha = 0.55; c.fillStyle = leafD;
+  [[-4, 84, 11], [4, 108, 13], [120, 88, 12], [112, 110, 14]].forEach(([x, y, r]) => { c.beginPath(); c.arc(x, y, r, 0, Math.PI*2); c.fill(); });
+  c.restore();
+  c.fillStyle = 'rgba(255,255,255,.8)'; [[12, 44], [106, 50], [20, 72]].forEach(([x, y]) => { fx(x, y, 1, 3); fx(x - 1, y + 1, 3, 1); });
+}
 function renderCard(){
   const c = CLASSES[HERO().cls] || CLASSES.samurai, t = title(S.lvl);
-  $('#ccName').textContent = HERO().name || 'Sem nome';
-  $('#ccLv').textContent = `LV ${S.lvl} ♥`;
-  $('#ccSub').textContent = `${HERO().title || c.n + ' ' + c.k} · ${t[1]} ${t[2]}`;
+  const ch = HERO(), ti = cardTier(), T2 = CARD_TIERS[ti], nx = CARD_TIERS[ti + 1], nq = S.totals.quests || 0, card = $('#cc');
+  card.style.setProperty('--tier', T2[2]); card.dataset.holo = ti >= 3 ? '1' : '0';
+  if (S.cardTier == null) S.cardTier = ti;
+  else if (ti > S.cardTier) { S.cardTier = ti; sfx('chime'); toast(`A carta de ${ch.name || 'sua personagem'} subiu para ${T2[1]}!`); card.classList.remove('up'); void card.offsetWidth; card.classList.add('up'); save(); }
+  $('#ccTier').textContent = T2[1];
+  $('#ccName').textContent = ch.name || 'Sem nome';
+  $('#ccLv').textContent = `LV ${S.lvl}`;
+  $('#ccType').textContent = c.k.slice(0, 1);
+  $('#ccSub').textContent = `${ch.title || c.n + ' ' + c.k} · ${t[1]} ${t[2]}`;
+  const sp = ch.spec || {}, pow = ((+sp.forca || 0) + (+sp.agil || 0))*5 + S.lvl*2;
+  $('#ccMove').innerHTML = `<span class="cost"><i>${esc(c.k.slice(0, 1))}</i><i>${esc(c.k.slice(0, 1))}</i></span><b>${esc(WEAPONS[ch.weapon] || 'Golpe')}</b><span class="pow">${pow}</span>`;
+  $('#ccRule').innerHTML = `<em>Habilidade</em>${esc(PERKS[ch.perk] || c.perk)}`;
+  $('#ccFoot').innerHTML = `<div class="row"><span class="stars">${'★'.repeat(ti + 1)}${'☆'.repeat(CARD_TIERS.length - ti - 1)}</span><span>Nº ${String(nq).padStart(3, '0')} · Dojo do Foco</span></div>`
+    + (nx ? `<div class="row"><span>${nq}/${nx[0]} missões para ${nx[1]}</span></div><div class="track"><div class="fill" style="width:${Math.min(100, (nq - T2[0])/(nx[0] - T2[0])*100)}%"></div></div>` : `<div class="row"><span>Raridade máxima. ${nq} missões concluídas.</span></div>`);
+  drawCardArt();
   $('#xpTxt').textContent = `${S.xp}/${need(S.lvl)}`; $('#xpFill').style.width = (S.xp/need(S.lvl)*100) + '%';
   $('#hpTxt').textContent = `${S.hp}/100`; const hf = $('#hpFill'); hf.style.width = S.hp + '%'; hf.classList.toggle('low', S.hp < 30);
   $('#attrs').innerHTML = [['Foco','foco'],['Disciplina','disc'],['Vitalidade','vit']].map(([n, k]) => `<div class="attr"><div class="v">${S.stats[k]}</div><div class="k">${n}</div></div>`).join('');
