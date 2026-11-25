@@ -389,6 +389,20 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
 /* Selo "Powered by Netlify" do plano grátis: fica acima da barra de abas em vez de cobri-la */
 #nl-badge-frame{bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
 
+/* Portão de entrada (login na nuvem). Só aparece quando o site tem o Supabase configurado. */
+#gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% 30%,var(--glow),var(--bg) 70%);overflow:auto}
+#gate .gate-box{width:min(400px,100%);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:24px 22px;box-shadow:0 0 0 4px var(--bg),0 18px 50px rgba(0,0,0,.45)}
+#gate h1{font-family:var(--px);font-size:26px;margin:0 0 2px;text-align:center}
+#gate .gate-jp{font-family:var(--jp);color:var(--pink);text-align:center;margin:0 0 14px;letter-spacing:.2em}
+#gate form{display:grid;gap:10px}
+#gate label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+#gate input{background:var(--panel2);border:2px solid var(--line);border-radius:7px;padding:10px 12px;font-size:16px;color:var(--ink);width:100%;box-sizing:border-box}
+#gate input:focus-visible{outline:2px solid var(--violet);outline-offset:1px}
+#gate .gate-row{display:flex;gap:8px;flex-wrap:wrap}
+#gate .gate-row .btn{flex:1 1 140px}
+#gate .gate-msg{min-height:1.3em;margin:4px 0 0;font-size:14px;color:var(--muted)}
+#gate .gate-msg.err{color:var(--danger)}
+#gate .gate-foot{font-size:12.5px;color:var(--faint);margin:14px 0 0;line-height:1.45}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--dlg);color:var(--dlg-ink);border:2px solid var(--dlg-ink);padding:10px 16px;border-radius:6px;font-size:15px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 0 0 3px var(--dlg),0 8px 24px rgba(0,0,0,.3)}
 .log{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:4px;font-size:14px}
 .log li{display:grid;grid-template-columns:46px minmax(0,1fr);gap:6px}
@@ -602,6 +616,12 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
               <div class="presets" id="sceneOpts"></div>
               <label class="tog" style="margin-top:12px"><input type="checkbox" id="cfg-bg3d"><div><b>Reino em 3D no fundo</b><span>Uma paisagem animada em 3D (three.js) atrás do jogo, do mesmo reino. Desligue se o computador ficar lento.</span></div></label>
             </div>
+            <div class="card set" id="cloudCard" hidden>
+              <h3>Conta</h3>
+              <p class="small" id="cloudInfo"></p>
+              <p class="wx-status" id="cloudStatus"></p>
+              <button class="btn sm" id="cloudOut" type="button">Sair da conta</button>
+            </div>
             <div class="card set">
               <h3>Obsidian</h3>
               <p class="small" id="vaultInfo"></p>
@@ -675,6 +695,24 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
   </div>
 </nav>
 <div class="toast" id="toast" hidden></div>
+<div id="gate" hidden>
+  <div class="gate-box" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <h1 id="gateTitle">Dojo do Foco</h1>
+    <p class="gate-jp">道場</p>
+    <p class="small" id="gateLead">Entre para guardar o seu progresso na nuvem. Ele fica só na sua conta e volta em qualquer aparelho.</p>
+    <form id="gateForm" novalidate>
+      <label>E-mail<input type="email" id="gateEmail" autocomplete="email" required maxlength="254" inputmode="email"></label>
+      <label>Senha<input type="password" id="gatePass" autocomplete="current-password" minlength="8" maxlength="72"></label>
+      <div class="gate-row">
+        <button class="btn primary" type="submit" id="gateIn">Entrar</button>
+        <button class="btn" type="button" id="gateUp">Criar conta</button>
+      </div>
+      <button class="btn ghost sm" type="button" id="gateLink">Prefiro receber um link de entrada no e-mail</button>
+    </form>
+    <p class="gate-msg" id="gateMsg" role="status" aria-live="polite"></p>
+    <p class="gate-foot">A senha é guardada com criptografia pelo Supabase e nunca passa pelo jogo. Ninguém além de você consegue ler o seu progresso.</p>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -988,8 +1026,179 @@ function merge(o){
   Object.values(out.days || {}).forEach(x => { const b = newDay(x.date); Object.keys(b).forEach(k => { if (x[k] === undefined) x[k] = b[k]; }); });
   return out;
 }
-function load(){ try { const r = localStorage.getItem(KEY); if (r) return merge(JSON.parse(r)); } catch(e){} return null; }
-function save(){ S._savedAt = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} vaultSave(); }
+/* Com login, cada conta tem a sua cópia local (STORE = KEY:id), para duas pessoas no mesmo navegador não se misturarem. */
+let STORE = KEY;
+function load(){ try { const r = localStorage.getItem(STORE); if (r) return merge(JSON.parse(r)); } catch(e){} return null; }
+function save(){ S._savedAt = Date.now(); try { localStorage.setItem(STORE, JSON.stringify(S)); } catch(e){} vaultSave(); cloudSave(); }
+
+/* ================= Nuvem (Supabase): login e progresso por conta ================= */
+/* Só liga quando o site recebe window.DOJO_CLOUD = { url, key } (ver lib/page.js).
+   A key é a chave pública "anon": quem protege os dados é a regra RLS do banco (supabase/schema.sql),
+   que só deixa cada conta ler e gravar a própria linha. */
+const CLOUD_CFG = (() => {
+  const c = window.DOJO_CLOUD;
+  if (!c || window.claude?.hot) return null;
+  if (typeof c.url !== 'string' || !/^(https:\/\/[a-z0-9.-]+|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/i.test(c.url)) return null;
+  if (typeof c.key !== 'string' || !/^[A-Za-z0-9._-]{20,}$/.test(c.key)) return null;
+  return { url:c.url, key:c.key };
+})();
+const SB_SRC = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js';
+const SB_SRI = 'sha384-A97u3Qnt9GZHURO9YJZRe7VQgGUeFzcv6I1oIGnUTxQrCxnpQMwR0/G8F2zt9abZ';
+const cloud = { on:false, sb:null, user:null, token:'', last:0, err:'', sent:'', busy:false, again:false, migrated:false };
+let cloudT;
+const cloudKey = () => { const c = Object.assign({}, S); delete c._savedAt; return JSON.stringify(c); };
+function cloudSave(now){
+  if (!cloud.on) return Promise.resolve(true);
+  clearTimeout(cloudT);
+  const go = async () => {
+    if (cloud.busy) { cloud.again = true; return false; }
+    const key = cloudKey();
+    if (key === cloud.sent) return true;
+    cloud.busy = true;
+    try {
+      const { error } = await cloud.sb.from('saves').upsert({ user_id:cloud.user.id, state:S, saved_at:new Date(S._savedAt || Date.now()).toISOString() });
+      if (error) throw error;
+      cloud.sent = key; cloud.last = Date.now(); cloud.err = '';
+      if (cloud.migrated) { try { localStorage.removeItem(KEY); } catch(e){} cloud.migrated = false; }
+      return true;
+    } catch(e) {
+      cloud.err = navigator.onLine === false ? 'Sem internet: o progresso fica neste aparelho e sobe quando a conexão voltar.' : 'Não consegui salvar na nuvem agora. Vou tentar de novo.';
+      return false;
+    } finally {
+      cloud.busy = false; renderCloud();
+      if (cloud.again) { cloud.again = false; cloudSave(); }
+    }
+  };
+  if (now) return go();
+  cloudT = setTimeout(go, 2000);
+  return Promise.resolve(true);
+}
+/* Ao fechar a aba: envia o que faltou com keepalive (o navegador termina o envio sozinho). */
+function cloudBeacon(){
+  if (!cloud.on || !cloud.token) return;
+  const key = cloudKey(); if (key === cloud.sent) return;
+  const body = JSON.stringify({ user_id:cloud.user.id, state:S, saved_at:new Date(S._savedAt || Date.now()).toISOString() });
+  if (body.length > 60000) return; /* limite do keepalive; o salvamento normal já cobre */
+  try {
+    fetch(CLOUD_CFG.url + '/rest/v1/saves?on_conflict=user_id', { method:'POST', keepalive:true,
+      headers:{ apikey:CLOUD_CFG.key, Authorization:'Bearer ' + cloud.token, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates,return=minimal' }, body });
+    cloud.sent = key;
+  } catch(e){}
+}
+function loadScript(src, sri){
+  return new Promise((ok, fail) => {
+    const el = document.createElement('script');
+    el.src = src; el.integrity = sri; el.crossOrigin = 'anonymous'; el.referrerPolicy = 'no-referrer';
+    el.onload = ok; el.onerror = () => fail(new Error('script'));
+    document.head.appendChild(el);
+  });
+}
+const AUTH_MSG = [
+  [/invalid login credentials/i, 'E-mail ou senha incorretos.'],
+  [/email not confirmed/i, 'Confirme o e-mail pelo link que enviamos antes de entrar.'],
+  [/already registered|already been registered/i, 'Esse e-mail já tem conta. Use Entrar.'],
+  [/rate limit|too many|security purposes/i, 'Muitas tentativas seguidas. Espere um minuto e tente de novo.'],
+  [/password.*(at least|short|weak|characters)/i, 'A senha precisa ter pelo menos 8 caracteres, com letras e números.'],
+  [/invalid.*email|email.*invalid/i, 'Esse e-mail não parece válido.'],
+  [/expired|otp/i, 'O link expirou ou já foi usado. Peça um novo.'],
+  [/signups not allowed/i, 'Novas contas estão fechadas neste dojo.'],
+  [/failed to fetch|network/i, 'Sem conexão com o serviço de login. Verifique a internet.']
+];
+const authMsg = e => { const m = String((e && (e.message || e)) || ''); const f = AUTH_MSG.find(x => x[0].test(m)); return f ? f[1] : 'Não deu certo. Tente de novo em instantes.'; };
+function gateMsg(txt, err){ const el = $('#gateMsg'); el.textContent = txt || ''; el.classList.toggle('err', !!err); }
+function gateBusy(on){ ['#gateIn','#gateUp','#gateLink'].forEach(q => { $(q).disabled = on; }); }
+/* Mostra a tela de entrada até existir uma sessão. Resolve com o usuário. */
+async function cloudGate(){
+  const gate = $('#gate'); gate.hidden = false;
+  const urlErr = new URLSearchParams(location.hash.slice(1)).get('error_description');
+  try { await loadScript(SB_SRC, SB_SRI); }
+  catch(e) { gateMsg('Não consegui abrir o serviço de login. Verifique a internet e recarregue a página.', true); gateBusy(true); return new Promise(() => {}); }
+  const sb = window.supabase.createClient(CLOUD_CFG.url, CLOUD_CFG.key, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
+  cloud.sb = sb;
+  sb.auth.onAuthStateChange((ev, session) => { cloud.token = session ? session.access_token : ''; });
+  const { data } = await sb.auth.getSession();
+  if (/access_token|error_description|type=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+  if (data && data.session) { cloud.token = data.session.access_token; gate.hidden = true; return data.session.user; }
+  if (urlErr) gateMsg(authMsg(urlErr), true);
+  $('#gateEmail').focus();
+  return new Promise(resolve => {
+    const email = () => $('#gateEmail').value.trim().toLowerCase();
+    const pass = () => $('#gatePass').value;
+    const redirect = location.origin + location.pathname;
+    const okEmail = () => { if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) return true; gateMsg('Digite um e-mail válido.', true); $('#gateEmail').focus(); return false; };
+    const okPass = () => { if (pass().length >= 8) return true; gateMsg('A senha precisa ter pelo menos 8 caracteres.', true); $('#gatePass').focus(); return false; };
+    sb.auth.onAuthStateChange((ev, session) => { if (session && ev === 'SIGNED_IN') { gate.hidden = true; resolve(session.user); } });
+    $('#gateForm').addEventListener('submit', async e => {
+      e.preventDefault(); if (!okEmail() || !okPass()) return;
+      gateBusy(true); gateMsg('Entrando…');
+      const { error } = await sb.auth.signInWithPassword({ email:email(), password:pass() });
+      gateBusy(false); if (error) gateMsg(authMsg(error), true);
+    });
+    $('#gateUp').addEventListener('click', async () => {
+      if (!okEmail() || !okPass()) return;
+      gateBusy(true); gateMsg('Criando a conta…');
+      const { data:d, error } = await sb.auth.signUp({ email:email(), password:pass(), options:{ emailRedirectTo:redirect } });
+      gateBusy(false);
+      if (error) gateMsg(authMsg(error), true);
+      else if (!d.session) gateMsg('Quase lá! Enviamos um link de confirmação para ' + email() + '. Abra o e-mail e clique nele.');
+    });
+    $('#gateLink').addEventListener('click', async () => {
+      if (!okEmail()) return;
+      gateBusy(true); gateMsg('Enviando o link…');
+      const { error } = await sb.auth.signInWithOtp({ email:email(), options:{ emailRedirectTo:redirect } });
+      gateBusy(false);
+      gateMsg(error ? authMsg(error) : 'Pronto! Se existir uma conta com ' + email() + ', o link de entrada chega em instantes.', !!error);
+    });
+  });
+}
+/* Login + busca do progresso. Só depois de ler a nuvem com sucesso o jogo pode gravar nela,
+   para nunca subir um progresso vazio por cima do que já existe. */
+async function cloudStart(){
+  const user = await cloudGate();
+  cloud.user = user; STORE = KEY + ':' + user.id;
+  let local = null; try { const r = localStorage.getItem(STORE); if (r) local = JSON.parse(r); } catch(e){}
+  let remote = null;
+  for (;;) {
+    const { data, error } = await cloud.sb.from('saves').select('state, saved_at').eq('user_id', user.id).maybeSingle();
+    if (!error) { remote = data; break; }
+    $('#gate').hidden = false; gateBusy(true);
+    gateMsg('Entrei na conta, mas não consegui buscar o seu progresso. Tentando de novo…', true);
+    await new Promise(r => setTimeout(r, 5000));
+  }
+  $('#gate').hidden = true;
+  const rT = remote ? Date.parse(remote.saved_at) || 0 : 0, lT = local ? local._savedAt || 0 : 0;
+  let state = null;
+  if (remote && remote.state && rT >= lT) state = remote.state;
+  else if (local) state = local;
+  else { try { const old = localStorage.getItem(KEY); if (old) { state = JSON.parse(old); cloud.migrated = true; } } catch(e){} }
+  cloud.on = true;
+  return { S:state };
+}
+function cloudAfterBoot(){
+  if (!cloud.on) return;
+  cloud.sent = ''; cloudSave(true);
+  if (cloud.migrated) toast('O progresso que estava neste navegador agora está na sua conta.');
+  window.addEventListener('pagehide', cloudBeacon);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudBeacon(); });
+  window.addEventListener('online', () => cloudSave(true));
+  let armed = false;
+  $('#cloudOut').addEventListener('click', async e => {
+    const b = e.target; b.disabled = true; b.textContent = 'Salvando…';
+    save(); const ok = await cloudSave(true);
+    if (!ok && !armed) { armed = true; b.disabled = false; b.textContent = 'Sair mesmo assim'; toast('Não consegui salvar na nuvem. Se sair agora, o que não subiu fica perdido.'); return; }
+    try { localStorage.removeItem(STORE); } catch(e){}
+    cloud.on = false;
+    await cloud.sb.auth.signOut();
+    location.replace(location.pathname);
+  });
+  renderCloud();
+}
+function renderCloud(){
+  const card = $('#cloudCard'); if (!card || !cloud.user) return;
+  card.hidden = false;
+  $('#cloudInfo').textContent = 'Conta: ' + (cloud.user.email || '') + '. O progresso é salvo nela e volta em qualquer aparelho em que você entrar. Só você tem acesso.';
+  $('#cloudStatus').textContent = cloud.err || (cloud.last ? 'Salvo na nuvem às ' + hm(cloud.last) + '.' : 'Conectado à nuvem.');
+}
 
 /* ================= Obsidian (servidor local) ================= */
 const LOCAL = /^https?:$/.test(location.protocol) && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
@@ -3754,18 +3963,22 @@ function boot(data){
   window.claude?.hot?.snapshot?.(() => ({ S }));
   vaultLoad().then(j => {
     if (!j) return;
-    if (j.state && (j.state._savedAt || 0) > (S._savedAt || 0)) {
+    /* Com login, a conta é a fonte da verdade: o cofre é um arquivo só e poderia ter o progresso de outra pessoa. */
+    if (!cloud.on && j.state && (j.state._savedAt || 0) > (S._savedAt || 0)) {
       S = merge(j.state); checkDay(); applyUI(); go(S.view || 'dojo');
       toast('Progresso carregado do Obsidian.');
     }
     vault.sent = ''; vaultSave(true); renderVault();
   });
+  cloudAfterBoot();
   window.addEventListener('pagehide', vaultBeacon);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') vaultBeacon(); });
   setInterval(tick, 250); tick(); minuteTick();
   requestAnimationFrame(frame);
   setInterval(save, 10000);
 }
-window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+if (window.claude?.hot?.ready) window.claude.hot.ready(boot);
+else if (CLOUD_CFG) cloudStart().then(boot);
+else boot(window.claude?.hot?.data ?? {});
 })();
 </script>

@@ -233,6 +233,36 @@ DOJO_VAULT=/caminho/do/cofre PORT=4321 npm start
 
 </details>
 
+## 🔐 Login e progresso na nuvem
+
+Com o login ligado, o jogo pede e-mail e senha (ou um link de entrada no e-mail) antes de abrir o dojo. O progresso de cada pessoa fica na conta dela, no [Supabase](https://supabase.com), e volta em qualquer aparelho. Cada pessoa só vê o próprio progresso.
+
+**Como os dados ficam protegidos**
+
+- As senhas ficam com o Supabase, guardadas com criptografia. O jogo nunca as recebe.
+- A tabela `saves` tem RLS (Row Level Security): o banco só entrega a linha da conta que fez o pedido. Quem abrir o código do site e tentar pedir os dados de outra pessoa recebe uma resposta vazia.
+- A página só recebe a chave **pública** (`anon` / `publishable`). Ela foi feita para ficar no navegador. O build se recusa a usar a chave `service_role`, que é secreta e nunca deve sair do painel do Supabase.
+- O cliente do Supabase é carregado com verificação de integridade (SRI): se o arquivo da CDN for alterado, o navegador não o executa.
+- Ao sair da conta, a cópia local daquele navegador é apagada. Num computador compartilhado, a próxima pessoa não vê nada.
+
+**Configurar (uma vez só)**
+
+1. Crie uma conta e um projeto grátis em <https://supabase.com>.
+2. Em **SQL Editor** → **New query**, cole o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
+3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (por exemplo `https://dojo-do-foco.netlify.app`). Em **Redirect URLs**, adicione esse mesmo endereço e `http://localhost:4321`.
+4. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
+5. No Netlify, em **Site configuration** → **Environment variables**, crie `SUPABASE_URL` e `SUPABASE_ANON_KEY` com esses valores e publique de novo (**Deploys** → **Trigger deploy**).
+
+Para o servidor local, coloque as duas no `dojo.config.json`:
+
+```json
+{ "supabaseUrl": "https://abcd.supabase.co", "supabaseAnonKey": "sua-chave-anon" }
+```
+
+Sem essas variáveis, o jogo funciona como antes, sem login, com o progresso no navegador. Com login ligado no servidor local, o progresso vem da conta, e o cofre do Obsidian só recebe uma cópia de quem estiver conectado.
+
+Na primeira vez que alguém entra, o progresso que já estava naquele navegador vai para a conta dela. Se o mesmo dojo ficar aberto em dois aparelhos ao mesmo tempo, vale o último salvamento.
+
 ## 🌐 Publicar no Netlify
 
 O projeto já vem pronto para o [Netlify](https://www.netlify.com), que é gratuito e funciona com repositório privado. O `netlify.toml` diz tudo o que ele precisa: roda `npm run build` e publica a pasta `dist/`.
@@ -246,7 +276,7 @@ Depois disso, cada `git push` publica uma versão nova sozinho.
 
 | | No site publicado | Rodando `npm start` |
 | --- | --- | --- |
-| Onde o progresso fica | No navegador de cada aparelho | No cofre do Obsidian |
+| Onde o progresso fica | Na conta de cada pessoa (com login) ou no navegador | No cofre do Obsidian (e na conta, com login) |
 | Clima | Automático, pela cidade ou pela localização do aparelho | Automático, pela cidade ou pela localização |
 | Onde abre | Em qualquer aparelho, celular incluído | Só no computador onde o servidor está rodando |
 
@@ -263,7 +293,8 @@ O resultado fica em `dist/index.html`.
 ```
 index.html        o jogo inteiro: HTML, CSS e JavaScript, com a pixel art desenhada em canvas
 server.js         servidor local e gravação no cofre do Obsidian
-lib/page.js       monta o documento completo (viewport, ícone) a partir do index.html
+lib/page.js       monta o documento completo (viewport, ícone, config da nuvem) a partir do index.html
+supabase/schema.sql  tabela de progresso e regras de acesso (RLS) do login
 scripts/build.js  gera a versão estática em dist/ para o Netlify
 scripts/opcoes-personagens.js  desenha as opções de visual dos modelos em docs/personagens/
 netlify.toml      configuração de publicação no Netlify

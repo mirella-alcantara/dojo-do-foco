@@ -1,5 +1,6 @@
 # Publicação no Netlify: o site é o jogo estático gerado em dist/.
-# O salvamento no Obsidian (server.js) só roda no seu computador; no site, o progresso fica no navegador.
+# O salvamento no Obsidian (server.js) só roda no seu computador.
+# Login na nuvem: defina SUPABASE_URL e SUPABASE_ANON_KEY nas variáveis de ambiente do site (ver README).
 
 [build]
   command = "npm run build"
