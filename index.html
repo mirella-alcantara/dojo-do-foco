@@ -167,32 +167,31 @@ body.focusing .scene-pick{display:none}
 .ccw{position:relative;padding:0 8px 8px 0}
 .ccw::before{content:"";position:absolute;inset:12px 0 0 12px;border:2px solid var(--line);background:var(--panel2);border-radius:14px;transform:rotate(2.5deg)}
 .cc{position:relative;background:var(--panel);border:2px solid color-mix(in srgb,var(--ink) 55%,transparent);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
-.tcg{--tier:#9aa0ac;border:3px solid var(--tier);box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 5px color-mix(in srgb,var(--tier) 45%,transparent);gap:8px;padding:12px 12px 10px}
-.tcg-top{display:flex;align-items:center;gap:8px}
-.tcg-top h3{flex:1;min-width:0;font-family:var(--px);font-weight:700;font-size:20px;line-height:1.1;margin:0;overflow-wrap:anywhere}
-.tcg-tier{font-family:var(--px);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px 6px 6px 99px;background:var(--tier);color:#160f2b;white-space:nowrap}
-.tcg-type{width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:14px;background:var(--tier);color:#160f2b;box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--tier)}
-.tcg-art{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:120/112;border:3px solid color-mix(in srgb,var(--tier) 70%,#ffffff);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+/* Carta de duelo: moldura na cor da raridade, faixa do nome, estrelas, arte com moldura chanfrada e caixa de texto de pergaminho. */
+.tcg{--tier:#a9aebb;position:relative;border-radius:10px;padding:9px 9px 7px;display:flex;flex-direction:column;gap:5px;color:#1e1410;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--tier) 70%,#fff) 0%,var(--tier) 30%,color-mix(in srgb,var(--tier) 72%,#1a0f0a) 100%);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--tier) 40%,#000),inset 0 0 0 4px color-mix(in srgb,var(--tier) 55%,#fff),0 6px 18px rgba(0,0,0,.45)}
+.tcg-name{display:flex;align-items:center;gap:6px;padding:4px 5px 4px 9px;border-radius:3px;background:linear-gradient(#fffaf0,color-mix(in srgb,var(--tier) 22%,#f1e6cf));box-shadow:inset 0 -2px 0 rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.35)}
+.tcg-name h3{flex:1;min-width:0;margin:0;font-family:var(--px);font-weight:700;font-size:19px;line-height:1.1;color:#1e1410;overflow-wrap:anywhere}
+.tcg-attr{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;color:#fff;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--tier) 40%,#fff),color-mix(in srgb,var(--tier) 60%,#000));box-shadow:0 0 0 2px #f1e6cf,0 0 0 3px rgba(0,0,0,.4)}
+.tcg-stars{display:flex;justify-content:flex-end;gap:2px;padding:0 3px;min-height:16px}
+.tcg-stars i{width:15px;height:15px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;color:#fff4c6;background:radial-gradient(circle at 35% 30%,#ffb35c,#c2401e);box-shadow:0 0 0 1px #6a1e0c}
+.tcg-art{position:relative;margin:0 6px;aspect-ratio:120/112;overflow:hidden;border:3px solid;border-color:color-mix(in srgb,var(--tier) 35%,#000) color-mix(in srgb,var(--tier) 45%,#fff) color-mix(in srgb,var(--tier) 45%,#fff) color-mix(in srgb,var(--tier) 35%,#000);background:#000}
 .tcg-art canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 .tcg-holo{position:absolute;inset:0;pointer-events:none;opacity:0}
-.tcg[data-holo="1"] .tcg-holo{opacity:1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 42%,rgba(160,127,255,.22) 50%,rgba(92,225,230,.2) 56%,transparent 68%);background-size:250% 100%;mix-blend-mode:screen;animation:holo 5s ease-in-out infinite}
+.tcg[data-holo="1"] .tcg-holo{opacity:1;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.3) 38%,rgba(255,111,181,.22) 46%,rgba(92,225,230,.22) 54%,rgba(245,198,107,.2) 60%,transparent 72%);background-size:260% 100%;mix-blend-mode:screen;animation:holo 5s ease-in-out infinite}
 @keyframes holo{0%,100%{background-position:100% 0}50%{background-position:0 0}}
 .tcg.up{animation:cardUp .9s ease-out}
 @keyframes cardUp{0%{transform:scale(1)}30%{transform:scale(1.04) rotate(-1deg);box-shadow:0 0 40px var(--tier)}100%{transform:scale(1)}}
-.tcg-sub{font-family:var(--px);font-size:13px;color:var(--muted);text-align:center;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--tier) 22%,transparent),transparent);padding:2px 0;margin-top:-2px}
-.tcg-move{display:flex;align-items:center;gap:8px;padding:4px 2px;border-bottom:2px solid var(--line)}
-.tcg-move .cost{display:flex;gap:3px}
-.tcg-move .cost i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;background:var(--tier);color:#160f2b}
-.tcg-move b{flex:1;font-family:var(--px);font-size:17px}
-.tcg-move .pow{font-family:var(--num);font-size:24px;line-height:1}
-.tcg-rule{font-size:12.5px;line-height:1.4;border:2px solid color-mix(in srgb,var(--tier) 55%,var(--line));border-radius:8px 8px 8px 2px;padding:6px 9px;background:var(--panel2)}
-.tcg-rule em{font-family:var(--px);font-style:normal;color:var(--tier);margin-right:4px}
-.tcg-foot{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted)}
-.tcg-foot .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tcg-foot .stars{color:var(--tier);letter-spacing:1px;font-size:13px}
-.tcg-foot .track{height:6px;border-width:1px}
-.tcg-foot .fill{background:var(--tier)}
-.tcg .quote{min-height:0;font-size:14px;padding:7px 10px}
+.tcg-code{display:flex;justify-content:space-between;padding:0 7px;font-family:var(--num);font-size:12px;color:#1e1410;opacity:.85}
+.tcg-text{margin:0 2px;padding:6px 8px 5px;border-radius:2px;background:linear-gradient(#f6eedb,#e9dcbd);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),inset 0 0 0 3px color-mix(in srgb,var(--tier) 30%,#f6eedb);font-size:12.5px;line-height:1.38;color:#2a1d14}
+.tcg-text b{display:block;font-family:var(--px);font-size:13px;letter-spacing:.02em;margin-bottom:2px}
+.tcg-text p{margin:0}
+.tcg-text .tcg-q{margin-top:4px;font-style:italic;color:#5a4636;min-height:0;border:0;padding:0;background:none;font-size:12.5px}
+.tcg-atk{display:flex;justify-content:space-between;margin-top:5px;padding-top:3px;border-top:1px solid rgba(42,29,20,.45);font-family:var(--num);font-size:15px}
+.tcg-foot{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:0 4px;font-size:10.5px;color:#1e1410}
+.tcg-foot .track{flex:1;height:5px;border:1px solid rgba(0,0,0,.35);background:rgba(255,255,255,.35)}
+.tcg-foot .fill{background:#1e1410}
 .cc-pic{position:relative;border-radius:9px;overflow:hidden;background:radial-gradient(circle at 50% 70%,color-mix(in srgb,var(--violet) 55%,transparent),transparent 65%),linear-gradient(#1c1438,#2a1d55);aspect-ratio:5/4}
 .cc-pic canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
 .cc-name{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -472,20 +471,13 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
 
         <aside class="dojo-right">
           <div class="ccw">
-            <div class="cc tcg" id="cc">
-              <div class="tcg-top"><span class="tcg-tier" id="ccTier"></span><h3 id="ccName"></h3><span class="lv" id="ccLv"></span><span class="tcg-type" id="ccType"></span></div>
-              <div class="tcg-art"><canvas id="portrait" width="120" height="112"></canvas><div class="tcg-holo" aria-hidden="true"></div></div>
-              <div class="tcg-sub" id="ccSub"></div>
-              <div class="tcg-move" id="ccMove"></div>
+            <div class="cc cc-side">
+              <div class="tcg" id="cc"></div>
               <div class="meters">
                 <div class="meter"><div class="meter-top"><span>XP</span><b id="xpTxt"></b></div><div class="track"><div class="fill xp" id="xpFill"></div></div></div>
                 <div class="meter"><div class="meter-top"><span>Energia</span><b id="hpTxt"></b></div><div class="track"><div class="fill hp" id="hpFill"></div></div></div>
               </div>
               <div class="attrs" id="attrs"></div>
-              <div class="tcg-rule" id="ccRule"></div>
-              <p class="quote" id="quote"></p>
-              <div class="tcg-foot" id="ccFoot"></div>
-              <div id="ccVis"></div>
               <div class="cc-btns">
                 <button class="btn primary sm" id="talkBtn">Conversar</button>
                 <button class="btn outline sm" data-go="perfil">Perfil</button>
@@ -3119,67 +3111,101 @@ function renderMissionCard(){
     <div class="toms" title="${t.done} feitos de ${t.est} estimados">${tm}</div>
     ${t.steps.length ? `<ul class="steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label></li>`).join('')}</ul>` : '<p class="small">Sem passos. Adicione passos pequenos na aba Missões.</p>'}`;
 }
-/* Carta da personagem: sobe de raridade conforme as missões concluídas. */
-const CARD_TIERS = [[0,'Comum','#a9aebb'],[1,'Incomum','#8fd18b'],[3,'Rara','#6cb4ff'],[6,'Épica','#b98cff'],[10,'Lendária','#f5c66b'],[20,'Mítica','#ff6fb5']];
-function cardTier(){ const q = S.totals.quests || 0; let i = 0; CARD_TIERS.forEach((t, k) => { if (q >= t[0]) i = k; }); return i; }
-let artKey = '';
-function drawCardArt(force){
-  const cv = $('#portrait'); if (!cv) return;
-  const ch = HERO(), ti = cardTier(), h = hourNow(), sky = skyAt(h), a = effAmb(sky.amb, WX[wxNow()]), tc = CARD_TIERS[ti][2];
-  const key = JSON.stringify([ch.id, ch.cls, ch.look, ch.col, ti, Math.round(h*4), a.toFixed(2)]);
-  if (!force && key === artKey) return; artKey = key;
+/* carta:inicio
+   Carta da personagem: sobe de raridade conforme as missões concluídas, e cada classe tem um efeito de poder na arte. */
+const CARD_TIERS = [[0,'Comum','#a9aebb'],[1,'Incomum','#7fbf6a'],[3,'Rara','#5a9be0'],[6,'Épica','#9a6ae0'],[10,'Lendária','#e0a640'],[20,'Mítica','#e0508f']];
+function cardTierOf(q){ let i = 0; CARD_TIERS.forEach((t, k) => { if ((q || 0) >= t[0]) i = k; }); return i; }
+function cardStats(ch, lvl){ const sp = ch.spec || {}; return { atk:((+sp.forca || 0)*2 + (+sp.agil || 0))*50 + lvl*20, def:((+sp.mente || 0) + (+sp.espirito || 0)*2)*50 + lvl*20 }; }
+function cardHTML(ch, lvl, quests, line){
+  const C = CLASSES[ch.cls] || CLASSES.samurai, ti = cardTierOf(quests), T = CARD_TIERS[ti], nx = CARD_TIERS[ti + 1], st = cardStats(ch, lvl);
+  const code = 'DDF-' + (ch.cls || 'sam').slice(0, 3).toUpperCase() + String(quests || 0).padStart(3, '0');
+  const prog = nx ? `<span>${quests || 0}/${nx[0]} missões para ${nx[1]}</span><span class="track"><span class="fill" style="display:block;height:100%;width:${Math.min(100, ((quests || 0) - T[0])/(nx[0] - T[0])*100)}%"></span></span>` : `<span>Raridade máxima · ${quests || 0} missões</span>`;
+  return `<div class="tcg-name"><h3>${esc(ch.name || 'Sem nome')}</h3><span class="tcg-attr">${esc(C.k.slice(0, 1))}</span></div>
+    <div class="tcg-stars" aria-label="${T[1]}: ${ti + 1} de ${CARD_TIERS.length} estrelas">${'<i>★</i>'.repeat(ti + 1)}</div>
+    <div class="tcg-art"><canvas width="120" height="112"></canvas><div class="tcg-holo" aria-hidden="true"></div></div>
+    <div class="tcg-code"><span>${T[1]}</span><span>${code}</span></div>
+    <div class="tcg-text"><b>[${esc(C.n)} / ${esc(WEAPONS[ch.weapon] || 'Golpe')}]</b><p>${esc(PERKS[ch.perk] || C.perk)}</p><p class="quote tcg-q" id="quote">${line ? '“' + esc(line) + '”' : ''}</p>
+      <div class="tcg-atk"><span>LV ${lvl}</span><span>ATQ/${st.atk} &nbsp;DEF/${st.def}</span></div></div>
+    <div class="tcg-foot">${prog}</div>`;
+}
+/* Efeito de poder de cada classe: o que fica atrás da personagem e o que fica na frente. */
+function fxDraw(c, cls, layer, P){
+  const R2 = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
+  const dot = (x, y, r, col, al) => { c.save(); c.globalAlpha = al ?? 1; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, Math.PI*2); c.fill(); c.restore(); };
+  const glow = (x, y, r, col, al) => { const g2 = c.createRadialGradient(x, y, 0, x, y, r); g2.addColorStop(0, col); g2.addColorStop(1, 'rgba(0,0,0,0)'); c.save(); c.globalAlpha = al ?? 1; c.fillStyle = g2; c.fillRect(x - r, y - r, r*2, r*2); c.restore(); };
+  const ring = (x, y, r, col, w, al) => { c.save(); c.globalAlpha = al ?? 1; c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.arc(x, y, r, 0, Math.PI*2); c.stroke(); c.restore(); };
+  const ofuda = (x, y, rot) => { c.save(); c.translate(x, y); c.rotate(rot); R2(-3, -6, 6, 12, '#f8f2e0'); R2(-3, -6, 6, 1, '#c8442e'); R2(-1, -3, 2, 6, '#c8442e'); c.restore(); };
+  const petal = (x, y, col) => { R2(x, y, 2, 1, col); R2(x + 1, y + 1, 1, 1, col); };
+  const F = {
+    samurai:{ back:() => { glow(60, 44, 40, 'rgba(232,85,63,.9)', .55); dot(60, 44, 22, '#e8553f', .55); },
+      front:() => { c.save(); c.strokeStyle = '#ffffff'; c.globalAlpha = .9; c.lineWidth = 3; c.beginPath(); c.moveTo(2, 78); c.quadraticCurveTo(54, 30, 118, 12); c.stroke(); c.lineWidth = 1; c.globalAlpha = .7; c.beginPath(); c.moveTo(10, 86); c.quadraticCurveTo(60, 42, 118, 26); c.stroke(); c.restore(); } },
+    ninja:{ back:() => { for (let i = 0; i < 9; i++) dot(6 + i*14, 104 - (i % 3)*5, 12 + (i % 2)*4, '#2a2340', .75); },
+      front:() => { [[14, 30, 0], [100, 22, .6], [98, 64, .3]].forEach(([x, y, r]) => { c.save(); c.translate(x, y); c.rotate(r); c.fillStyle = '#d0d5e0'; for (let k = 0; k < 4; k++) { c.rotate(Math.PI/2); c.beginPath(); c.moveTo(0, -1); c.lineTo(7, 0); c.lineTo(0, 1); c.fill(); } R2(-1, -1, 2, 2, '#30364a'); c.restore(); R2(x - 14, y, 9, 1, 'rgba(255,255,255,.5)'); }); } },
+    miko:{ back:() => { [[18, 28, 4], [96, 36, 5], [30, 66, 3], [92, 76, 3], [60, 16, 3]].forEach(([x, y, r]) => { glow(x, y, r*3, 'rgba(160,230,255,.9)', .8); dot(x, y, r*0.6, '#ffffff', .9); }); },
+      front:() => { ofuda(14, 46, -.3); ofuda(104, 50, .25); ofuda(22, 84, .15); ofuda(98, 88, -.2); } },
+    monge:{ back:() => { glow(60, 40, 50, 'rgba(245,198,107,.85)', .6); c.save(); c.strokeStyle = 'rgba(255,230,150,.45)'; c.lineWidth = 2; for (let k = 0; k < 16; k++) { const an = k*Math.PI/8; c.beginPath(); c.moveTo(60 + Math.cos(an)*30, 40 + Math.sin(an)*30); c.lineTo(60 + Math.cos(an)*58, 40 + Math.sin(an)*58); c.stroke(); } c.restore(); ring(60, 40, 27, '#f5c66b', 3, .95); },
+      front:() => {} },
+    onna:{ back:() => { c.save(); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; [[20, 0], [40, 14], [66, -6]].forEach(([y, o]) => { c.beginPath(); c.moveTo(-4, y + 20); c.bezierCurveTo(30 + o, y, 70 + o, y + 30, 124, y + 6); c.stroke(); }); c.restore(); },
+      front:() => { [[10, 30], [20, 62], [100, 40], [108, 70], [86, 18], [30, 14]].forEach(([x, y]) => petal(x, y, '#ffb7d0')); } },
+    kunoichi:{ back:() => { const sh = {}; Object.keys(P).forEach(k => { sh[k] = typeof P[k] === 'string' && P[k][0] === '#' ? '#6a4aa0' : P[k]; }); sh.q = null; c.save(); c.globalAlpha = .4; drawFront(c, 12, 104, { pal:sh, legs:'stand', arm:'down', u:3 }); drawFront(c, 66, 104, { pal:sh, legs:'stand', arm:'down', u:3 }); c.restore(); },
+      front:() => { [[8, 40], [16, 76], [104, 30], [96, 82], [60, 10], [112, 58]].forEach(([x, y], i) => petal(x, y, i % 2 ? '#ff6fb5' : '#ffb7d0')); } },
+    kyudo:{ back:() => { [44, 34, 24, 14, 6].forEach((r, i) => dot(60, 46, r, i % 2 ? '#c8442e' : '#f4f2ec', .4)); },
+      front:() => { c.save(); c.strokeStyle = '#fff4c6'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 20); c.lineTo(106, 12); c.stroke(); c.globalAlpha = .5; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 24); c.lineTo(70, 18); c.stroke(); c.restore(); c.fillStyle = '#d8dde6'; c.beginPath(); c.moveTo(114, 11); c.lineTo(104, 7); c.lineTo(106, 16); c.fill(); R2(0, 18, 6, 2, '#c8442e'); } },
+    onmyoji:{ back:() => { glow(60, 52, 50, 'rgba(160,127,255,.8)', .6); ring(60, 52, 46, '#e1b85a', 2, .9); ring(60, 52, 38, '#e1b85a', 1, .9); c.save(); c.strokeStyle = '#e1b85a'; c.globalAlpha = .85; c.lineWidth = 1; c.beginPath(); for (let k = 0; k <= 5; k++) { const an = -Math.PI/2 + k*4*Math.PI/5; const x = 60 + Math.cos(an)*38, y = 52 + Math.sin(an)*38; k ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); c.restore(); for (let k = 0; k < 12; k++) { const an = k*Math.PI/6; R2(60 + Math.cos(an)*42 - 1, 52 + Math.sin(an)*42 - 1, 2, 2, '#fff4c6'); } },
+      front:() => { ofuda(12, 34, -.2); ofuda(108, 40, .3); } },
+    ferreira:{ back:() => { glow(60, 112, 60, 'rgba(255,120,40,.95)', .7); },
+      front:() => { [[12, 80], [20, 50], [30, 30], [94, 70], [104, 44], [88, 24], [70, 14], [50, 20], [110, 90]].forEach(([x, y], i) => { R2(x, y, 2, 2, i % 3 ? '#ffb35c' : '#fff1a0'); R2(x, y + 3, 1, 2, 'rgba(255,120,40,.6)'); }); } },
+    kitsune:{ back:() => { glow(60, 50, 54, 'rgba(90,180,255,.55)', .6); },
+      front:() => { [[14, 40], [104, 34], [20, 78], [100, 80], [60, 10]].forEach(([x, y]) => { glow(x, y, 12, 'rgba(120,210,255,.9)', .8); c.fillStyle = '#9fe4ff'; c.beginPath(); c.moveTo(x, y - 8); c.quadraticCurveTo(x + 5, y, x, y + 4); c.quadraticCurveTo(x - 5, y, x, y - 8); c.fill(); dot(x, y + 1, 1.5, '#ffffff'); }); } },
+    yamabushi:{ back:() => { c.save(); c.globalAlpha = .55; c.fillStyle = '#4a5a7a'; c.beginPath(); c.moveTo(-10, 84); c.lineTo(30, 30); c.lineTo(62, 84); c.fill(); c.fillStyle = '#5a6a8a'; c.beginPath(); c.moveTo(40, 84); c.lineTo(88, 22); c.lineTo(132, 84); c.fill(); c.fillStyle = '#f4f2ec'; c.beginPath(); c.moveTo(88, 22); c.lineTo(80, 32); c.lineTo(96, 32); c.fill(); c.restore(); },
+      front:() => { [[0, 74, 50], [64, 82, 56], [20, 92, 80]].forEach(([x, y, w]) => R2(x, y, w, 3, 'rgba(255,255,255,.45)')); } },
+    ronin:{ back:() => { dot(84, 30, 22, '#f4efe2', .85); dot(84, 30, 28, '#f4efe2', .15); R2(54, 34, 50, 2, 'rgba(40,40,60,.5)'); },
+      front:() => { [[10, 30], [24, 60], [100, 56], [108, 84], [16, 90], [70, 12]].forEach(([x, y], i) => { const col = i % 2 ? '#c8642a' : '#e0a040'; R2(x, y, 3, 2, col); R2(x + 1, y - 1, 1, 1, col); R2(x + 1, y + 2, 1, 1, col); }); } }
+  };
+  const e = F[cls] || F.samurai; (e[layer] || (() => {}))();
+}
+function drawCardArtTo(cv, ch, ti, h, a){
+  const P = charPal(ch), sky = skyAt(h), tc = CARD_TIERS[ti][2];
   const c = cv.getContext('2d'), W2 = 120, H2 = 112, fx = (x, y, w, h2, col) => { c.fillStyle = col; c.fillRect(x, y, w, h2); };
   c.imageSmoothingEnabled = false; c.clearRect(0, 0, W2, H2);
   const gr = c.createLinearGradient(0, 0, 0, 84); gr.addColorStop(0, sky.top); gr.addColorStop(1, sky.bot); c.fillStyle = gr; c.fillRect(0, 0, W2, H2);
-  const leaf = mix('#8fc46a', '#1f3a34', a), leafD = mix('#5f9a4e', '#142822', a), trunk = mix('#8a6040', '#2a1e26', a);
-  /* árvores ao fundo */
-  [[4, 16, 10], [100, 14, 12]].forEach(([x, w, top]) => { fx(x, top, w, 84, mix(trunk, sky.bot, 0.35)); });
-  for (let i = 0; i < 9; i++) { const x = (i*29) % 120 - 8, y = 4 + (i*13) % 22; c.fillStyle = mix(leafD, sky.bot, 0.45); c.beginPath(); c.arc(x, y, 12 + (i % 3)*3, 0, Math.PI*2); c.fill(); }
-  if (a < 0.5) { /* raios de sol */
-    c.save(); c.globalAlpha = 0.16*(1 - a*2); c.fillStyle = '#fff6c8';
-    for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(18 + i*16, 0); c.lineTo(30 + i*16, 0); c.lineTo(70 + i*20, H2); c.lineTo(52 + i*20, H2); c.closePath(); c.fill(); }
-    c.restore();
-  } else { /* estrelas e lua */
-    c.fillStyle = '#f4efe2'; [[10, 8], [30, 20], [52, 6], [78, 18], [100, 9], [66, 28]].forEach(([x, y]) => fx(x, y, 1, 1, '#f4efe2'));
-    c.beginPath(); c.arc(92, 16, 6, 0, Math.PI*2); c.fill(); c.fillStyle = sky.top; c.beginPath(); c.arc(95, 14, 5, 0, Math.PI*2); c.fill();
-  }
-  /* brilho da raridade atrás da personagem */
-  const halo = c.createRadialGradient(60, 64, 6, 60, 64, 52); halo.addColorStop(0, tc + 'aa'); halo.addColorStop(1, tc + '00'); c.fillStyle = halo; c.fillRect(0, 0, W2, H2);
-  /* morrinho de grama */
+  if (a >= 0.5) [[10, 8], [30, 20], [52, 6], [78, 18], [100, 9], [66, 28], [112, 30]].forEach(([x, y]) => fx(x, y, 1, 1, '#f4efe2'));
+  const halo = c.createRadialGradient(60, 64, 6, 60, 64, 52); halo.addColorStop(0, tc + '99'); halo.addColorStop(1, tc + '00'); c.fillStyle = halo; c.fillRect(0, 0, W2, H2);
+  fxDraw(c, ch.cls, 'back', P);
+  const leaf = mix('#8fc46a', '#1f3a34', a), leafD = mix('#5f9a4e', '#142822', a);
   c.fillStyle = leaf; c.beginPath(); c.ellipse(60, 122, 76, 28, 0, 0, Math.PI*2); c.fill();
   fx(0, 104, W2, 8, leafD);
   for (let x = 2; x < W2; x += 5) fx(x, 96 + ((x*7) % 5), 1, 3, mix(leaf, '#ffffff', 0.25));
-  [[16, 100], [96, 98], [84, 104], [28, 106]].forEach(([x, y], i) => { fx(x, y, 2, 2, i % 2 ? '#fff4c6' : tc); fx(x, y + 2, 1, 2, leafD); });
   c.save(); c.globalAlpha = 0.3; c.fillStyle = '#000'; c.beginPath(); c.ellipse(60, 106, 24, 4, 0, 0, Math.PI*2); c.fill(); c.restore();
-  drawFront(c, 32, 106, { pal:pal(), legs:'stand', arm:'down', u:4 });
-  /* folhas desfocadas na frente, como numa ilustração */
-  c.save(); c.globalAlpha = 0.55; c.fillStyle = leafD;
-  [[-4, 84, 11], [4, 108, 13], [120, 88, 12], [112, 110, 14]].forEach(([x, y, r]) => { c.beginPath(); c.arc(x, y, r, 0, Math.PI*2); c.fill(); });
-  c.restore();
-  c.fillStyle = 'rgba(255,255,255,.8)'; [[12, 44], [106, 50], [20, 72]].forEach(([x, y]) => { fx(x, y, 1, 3); fx(x - 1, y + 1, 3, 1); });
+  drawFront(c, 32, 106, { pal:P, legs:'stand', arm:'down', u:4 });
+  fxDraw(c, ch.cls, 'front', P);
+}
+/* carta:fim */
+function cardTier(){ return cardTierOf(S.totals.quests); }
+let artKey = '', cardKey = '';
+function drawCardArt(force){
+  const cv = $('#cc canvas'); if (!cv) return;
+  const ch = HERO(), ti = cardTier(), h = hourNow(), a = effAmb(skyAt(h).amb, WX[wxNow()]);
+  const key = JSON.stringify([ch.id, ch.cls, ch.look, ch.col, ti, Math.round(h*4), a.toFixed(2)]);
+  if (!force && key === artKey) return; artKey = key;
+  drawCardArtTo(cv, ch, ti, h, a);
 }
 function renderCard(){
-  const c = CLASSES[HERO().cls] || CLASSES.samurai, t = title(S.lvl);
-  const ch = HERO(), ti = cardTier(), T2 = CARD_TIERS[ti], nx = CARD_TIERS[ti + 1], nq = S.totals.quests || 0, card = $('#cc');
+  const ch = HERO(), ti = cardTier(), T2 = CARD_TIERS[ti], card = $('#cc'), q0 = $('#quote');
+  const key = JSON.stringify([ch.id, ch.name, ch.cls, ch.weapon, ch.perk, ch.spec, S.lvl, S.totals.quests]);
+  if (key !== cardKey) {
+    cardKey = key; artKey = '';
+    const talking = q0 && q0.dataset.talk ? q0.textContent : null;
+    card.innerHTML = cardHTML(ch, S.lvl, S.totals.quests, '');
+    if (talking) { $('#quote').textContent = talking; $('#quote').dataset.talk = '1'; }
+  }
   card.style.setProperty('--tier', T2[2]); card.dataset.holo = ti >= 3 ? '1' : '0';
   if (S.cardTier == null) S.cardTier = ti;
   else if (ti > S.cardTier) { S.cardTier = ti; sfx('chime'); toast(`A carta de ${ch.name || 'sua personagem'} subiu para ${T2[1]}!`); card.classList.remove('up'); void card.offsetWidth; card.classList.add('up'); save(); }
-  $('#ccTier').textContent = T2[1];
-  $('#ccName').textContent = ch.name || 'Sem nome';
-  $('#ccLv').textContent = `LV ${S.lvl}`;
-  $('#ccType').textContent = c.k.slice(0, 1);
-  $('#ccSub').textContent = `${ch.title || c.n + ' ' + c.k} · ${t[1]} ${t[2]}`;
-  const sp = ch.spec || {}, pow = ((+sp.forca || 0) + (+sp.agil || 0))*5 + S.lvl*2;
-  $('#ccMove').innerHTML = `<span class="cost"><i>${esc(c.k.slice(0, 1))}</i><i>${esc(c.k.slice(0, 1))}</i></span><b>${esc(WEAPONS[ch.weapon] || 'Golpe')}</b><span class="pow">${pow}</span>`;
-  $('#ccRule').innerHTML = `<em>Habilidade</em>${esc(PERKS[ch.perk] || c.perk)}`;
-  $('#ccFoot').innerHTML = `<div class="row"><span class="stars">${'★'.repeat(ti + 1)}${'☆'.repeat(CARD_TIERS.length - ti - 1)}</span><span>Nº ${String(nq).padStart(3, '0')} · Dojo do Foco</span></div>`
-    + (nx ? `<div class="row"><span>${nq}/${nx[0]} missões para ${nx[1]}</span></div><div class="track"><div class="fill" style="width:${Math.min(100, (nq - T2[0])/(nx[0] - T2[0])*100)}%"></div></div>` : `<div class="row"><span>Raridade máxima. ${nq} missões concluídas.</span></div>`);
   drawCardArt();
   $('#xpTxt').textContent = `${S.xp}/${need(S.lvl)}`; $('#xpFill').style.width = (S.xp/need(S.lvl)*100) + '%';
   $('#hpTxt').textContent = `${S.hp}/100`; const hf = $('#hpFill'); hf.style.width = S.hp + '%'; hf.classList.toggle('low', S.hp < 30);
   $('#attrs').innerHTML = [['Foco','foco'],['Disciplina','disc'],['Vitalidade','vit']].map(([n, k]) => `<div class="attr"><div class="v">${S.stats[k]}</div><div class="k">${n}</div></div>`).join('');
-  const vis = $('#ccVis'), vk = HERO().id + JSON.stringify([HERO().look, HERO().col]);
-  if (vis.dataset.k !== vk) { vis.dataset.k = vk; vis.innerHTML = visHTML(HERO(), 'hero'); visDraw(vis, HERO()); }
   const q = $('#quote');
   if (!q.dataset.talk) q.textContent = '“' + heroLine() + '”';
 }
