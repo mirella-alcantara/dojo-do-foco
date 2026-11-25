@@ -13,7 +13,7 @@ toma chá na pausa curta e entra no onsen na pausa longa.
 <img alt="Salva no Obsidian" src="https://img.shields.io/badge/salva%20no-Obsidian-7c3aed?style=flat-square&logo=obsidian&logoColor=white">
 <img alt="Em português" src="https://img.shields.io/badge/idioma-portugu%C3%AAs-ff6fb5?style=flat-square">
 
-### [▶ Jogar agora: dojo-do-foco.netlify.app](https://dojo-do-foco.netlify.app)
+### [▶ Jogar agora: dojodofoco.com](https://dojodofoco.com)
 
 [Como rodar](#-como-rodar) · [O jogo](#-o-jogo) · [Reinos](#-reinos) · [Personagens](#-personagens) · [Obsidian](#-salvamento-no-obsidian) · [Publicar](#-publicar-no-netlify)
 
@@ -249,7 +249,7 @@ Com o login ligado, o jogo pede e-mail e senha (ou um link de entrada no e-mail)
 
 1. Crie uma conta e um projeto grátis em <https://supabase.com>.
 2. Em **SQL Editor** → **New query**, cole o conteúdo de [`supabase/schema.sql`](supabase/schema.sql) e clique em **Run**.
-3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (por exemplo `https://dojo-do-foco.netlify.app`). Em **Redirect URLs**, adicione esse mesmo endereço e `http://localhost:4321`.
+3. Em **Authentication** → **URL Configuration**, coloque em **Site URL** o endereço do site (aqui, `https://dojodofoco.com`). Em **Redirect URLs**, adicione esse endereço, a versão com `www`, o endereço `.netlify.app` e `http://localhost:4321`.
 4. Em **Project Settings** → **API**, copie a **Project URL** e a chave **anon / publishable**.
 5. Coloque os dois valores no `netlify.toml`, em `[build.environment]`, como `SUPABASE_URL` e `SUPABASE_ANON_KEY` (ou crie essas variáveis no painel do Netlify). O próximo `git push` publica com o login ligado.
 
@@ -273,6 +273,7 @@ O projeto já vem pronto para o [Netlify](https://www.netlify.com), que é gratu
 2. Clique em **Add new site** (ou **Add new project**) → **Import an existing project** → **GitHub** e autorize o acesso ao repositório `dojo-do-foco`.
 3. Escolha o repositório. O comando de build e a pasta de publicação já aparecem preenchidos pelo `netlify.toml`. Clique em **Deploy**.
 4. Nas configurações do site, troque o nome para ganhar um endereço como `dojo-do-foco.netlify.app`.
+5. Para ter um domínio próprio, compre-o em **Domain management** → **Add a domain** (este projeto usa `dojodofoco.com`, com o DNS no próprio Netlify). O cadeado HTTPS é emitido sozinho, e o `netlify.toml` redireciona o endereço `.netlify.app` para o domínio.
 
 Depois disso, cada `git push` publica uma versão nova sozinho.
 
