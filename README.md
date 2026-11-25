@@ -303,7 +303,6 @@ netlify.toml      configuração de publicação no Netlify
 package.json      scripts npm start e npm run build
 docs/             capturas de tela e GIF deste README
 docs/personagens/ opções de visual (A, B e C) de cada modelo
-pesquisas/        estudos técnicos e de produto, um arquivo por assunto
 decisoes/         registro das decisões técnicas e do porquê
 .vscode/          configuração para rodar pelo VS Code
 ```
