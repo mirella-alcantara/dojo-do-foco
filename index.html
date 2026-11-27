@@ -439,7 +439,8 @@ dl.terms dd{margin:0;color:var(--muted)}
 .dsel-btn:hover,.dp-btn:hover:not(:disabled){border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
 .dsel-btn:focus-visible,.dp-btn:focus-visible,.dsel-list:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .dsel-list{position:absolute;z-index:45;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(330px,calc(100vw - 20px));max-height:min(360px,60vh);overflow:auto;margin:0;padding:6px;list-style:none;
-  background:var(--panel);border:2px solid var(--line);border-radius:12px;box-shadow:0 0 0 3px var(--bg),0 14px 34px rgba(0,0,0,.5);animation:dselIn .16s ease-out;scrollbar-width:thin}
+  background:var(--panel);border:2px solid var(--line);border-radius:12px;box-shadow:0 0 0 3px var(--bg),0 14px 34px rgba(0,0,0,.5);animation:dselIn .16s ease-out;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior:contain}
+.dsel-list::-webkit-scrollbar{display:none}
 @keyframes dselIn{from{opacity:0;margin-top:-6px}to{opacity:1;margin-top:0}}
 .dsel-list li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 14px;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;border:2px solid transparent}
 .dsel-list li + li{margin-top:2px}
