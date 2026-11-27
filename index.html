@@ -358,18 +358,12 @@ dl.terms dd{margin:0;color:var(--muted)}
 .bigs .k{font-size:13px;color:var(--muted)}
 .sum-sec h3{font-family:var(--px);font-size:18px;font-weight:600;margin-bottom:8px}
 .timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.timeline li{background:var(--panel2);border-radius:8px;padding:9px 12px}
-.timeline time{font-family:var(--num);font-size:20px;line-height:1;color:var(--muted);flex:none;min-width:48px}
-.tl-h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:baseline;gap:10px}
+.timeline li{display:grid;grid-template-columns:50px minmax(0,1fr);gap:6px 10px;align-items:baseline;background:var(--panel2);border-radius:8px;padding:8px 12px}
+.timeline time{font-family:var(--num);font-size:19px;line-height:1;color:var(--muted)}
 .tl-tt{min-width:0;overflow-wrap:anywhere;line-height:1.35}
 .tl-tt .res{margin-left:6px;vertical-align:1px;white-space:nowrap}
-.tl-d{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);display:grid;gap:5px}
-.tl-meta{display:flex;flex-wrap:wrap;gap:6px}
-.tl-meta span{font-size:12.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
-.tl-d p{margin:0;display:grid;grid-template-columns:84px minmax(0,1fr);gap:8px;font-size:15px;line-height:1.4}
-.tl-d p em{font-style:normal;font-size:12.5px;color:var(--muted);padding-top:2px}
-.tl-d p span{overflow-wrap:anywhere}
-@media (max-width:480px){.tl-d p{grid-template-columns:minmax(0,1fr);gap:0}}
+.tl-s{grid-column:1 / -1;margin:0;padding-top:5px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+.tl-s em{font-style:normal;color:var(--pink)}
 .res{display:inline-block;font-size:12px;border-radius:5px;padding:0 7px;margin-left:6px;border:2px solid var(--line)}
 .res.tudo{border-color:var(--matcha);color:var(--matcha)}.res.parte{border-color:var(--gold);color:var(--gold)}.res.travei{border-color:var(--danger);color:var(--danger)}.res.int{color:var(--muted)}
 .tbl{width:100%;border-collapse:collapse;font-size:15px}
@@ -434,9 +428,34 @@ dl.terms dd{margin:0;color:var(--muted)}
 .sum-det.just .sum-det-in{animation:detIn .22s ease-out}
 @keyframes detIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .sum-det .timeline li{background:var(--panel)}
-.distr{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.distr li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px;align-items:baseline;background:var(--panel);border-radius:8px;padding:7px 10px;font-size:15px}
-.distr time{font-family:var(--num);font-size:18px;color:var(--muted)}
+.distr{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.distr li{display:inline-flex;align-items:baseline;gap:7px;background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px;max-width:100%;overflow-wrap:anywhere}
+.distr time{font-family:var(--num);font-size:15px;color:var(--muted)}
+/* Como foi: faixa visual */
+.howday{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+.hd-tile{background:var(--panel2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.hd-tile h3{font-family:var(--px);font-size:17px;font-weight:600;margin:0}
+.hd-k{font-family:var(--px);font-size:15px;font-weight:600}
+.hd-s{font-size:12.5px;color:var(--muted)}
+.hd-bar{display:flex;height:14px;border-radius:4px;overflow:hidden;gap:2px;background:var(--panel)}
+.hd-bar i,.hd-leg li i{display:block;background:var(--line)}
+.hd-bar i.tudo,.hd-leg i.tudo{background:var(--matcha)}.hd-bar i.parte,.hd-leg i.parte{background:var(--gold)}.hd-bar i.travei,.hd-leg i.travei{background:var(--danger)}.hd-bar i.int,.hd-leg i.int{background:var(--faint)}.hd-bar i.mini,.hd-leg i.mini{background:var(--violet)}
+.hd-leg{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted)}
+.hd-leg li{display:inline-flex;align-items:center;gap:5px}
+.hd-leg li i{width:9px;height:9px;border-radius:2px}
+.hd-leg b{font-family:var(--num);font-size:16px;font-weight:400;color:var(--ink)}
+.hd-en{display:flex;align-items:center;gap:6px;font-size:15px;white-space:nowrap}
+.hd-en em{font-style:normal;color:var(--pink)}
+.hd-gain{font-size:13px;color:var(--muted)}.hd-gain b{font-family:var(--num);font-size:22px;font-weight:400;color:var(--violet)}.hd-gain.gold b{color:var(--gold)}
+/* Para amanhã: cartões curtos */
+.tips h3{font-family:var(--px);font-size:18px;font-weight:600;margin:0 0 8px}
+.tips ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.tips li{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--violet) 12%,var(--panel2));border:2px solid color-mix(in srgb,var(--violet) 35%,var(--line));border-radius:10px;padding:11px 12px}
+.tip-ico{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--panel);color:var(--gold)}
+.tip-ico .ico{width:18px;height:18px}
+.tips b{display:block;font-family:var(--px);font-size:15px;font-weight:600;line-height:1.25}
+.tips li span:not(.tip-ico){display:block;font-size:12.5px;line-height:1.35;color:var(--muted);margin-top:2px}
+@media (max-width:640px){.howday{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hd-res{grid-column:1 / -1}}
 /* Seletor de dia com setas */
 .daypick{display:flex;align-items:stretch;gap:6px;max-width:100%;min-width:min(100%,280px)}
 .dsel{position:relative;flex:1 1 auto;min-width:0}
@@ -3851,15 +3870,17 @@ function summaryHTML(k){
   else if (d.pomos >= S.cfg.goal) phrase = 'Você bateu a meta. O dojo inteiro sente a sua disciplina.';
   else if (!d.skips && d.breaks > 0) phrase = 'Você respeitou todas as pausas. Isso também é sabedoria.';
   else phrase = `Cada pomodoro é um passo no caminho. Você deu ${d.pomos} ${d.pomos === 1 ? 'passo' : 'passos'} hoje.`;
+  /* Para amanhã: dicas curtas, uma ideia por cartão */
   const sug = [];
-  if (hours[best] > 0) sug.push(`Seu horário mais forte foi entre ${best}h e ${best+1}h. Coloque a missão mais difícil de amanhã nesse horário.`);
-  if (d.skips) sug.push(`Você pulou ${d.skips} ${d.skips === 1 ? 'pausa' : 'pausas'}. Amanhã, levante da cadeira nem que seja por 2 minutos.`);
-  if (d.distr.length >= 3) sug.push(`Foram ${d.distr.length} distrações. Deixe o celular em outro cômodo na primeira batalha.`);
-  if (res.travei) sug.push(`Você travou em ${res.travei} ${res.travei === 1 ? 'batalha' : 'batalhas'}. Divida essa missão em passos menores.`);
   const over = Object.keys(byTask).map(id => S.tasks.find(t => t.id === id)).filter(t => t && t.done > t.est);
-  if (over.length) sug.push(`"${over[0].name}" passou da estimativa. Aumente a estimativa ou quebre em partes.`);
-  if (!d.pomos) sug.push('Escolha uma missão pequena e toque em "Só 5 minutos".');
-  if (sug.length < 2) sug.push('Repita o ritmo de hoje. Constância vence intensidade.');
+  const stuck = done.find(x => x.result === 'travei');
+  if (!d.pomos) sug.push({ ico:'tomato', t:'Comece com 5 minutos', d:'Escolha uma missão pequena e toque em "Só 5 minutos".' });
+  if (hours[best] > 0) sug.push({ ico:'flame', t:`Missão difícil às ${best}h`, d:'Foi o seu horário mais forte hoje.' });
+  if (stuck) sug.push({ ico:'sword', t:'Divida em passos menores', d:`Você travou em "${stuck.taskName || 'uma missão'}".` });
+  if (d.skips) sug.push({ ico:'cup', t:'Levante na pausa', d:`Você pulou ${d.skips} ${d.skips === 1 ? 'pausa' : 'pausas'}. Bastam 2 minutos.` });
+  if (d.distr.length >= 3) sug.push({ ico:'focus', t:'Celular em outro cômodo', d:`Foram ${d.distr.length} distrações hoje.` });
+  if (over.length) sug.push({ ico:'scroll', t:'Reveja a estimativa', d:`"${over[0].name}" passou do previsto.` });
+  if (sug.length < 2) sug.push({ ico:'torii', t:'Repita o ritmo de hoje', d:'Constância vence intensidade.' });
 
   /* Carta do dia */
   const ti = dayTier(d), T = DAY_TIERS[ti], C = CARD_TIERS[T[1]];
@@ -3912,20 +3933,29 @@ function summaryHTML(k){
   return `<div class="scroll-card">
     <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div></div>
     <div class="daytop">${card}${panel}</div>
-    <div class="sum-sec"><h3>Para amanhã</h3><ul class="sugs">${sug.slice(0, 3).map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
-    ${det('batalhas', 'sword', 'Batalhas do dia', d.sessions.length, d.sessions.length ? [res.tudo && `${res.tudo} tudo`, res.parte && `${res.parte} parte`, res.travei && `${res.travei} travei`, aband.length && `${aband.length} interrompida${aband.length > 1 ? 's' : ''}`, minis.length && `${minis.length} de 5 min`].filter(Boolean).join(' · ') : 'nenhuma ainda', d.sessions.length > 0 && d.sessions.length <= 3)}
+    ${(() => {
+      const parts = [['tudo', res.tudo, 'tudo'], ['parte', res.parte, 'parte'], ['travei', res.travei, 'travei'], ['int', aband.length, 'interrompida'], ['mini', minis.length, '5 min']].filter(x => x[1]);
+      const tot = parts.reduce((n, x) => n + x[1], 0);
+      const face = v => (ENERGY[v] || '').split(' ');
+      const e0 = en.length ? face(en[0].v) : null, e1 = en.length ? face(en[en.length - 1].v) : null;
+      return `<section class="howday" aria-label="Como foi o dia">
+        <div class="hd-tile hd-res"><h3>Como foi</h3>
+          ${tot ? `<div class="hd-bar" role="img" aria-label="${parts.map(x => `${x[1]} ${x[2]}`).join(', ')}">${parts.map(x => `<i class="${x[0]}" style="flex:${x[1]}"></i>`).join('')}</div>
+          <ul class="hd-leg">${parts.map(x => `<li><i class="${x[0]}"></i><b>${x[1]}</b> ${x[2]}</li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha ainda.</p>'}</div>
+        <div class="hd-tile"><span class="hd-k">Energia</span>${e0 ? `<div class="hd-en"><span title="${e0[1]}">${e0[0]}</span><em>→</em><span title="${e1[1]}">${e1[0]}</span></div><span class="hd-s">${e0[1]} → ${e1[1]}</span>` : '<span class="hd-s">sem check-in</span>'}</div>
+        <div class="hd-tile"><span class="hd-k">Ganhos</span><div class="hd-gain"><b>+${d.xp}</b> XP</div><div class="hd-gain gold"><b>+${d.ryo}</b> ryō</div>${ach.length ? `<span class="hd-s">${ach.length} ${ach.length === 1 ? 'conquista' : 'conquistas'}</span>` : ''}</div>
+      </section>`;
+    })()}
+    <section class="tips" aria-labelledby="tipsH"><h3 id="tipsH">Para amanhã</h3>
+      <ul>${sug.slice(0, 3).map(x => `<li><span class="tip-ico">${icon(x.ico)}</span><div><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div></li>`).join('')}</ul>
+    </section>
+    ${det('batalhas', 'sword', 'Batalhas do dia', d.sessions.length, d.sessions.length ? `${done.length} ${done.length === 1 ? 'concluída' : 'concluídas'}${aband.length ? ` · ${aband.length} interrompida${aband.length > 1 ? 's' : ''}` : ''}` : 'nenhuma ainda', d.sessions.length > 0 && d.sessions.length <= 3)}
       <div class="sum-det-in">${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => { const badge = s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : '';
-        const rows = [s.plan && ['Plano', s.plan], s.note && ['Conseguiu', s.note]].filter(Boolean);
-        return `<li><div class="tl-h"><time>${hm(s.t)}</time><span class="tl-tt"><b>${esc(s.taskName || 'Sem missão')}</b>${badge}</span></div>
-        <div class="tl-d"><div class="tl-meta"><span>${s.mins} min</span>${s.energy ? `<span>${ENERGY[s.energy]}</span>` : ''}</div>
-        ${rows.map(([k, v]) => `<p><em>${k}</em><span>${esc(v)}</span></p>`).join('')}</div></li>`; }).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
+        const story = [s.plan, s.note].filter(Boolean).map(esc).join(' <em>→</em> ');
+        return `<li><time>${hm(s.t)}</time><div class="tl-tt"><b>${esc(s.taskName || 'Sem missão')}</b>${badge}</div>
+          <p class="tl-s">${story ? story + ' · ' : ''}${s.mins} min</p></li>`; }).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
     </details>
-    ${det('comofoi', 'chart', 'Como foi', 0, `+${d.xp} XP · +${d.ryo} ryō`)}<div class="sum-det-in">
-      <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
-      <p style="font-size:15px">Energia: ${en.length ? `${ENERGY[en[0].v]} no começo → ${ENERGY[en[en.length-1].v]} no fim` : 'sem check-in'}</p>
-      <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p></div>
-    </details>
-    ${d.distr.length ? `${det('distr', 'scroll', 'O que passou pela cabeça', d.distr.length, d.distr[0].txt + (d.distr.length > 1 ? ` e mais ${d.distr.length - 1}` : ''))}<div class="sum-det-in"><ul class="distr">${d.distr.map(x => `<li><time>${hm(x.t)}</time><span>${esc(x.txt)}</span></li>`).join('')}</ul></div></details>` : ''}
+    ${d.distr.length ? `${det('distr', 'scroll', 'O que passou pela cabeça', d.distr.length, 'anote e resolva na pausa')}<div class="sum-det-in"><ul class="distr">${d.distr.map(x => `<li><time>${hm(x.t)}</time>${esc(x.txt)}</li>`).join('')}</ul></div></details>` : ''}
   </div>`;
 }
 function renderAll(){
