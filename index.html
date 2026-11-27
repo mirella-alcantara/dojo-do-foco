@@ -358,8 +358,18 @@ dl.terms dd{margin:0;color:var(--muted)}
 .bigs .k{font-size:13px;color:var(--muted)}
 .sum-sec h3{font-family:var(--px);font-size:18px;font-weight:600;margin-bottom:8px}
 .timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.timeline li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;background:var(--panel2);border-radius:8px;padding:8px 10px}
-.timeline time{font-family:var(--num);font-size:20px;color:var(--muted)}
+.timeline li{background:var(--panel2);border-radius:8px;padding:9px 12px}
+.timeline time{font-family:var(--num);font-size:20px;line-height:1;color:var(--muted);flex:none;min-width:48px}
+.tl-h{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:baseline;gap:10px}
+.tl-tt{min-width:0;overflow-wrap:anywhere;line-height:1.35}
+.tl-tt .res{margin-left:6px;vertical-align:1px;white-space:nowrap}
+.tl-d{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);display:grid;gap:5px}
+.tl-meta{display:flex;flex-wrap:wrap;gap:6px}
+.tl-meta span{font-size:12.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+.tl-d p{margin:0;display:grid;grid-template-columns:84px minmax(0,1fr);gap:8px;font-size:15px;line-height:1.4}
+.tl-d p em{font-style:normal;font-size:12.5px;color:var(--muted);padding-top:2px}
+.tl-d p span{overflow-wrap:anywhere}
+@media (max-width:480px){.tl-d p{grid-template-columns:minmax(0,1fr);gap:0}}
 .res{display:inline-block;font-size:12px;border-radius:5px;padding:0 7px;margin-left:6px;border:2px solid var(--line)}
 .res.tudo{border-color:var(--matcha);color:var(--matcha)}.res.parte{border-color:var(--gold);color:var(--gold)}.res.travei{border-color:var(--danger);color:var(--danger)}.res.int{color:var(--muted)}
 .tbl{width:100%;border-collapse:collapse;font-size:15px}
@@ -3904,9 +3914,11 @@ function summaryHTML(k){
     <div class="daytop">${card}${panel}</div>
     <div class="sum-sec"><h3>Para amanhã</h3><ul class="sugs">${sug.slice(0, 3).map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
     ${det('batalhas', 'sword', 'Batalhas do dia', d.sessions.length, d.sessions.length ? [res.tudo && `${res.tudo} tudo`, res.parte && `${res.parte} parte`, res.travei && `${res.travei} travei`, aband.length && `${aband.length} interrompida${aband.length > 1 ? 's' : ''}`, minis.length && `${minis.length} de 5 min`].filter(Boolean).join(' · ') : 'nenhuma ainda', d.sessions.length > 0 && d.sessions.length <= 3)}
-      <div class="sum-det-in">${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
-        <div class="small">${s.mins} min${s.energy ? ' · ' + ENERGY[s.energy] : ''}</div>
-        ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
+      <div class="sum-det-in">${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => { const badge = s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : '';
+        const rows = [s.plan && ['Plano', s.plan], s.note && ['Conseguiu', s.note]].filter(Boolean);
+        return `<li><div class="tl-h"><time>${hm(s.t)}</time><span class="tl-tt"><b>${esc(s.taskName || 'Sem missão')}</b>${badge}</span></div>
+        <div class="tl-d"><div class="tl-meta"><span>${s.mins} min</span>${s.energy ? `<span>${ENERGY[s.energy]}</span>` : ''}</div>
+        ${rows.map(([k, v]) => `<p><em>${k}</em><span>${esc(v)}</span></p>`).join('')}</div></li>`; }).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
     </details>
     ${det('comofoi', 'chart', 'Como foi', 0, `+${d.xp} XP · +${d.ryo} ryō`)}<div class="sum-det-in">
       <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
