@@ -405,14 +405,37 @@ dl.terms dd{margin:0;color:var(--muted)}
 .rh i{height:22px;border-radius:3px;background:color-mix(in srgb,var(--violet) var(--a),var(--panel))}
 .rh i.hi{background:var(--pink)}
 .rh-ax{display:flex;justify-content:space-between;font-family:var(--num);font-size:14px;color:var(--muted);margin-top:3px}
-.sum-det{background:var(--panel2);border-radius:10px;padding:10px 14px}
-.sum-det summary{cursor:pointer;font-family:var(--px);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;list-style:none}
+.sum-det{background:var(--panel2);border:2px solid var(--line);border-radius:10px;transition:border-color .15s}
+.sum-det[open]{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
+.sum-det summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;min-height:52px}
 .sum-det summary::-webkit-details-marker{display:none}
-.sum-det summary::before{content:"▸";color:var(--pink);transition:transform .15s}
-.sum-det[open] summary::before{transform:rotate(90deg)}
-.sum-det summary .pm-n{margin-left:auto}
-.sum-det[open] > :not(summary){margin-top:10px}
+.sum-det summary:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.sum-det summary:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.sd-ico{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--panel);border:2px solid var(--line);color:var(--pink)}
+.sd-ico .ico{width:18px;height:18px}
+.sd-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.sd-t b{font-family:var(--px);font-size:17px;font-weight:600}
+.sd-t small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-det[open] .sd-t small{visibility:hidden;height:0}
+.sd-n{flex:none;font-family:var(--num);font-size:17px;line-height:1;padding:3px 8px;border-radius:999px;background:var(--panel);border:2px solid var(--line);color:var(--ink)}
+.sd-ch{flex:none;width:10px;height:10px;border-right:3px solid var(--muted);border-bottom:3px solid var(--muted);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+.sum-det[open] .sd-ch{transform:rotate(225deg) translate(-2px,-2px);border-color:var(--pink)}
+.sum-det-in{padding:0 14px 14px}
+.sum-det.just .sum-det-in{animation:detIn .22s ease-out}
+@keyframes detIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .sum-det .timeline li{background:var(--panel)}
+.distr{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.distr li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px;align-items:baseline;background:var(--panel);border-radius:8px;padding:7px 10px;font-size:15px}
+.distr time{font-family:var(--num);font-size:18px;color:var(--muted)}
+/* Seletor de dia com setas */
+.daypick{display:flex;align-items:stretch;gap:6px;max-width:100%}
+.daypick select{appearance:none;-webkit-appearance:none;min-width:0;flex:1 1 auto;padding:9px 38px 9px 12px;font-family:var(--px);font-size:15px;cursor:pointer;
+  background:var(--panel2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' shape-rendering='crispEdges'%3E%3Cpath fill='%23ff6fb5' d='M0 0h2v2H0zM2 2h2v2H2zM4 4h2v2H4zM6 2h2v2H6zM8 0h2v2H8z'/%3E%3C/svg%3E") no-repeat right 12px center/12px 8px}
+.daypick select:hover,.dp-btn:hover:not(:disabled){border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
+.daypick select:focus-visible,.dp-btn:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.dp-btn{flex:none;width:40px;border-radius:7px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:22px;line-height:1;cursor:pointer}
+.dp-btn:disabled{opacity:.35;cursor:default}
+@media (prefers-reduced-motion:reduce){.sum-det.just .sum-det-in{animation:none}}
 @media (max-width:700px){.daytop{grid-template-columns:minmax(0,1fr)}.daycard{max-width:230px;margin:0 auto}}
 
 /* Navegação inferior */
@@ -715,7 +738,11 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
       <div class="stack">
         <div class="page-h">
           <h2>Resumo dos meus <em>pomodoros</em></h2>
-          <select id="daySel" aria-label="Escolher dia"></select>
+          <div class="daypick">
+            <button class="dp-btn" id="dayPrev" type="button" aria-label="Dia anterior">‹</button>
+            <select id="daySel" aria-label="Escolher dia"></select>
+            <button class="dp-btn" id="dayNext" type="button" aria-label="Próximo dia">›</button>
+          </div>
         </div>
         <div id="sumBody"></div>
       </div>
@@ -3707,7 +3734,11 @@ let sumDay = null;
 function renderResumo(){
   const keys = Object.keys(S.days).filter(k => S.days[k].pomos || S.days[k].sessions.length || k === dayKey(new Date())).sort().reverse();
   if (!sumDay || !S.days[sumDay]) sumDay = keys[0];
-  $('#daySel').innerHTML = keys.map(k => `<option value="${k}" ${k === sumDay ? 'selected' : ''}>${k === dayKey(new Date()) ? 'Hoje · ' : ''}${fmtDate(k)}</option>`).join('');
+  const wd = ['dom','seg','ter','qua','qui','sex','sáb'];
+  $('#daySel').innerHTML = keys.map(k => { const dd = S.days[k], [y, m, d] = k.split('-').map(Number), dt = new Date(y, m-1, d);
+    return `<option value="${k}" ${k === sumDay ? 'selected' : ''} aria-label="${fmtDate(k)}, ${dd.pomos} de ${S.cfg.goal} pomodoros">${k === dayKey(new Date()) ? 'Hoje · ' : ''}${wd[dt.getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')} · ${dd.pomos}/${S.cfg.goal}</option>`; }).join('');
+  const i = keys.indexOf(sumDay);
+  $('#dayPrev').disabled = i >= keys.length - 1; $('#dayNext').disabled = i <= 0;
   $('#sumBody').innerHTML = summaryHTML(sumDay);
   const dc = $('#dayCv'), dd = S.days[sumDay]; if (dc && dd) { const h = hourNow(); drawCardArtTo(dc, HERO(), DAY_TIERS[dayTier(dd)][1], h, effAmb(skyAt(h).amb, WX[wxNow()])); }
 }
@@ -3738,6 +3769,16 @@ function streakAt(k){
   if (!dayVal(dayKey(d))) d.setDate(d.getDate() - 1);
   while (dayVal(dayKey(d)) > 0) { n++; d.setDate(d.getDate() - 1); }
   return n;
+}
+/* Seções que abrem com um toque. O estado aberto fica guardado enquanto a aba estiver aberta,
+   porque o resumo é redesenhado a cada mudança no jogo. */
+const sumOpen = {};
+function det(id, ico, title, n, preview, openDefault){
+  const open = id in sumOpen ? sumOpen[id] : !!openDefault;
+  return `<details class="sum-det" data-det="${id}"${open ? ' open' : ''}><summary>
+    <span class="sd-ico">${icon(ico)}</span>
+    <span class="sd-t"><b>${esc(title)}</b><small>${esc(preview || '')}</small></span>
+    ${n ? `<span class="sd-n">${n}</span>` : ''}<span class="sd-ch" aria-hidden="true"></span></summary>`;
 }
 function summaryHTML(k){
   const d = S.days[k]; if (!d) return '<div class="card"><p class="empty">Sem registros ainda.</p></div>';
@@ -3819,17 +3860,17 @@ function summaryHTML(k){
     <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div></div>
     <div class="daytop">${card}${panel}</div>
     <div class="sum-sec"><h3>Para amanhã</h3><ul class="sugs">${sug.slice(0, 3).map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
-    <details class="sum-det"${d.sessions.length && d.sessions.length <= 3 ? ' open' : ''}><summary>Batalhas do dia <span class="pm-n">${d.sessions.length}</span></summary>
-      ${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
+    ${det('batalhas', 'sword', 'Batalhas do dia', d.sessions.length, d.sessions.length ? [res.tudo && `${res.tudo} tudo`, res.parte && `${res.parte} parte`, res.travei && `${res.travei} travei`, aband.length && `${aband.length} interrompida${aband.length > 1 ? 's' : ''}`, minis.length && `${minis.length} de 5 min`].filter(Boolean).join(' · ') : 'nenhuma ainda', d.sessions.length > 0 && d.sessions.length <= 3)}
+      <div class="sum-det-in">${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
         <div class="small">${s.mins} min${s.energy ? ' · ' + ENERGY[s.energy] : ''}</div>
-        ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}
+        ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
     </details>
-    <details class="sum-det"><summary>Como foi</summary>
+    ${det('comofoi', 'chart', 'Como foi', 0, `+${d.xp} XP · +${d.ryo} ryō`)}<div class="sum-det-in">
       <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
       <p style="font-size:15px">Energia: ${en.length ? `${ENERGY[en[0].v]} no começo → ${ENERGY[en[en.length-1].v]} no fim` : 'sem check-in'}</p>
-      <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p>
+      <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p></div>
     </details>
-    ${d.distr.length ? `<details class="sum-det"><summary>O que passou pela cabeça <span class="pm-n">${d.distr.length}</span></summary><ul class="sugs">${d.distr.map(x => `<li>${hm(x.t)} · ${esc(x.txt)}</li>`).join('')}</ul></details>` : ''}
+    ${d.distr.length ? `${det('distr', 'scroll', 'O que passou pela cabeça', d.distr.length, d.distr[0].txt + (d.distr.length > 1 ? ` e mais ${d.distr.length - 1}` : ''))}<div class="sum-det-in"><ul class="distr">${d.distr.map(x => `<li><time>${hm(x.t)}</time><span>${esc(x.txt)}</span></li>`).join('')}</ul></div></details>` : ''}
   </div>`;
 }
 function renderAll(){
@@ -4059,6 +4100,10 @@ function wire(){
     S = fresh(); S.view = 'jogo'; resetArmed = false; e.target.textContent = 'Apagar progresso'; checkDay(); applyUI(); renderAll(); save(); toast('Progresso apagado. Um novo caminho começa.');
   });
   $('#daySel').addEventListener('change', e => { sumDay = e.target.value; renderResumo(); });
+  const dayStep = n => { const o = [...$('#daySel').options].map(x => x.value), i = o.indexOf(sumDay), j = i + n; if (j < 0 || j >= o.length) return; sumDay = o[j]; renderResumo(); };
+  $('#dayPrev').addEventListener('click', () => dayStep(1));
+  $('#dayNext').addEventListener('click', () => dayStep(-1));
+  $('#sumBody').addEventListener('toggle', e => { const el = e.target; if (!el.matches || !el.matches('details[data-det]') || sumOpen[el.dataset.det] === el.open) return; sumOpen[el.dataset.det] = el.open; if (el.open) { el.classList.add('just'); setTimeout(() => el.classList.remove('just'), 300); } }, true);
   document.addEventListener('visibilitychange', () => {
     const T = S.timer, focusing = T.running && T.phase === 'focus';
     if (document.visibilityState === 'hidden') { if (focusing) awayAt = Date.now(); return; }
