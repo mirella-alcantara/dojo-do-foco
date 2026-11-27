@@ -376,6 +376,44 @@ dl.terms dd{margin:0;color:var(--muted)}
 .master{display:flex;gap:14px;align-items:flex-start;background:var(--dlg);color:var(--dlg-ink);border:3px solid var(--dlg-ink);box-shadow:0 0 0 4px var(--dlg);border-radius:6px;padding:14px 16px}
 .master canvas{width:48px;height:72px;image-rendering:pixelated;flex:none}
 .sugs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+/* Resumo do dia: carta do dia + painel */
+.daytop{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.daycard{width:100%}
+.day-atts{margin:2px 0 0;display:grid;gap:1px}
+.day-atts div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted rgba(42,29,20,.35)}
+.day-atts dt{font-size:12.5px}.day-atts dd{margin:0;font-family:var(--num);font-size:16px}
+.daycard .tcg-foot{justify-content:center;text-align:center;font-size:11px}
+.daypanel{display:grid;gap:12px}
+.pm{background:var(--panel2);border-radius:10px;padding:12px 14px}
+.pm h3{font-family:var(--px);font-size:17px;font-weight:600;margin:0}
+.pm-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.pm-n{font-family:var(--num);font-size:17px;color:var(--muted);white-space:nowrap}
+.pm-bar{height:9px;background:var(--panel);border:2px solid var(--line);border-radius:4px;overflow:hidden}
+.pm-bar.big{height:16px}
+.pm-bar i{display:block;height:100%;background:var(--violet)}
+.pm-bar.big i{background:var(--pink)}.pm-bar i.done{background:var(--matcha)}.pm-bar i.over{background:var(--gold)}
+.pm-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px;font-size:15px}
+.pm-list .pm-row{margin-bottom:3px}
+.wk{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.wk i{display:block;width:26px;height:26px;margin:0 auto 2px;border-radius:50%;border:2px solid var(--line);background:var(--panel)}
+.wk i[data-l="1"]{background:color-mix(in srgb,var(--violet) 40%,var(--panel))}
+.wk i[data-l="2"]{background:color-mix(in srgb,var(--violet) 70%,var(--panel))}
+.wk i[data-l="3"]{background:var(--violet);border-color:var(--gold)}
+.wk li.now i{box-shadow:0 0 0 3px var(--pink)}
+.wk span{font-family:var(--num);font-size:14px;color:var(--muted)}
+.rh{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:2px}
+.rh i{height:22px;border-radius:3px;background:color-mix(in srgb,var(--violet) var(--a),var(--panel))}
+.rh i.hi{background:var(--pink)}
+.rh-ax{display:flex;justify-content:space-between;font-family:var(--num);font-size:14px;color:var(--muted);margin-top:3px}
+.sum-det{background:var(--panel2);border-radius:10px;padding:10px 14px}
+.sum-det summary{cursor:pointer;font-family:var(--px);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;list-style:none}
+.sum-det summary::-webkit-details-marker{display:none}
+.sum-det summary::before{content:"▸";color:var(--pink);transition:transform .15s}
+.sum-det[open] summary::before{transform:rotate(90deg)}
+.sum-det summary .pm-n{margin-left:auto}
+.sum-det[open] > :not(summary){margin-top:10px}
+.sum-det .timeline li{background:var(--panel)}
+@media (max-width:700px){.daytop{grid-template-columns:minmax(0,1fr)}.daycard{max-width:230px;margin:0 auto}}
 
 /* Navegação inferior */
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--nav) 97%,transparent);border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
@@ -3671,7 +3709,35 @@ function renderResumo(){
   if (!sumDay || !S.days[sumDay]) sumDay = keys[0];
   $('#daySel').innerHTML = keys.map(k => `<option value="${k}" ${k === sumDay ? 'selected' : ''}>${k === dayKey(new Date()) ? 'Hoje · ' : ''}${fmtDate(k)}</option>`).join('');
   $('#sumBody').innerHTML = summaryHTML(sumDay);
-  const mc = $('#masterCv'); if (mc) { const c = mc.getContext('2d'); c.clearRect(0, 0, 24, 28); drawMap(c, MASTER, MPAL, 0, 6, 2/1); }
+  const dc = $('#dayCv'), dd = S.days[sumDay]; if (dc && dd) { const h = hourNow(); drawCardArtTo(dc, HERO(), DAY_TIERS[dayTier(dd)][1], h, effAmb(skyAt(h).amb, WX[wxNow()])); }
+}
+/* Resumo do dia: carta do dia (raridade pelo desempenho) + painel com meta, missões, semana e ritmo.
+   Os detalhes (batalhas, como foi, distrações) ficam em listas que abrem com um toque. */
+const DAY_TIERS = [ /* [nome, índice em CARD_TIERS (cor e estrelas), regra] */
+  ['Descanso', 0], ['Comum', 1], ['Rara', 2], ['Épica', 3], ['Lendária', 4]
+];
+function dayTier(d){
+  const g = S.cfg.goal;
+  if (!d.pomos) return 0;
+  if (d.pomos >= g && !d.skips && d.breaks > 0) return 4;
+  if (d.pomos >= g) return 3;
+  if (d.pomos >= Math.ceil(g * 2/3)) return 2;
+  return 1;
+}
+function dayTierNext(d, t){
+  const g = S.cfg.goal, falta = n => `${n} ${n === 1 ? 'pomodoro' : 'pomodoros'}`;
+  if (t === 0) return 'Um pomodoro já transforma o dia numa carta Comum.';
+  const f = n => `${n === 1 ? 'Falta' : 'Faltam'} ${falta(n)}`;
+  if (t === 1) return `${f(Math.ceil(g * 2/3) - d.pomos)} para Rara.`;
+  if (t === 2) return `${f(g - d.pomos)} para Épica.`;
+  if (t === 3) return d.skips ? 'Lendária pede a meta sem pular nenhuma pausa.' : 'Faça uma pausa completa para chegar a Lendária.';
+  return 'Raridade máxima. Dia lendário!';
+}
+function streakAt(k){
+  const [y, m, dd] = k.split('-').map(Number), d = new Date(y, m-1, dd); let n = 0;
+  if (!dayVal(dayKey(d))) d.setDate(d.getDate() - 1);
+  while (dayVal(dayKey(d)) > 0) { n++; d.setDate(d.getDate() - 1); }
+  return n;
 }
 function summaryHTML(k){
   const d = S.days[k]; if (!d) return '<div class="card"><p class="empty">Sem registros ainda.</p></div>';
@@ -3700,46 +3766,70 @@ function summaryHTML(k){
   if (over.length) sug.push(`"${over[0].name}" passou da estimativa. Aumente a estimativa ou quebre em partes.`);
   if (!d.pomos) sug.push('Escolha uma missão pequena e toque em "Só 5 minutos".');
   if (sug.length < 2) sug.push('Repita o ritmo de hoje. Constância vence intensidade.');
-  const week = []; const [y, m, dd] = k.split('-').map(Number);
-  for (let i = 6; i >= 0; i--) { const dt = new Date(y, m-1, dd - i); const kk = dayKey(dt); week.push({ k:kk, d:['dom','seg','ter','qua','qui','sex','sáb'][dt.getDay()], v:dayVal(kk) }); }
-  const wmax = Math.max(S.cfg.goal, ...week.map(w => w.v), 1);
+
+  /* Carta do dia */
+  const ti = dayTier(d), T = DAY_TIERS[ti], C = CARD_TIERS[T[1]];
+  const [y, m, dd] = k.split('-').map(Number);
+  const short = new Date(y, m-1, dd).toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit' }).replace('.', '');
+  const pauses = d.breaks + d.skips;
+  const card = `<article class="tcg daycard" style="--tier:${C[2]}" data-holo="${ti === 4 ? 1 : 0}" aria-label="Carta do dia: ${T[0]}">
+    <div class="tcg-name"><h3>${esc(short.charAt(0).toUpperCase() + short.slice(1))}</h3><span class="tcg-attr">日</span></div>
+    <div class="tcg-stars" aria-label="${T[0]}: ${ti} de 4 estrelas">${'<i>★</i>'.repeat(ti)}</div>
+    <div class="tcg-art"><canvas width="120" height="112" id="dayCv"></canvas><div class="tcg-holo" aria-hidden="true"></div></div>
+    <div class="tcg-code"><span>${T[0]}</span><span>DIA-${String(m).padStart(2, '0')}${String(dd).padStart(2, '0')}</span></div>
+    <div class="tcg-text"><b>[Resumo do dia]</b>
+      <dl class="day-atts">
+        <div><dt>Foco</dt><dd>${d.mins} min</dd></div>
+        <div><dt>Disciplina</dt><dd>${pauses ? `${d.breaks}/${pauses} pausas` : '—'}</dd></div>
+        <div><dt>Calma</dt><dd>${d.distr.length} ${d.distr.length === 1 ? 'distração' : 'distrações'}</dd></div>
+        <div><dt>Vitórias</dt><dd>${done.length}</dd></div>
+      </dl>
+      <p class="tcg-q">“${esc(phrase)}”</p>
+    </div>
+    <div class="tcg-foot"><span>${esc(dayTierNext(d, ti))}</span></div>
+  </article>`;
+
+  /* Painel */
+  const g = S.cfg.goal, pct = Math.min(100, Math.round(d.pomos / g * 100));
+  const tasks = Object.entries(byTask).map(([id, v]) => {
+    const t = S.tasks.find(x => x.id === id);
+    if (!t || !t.est) return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${v.n} hoje</span></div></li>`;
+    const p = Math.min(100, Math.round(t.done / t.est * 100)), passou = t.done > t.est;
+    return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${t.done}/${t.est}${passou ? ' · passou' : ''}</span></div><div class="pm-bar"><i class="${passou ? 'over' : ''}" style="width:${p}%"></i></div></li>`;
+  }).join('');
+  const week = [];
+  for (let i = 6; i >= 0; i--) { const dt = new Date(y, m-1, dd - i), kk = dayKey(dt), v = dayVal(kk); week.push({ k:kk, d:['dom','seg','ter','qua','qui','sex','sáb'][dt.getDay()], v, lvl:!v ? 0 : v >= g ? 3 : v >= Math.ceil(g/2) ? 2 : 1 }); }
+  const st = streakAt(k);
   let h0 = 6; hours.forEach((v, i) => { if (v && i < h0) h0 = i; });
-  const hmax = Math.max(...hours, 1);
-  const hourBars = []; for (let i = h0; i < 24; i++) hourBars.push(`<div class="b ${i === best && hours[i] ? 'hi' : ''}" title="${i}h: ${hours[i]} min"><i style="height:${hours[i]/hmax*70}px"></i><span>${i % 3 === 0 ? i : ''}</span></div>`);
+  const hmax = Math.max(...hours, 1), cells = [];
+  for (let i = h0; i < 24; i++) cells.push(`<i class="${i === best && hours[i] ? 'hi' : ''}" style="--a:${hours[i] ? Math.round(25 + hours[i]/hmax*75) : 0}%" title="${i}h: ${hours[i]} min"></i>`);
+  const panel = `<div class="daypanel">
+    <section class="pm"><div class="pm-row"><h3>Meta do dia</h3><span class="pm-n">${d.pomos} de ${g} pomodoros</span></div>
+      <div class="pm-bar big" role="progressbar" aria-valuemin="0" aria-valuemax="${g}" aria-valuenow="${d.pomos}" aria-label="Meta do dia"><i class="${d.pomos >= g ? 'done' : ''}" style="width:${pct}%"></i></div>
+      ${!final ? `<p class="small">O resumo final sai às ${esc(S.cfg.summaryAt)}.</p>` : ''}</section>
+    <section class="pm"><h3>Missões</h3>${tasks ? `<ul class="pm-list">${tasks}</ul>` : '<p class="empty">Nenhuma missão trabalhada.</p>'}</section>
+    <section class="pm"><div class="pm-row"><h3>Semana</h3><span class="pm-n">${st} ${st === 1 ? 'dia seguido' : 'dias seguidos'}</span></div>
+      <ol class="wk">${week.map(w => `<li class="${w.k === k ? 'now' : ''}" title="${w.v} pomodoros"><i data-l="${w.lvl}"></i><span>${w.d}</span></li>`).join('')}</ol></section>
+    <section class="pm"><div class="pm-row"><h3>Ritmo do dia</h3>${hours[best] ? `<span class="pm-n">pico às ${best}h</span>` : ''}</div>
+      <div class="rh" style="--n:${24 - h0}">${cells.join('')}</div>
+      <div class="rh-ax"><span>${h0}h</span><span>${Math.round((h0 + 23) / 2)}h</span><span>23h</span></div></section>
+  </div>`;
+
   return `<div class="scroll-card">
-    <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div>
-    ${!final ? `<span class="small">O resumo final sai às ${esc(S.cfg.summaryAt)}.</span>` : ''}</div>
-    <div class="big5">
-      <div class="bigs"><div class="v">${d.pomos}</div><div class="k">pomodoros de ${S.cfg.goal}</div></div>
-      <div class="bigs"><div class="v">${d.mins}</div><div class="k">minutos de foco</div></div>
-      <div class="bigs"><div class="v">${d.breaks}</div><div class="k">pausas feitas</div></div>
-      <div class="bigs"><div class="v">${d.skips}</div><div class="k">pausas puladas</div></div>
-      <div class="bigs"><div class="v">${d.distr.length}</div><div class="k">distrações anotadas</div></div>
-    </div>
-    <div class="master"><canvas id="masterCv" width="24" height="36" aria-hidden="true"></canvas><div><div class="mono" style="color:#a99fd6;font-size:16px">Mestre do dojo</div><p style="font-size:17px">${esc(phrase)}</p></div></div>
-    <div class="cols">
-      <div class="sum-sec"><h3>Batalhas do dia</h3>
-        ${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
-          <div class="small">${s.mins} min${s.energy ? ' · ' + ENERGY[s.energy] : ''}</div>
-          ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}
-      </div>
-      <div class="stack" style="gap:16px">
-        <div class="sum-sec"><h3>Missões</h3>
-          ${Object.keys(byTask).length ? `<div class="tblw"><table class="tbl"><thead><tr><th>Missão</th><th>Hoje</th><th>Real / estimado</th></tr></thead><tbody>${Object.entries(byTask).map(([id, v]) => { const t = S.tasks.find(x => x.id === id); return `<tr><td>${esc(v.name)}</td><td class="num">${v.n}</td><td class="num">${t ? t.done + ' / ' + t.est : '—'}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="empty">Nenhuma missão trabalhada.</p>'}
-        </div>
-        <div class="sum-sec"><h3>Como foi</h3>
-          <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
-          <p style="font-size:15px">Energia: ${en.length ? `${ENERGY[en[0].v]} no começo → ${ENERGY[en[en.length-1].v]} no fim` : 'sem check-in'}</p>
-          <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p>
-        </div>
-      </div>
-    </div>
-    <div class="cols">
-      <div class="sum-sec"><h3>Minutos de foco por hora</h3><div class="bars">${hourBars.join('')}</div>${hours[best] ? `<p class="small">Pico: ${best}h, com ${hours[best]} min.</p>` : ''}</div>
-      <div class="sum-sec"><h3>Semana</h3><div class="bars">${week.map(w => `<div class="b ${w.k === k ? 'hi' : ''}"><em>${w.v}</em><i style="height:${w.v/wmax*60}px"></i><span>${w.d}</span></div>`).join('')}</div><p class="small">Meta diária: ${S.cfg.goal} pomodoros.</p></div>
-    </div>
+    <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div></div>
+    <div class="daytop">${card}${panel}</div>
     <div class="sum-sec"><h3>Para amanhã</h3><ul class="sugs">${sug.slice(0, 3).map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
-    ${d.distr.length ? `<div class="sum-sec"><h3>O que passou pela cabeça</h3><ul class="sugs">${d.distr.map(x => `<li>${hm(x.t)} · ${esc(x.txt)}</li>`).join('')}</ul></div>` : ''}
+    <details class="sum-det"${d.sessions.length && d.sessions.length <= 3 ? ' open' : ''}><summary>Batalhas do dia <span class="pm-n">${d.sessions.length}</span></summary>
+      ${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
+        <div class="small">${s.mins} min${s.energy ? ' · ' + ENERGY[s.energy] : ''}</div>
+        ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}
+    </details>
+    <details class="sum-det"><summary>Como foi</summary>
+      <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
+      <p style="font-size:15px">Energia: ${en.length ? `${ENERGY[en[0].v]} no começo → ${ENERGY[en[en.length-1].v]} no fim` : 'sem check-in'}</p>
+      <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p>
+    </details>
+    ${d.distr.length ? `<details class="sum-det"><summary>O que passou pela cabeça <span class="pm-n">${d.distr.length}</span></summary><ul class="sugs">${d.distr.map(x => `<li>${hm(x.t)} · ${esc(x.txt)}</li>`).join('')}</ul></details>` : ''}
   </div>`;
 }
 function renderAll(){
