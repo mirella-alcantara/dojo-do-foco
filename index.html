@@ -263,6 +263,83 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .q-steps .ibtn{width:24px;height:24px;font-size:12px;border:0}
 .addstep{margin:8px 0 0 30px}
 .empty{color:var(--muted);font-size:14px;padding:4px 0}
+/* Tela de Missões: uma aba por vez, missão em linha compacta que abre os passos ao tocar */
+.m-wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.m-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.m-title{font-family:var(--px);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1}
+.m-title em{font-style:normal;color:var(--violet)}
+.m-tabs{display:flex;gap:4px;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:4px;flex-wrap:wrap}
+.m-tabs button{display:flex;align-items:center;gap:6px;background:none;border:0;border-radius:7px;padding:6px 12px;font:inherit;font-size:15px;color:var(--muted);cursor:pointer}
+.m-tabs button:hover{color:var(--ink)}
+.m-tabs button[aria-selected="true"]{background:var(--phase);color:var(--on)}
+.m-tabs .jp{font-size:14px;opacity:.8}
+.m-tabs .n:not(:empty){font-family:var(--num);font-size:15px;line-height:1;background:color-mix(in srgb,currentColor 16%,transparent);border-radius:5px;padding:1px 5px}
+.m-panel{padding:14px}
+@media (max-width:560px){.m-tabs{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.m-tabs button{justify-content:center;padding:6px 4px;font-size:13px;gap:4px}.m-tabs .jp{display:none}}
+.m-sub{color:var(--muted);font-size:14px;margin:0 0 10px}
+.m-new{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.m-new > input{flex:1 1 200px;min-width:0}
+.m-new > select{flex:0 1 auto;min-width:0}
+.m-log{max-height:none}
+.q-cap{display:flex;gap:8px}
+.q-cap input{flex:1;min-width:0;font-size:17px;padding:12px 14px}
+.q-ex{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
+.q-ex:empty{display:none}
+@media (max-width:560px){.q-ex{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-14px;padding-right:14px}.q-ex button{white-space:nowrap;flex:none}.q-cap input{font-size:16px}}
+.q-ex .lb{font-size:13px;color:var(--faint)}
+.q-ex button,.qf-chip{background:none;border:2px solid var(--line);border-radius:999px;padding:2px 10px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.q-ex button:hover,.qf-chip:hover{color:var(--ink);border-color:var(--muted)}
+.qf{margin-top:14px;border:2px solid var(--phase);border-radius:12px;padding:14px 16px;background:color-mix(in srgb,var(--phase) 7%,var(--panel2))}
+.qf-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qf-tag{margin-left:auto;font-family:var(--num);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--phase)}
+.qf-chip{display:inline-flex;align-items:center;gap:4px}
+.qf-chip .tm{width:10px;height:10px}
+.card .qf-name{font-family:var(--body);font-weight:700;font-size:20px;line-height:1.3;margin:8px 0 0;overflow-wrap:anywhere}
+.qf-next{margin:10px 0 4px;padding:10px 12px;border-radius:8px;background:color-mix(in srgb,var(--matcha) 16%,transparent);color:var(--ink);font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.qf-next span{display:block;font-family:var(--num);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--matcha)}
+.qf-steps{margin:10px 0 0}
+.qf-steps li{display:flex;justify-content:space-between;gap:6px}
+.qf-steps .ibtn{width:24px;height:24px;font-size:12px;border:0}
+.qf-prog{display:flex;align-items:center;gap:10px;margin:10px 0 0;font-size:13px;color:var(--muted)}
+.qf-bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.qf-bar i{display:block;height:100%;background:var(--matcha);transition:width .3s}
+.qf .qf-add{margin:10px 0 0;display:flex;gap:8px}
+.qf-add input{flex:1;min-width:0}
+.qf-act{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+.qf-empty{margin-top:14px;padding:14px;border:2px dashed var(--line);border-radius:12px;color:var(--muted);font-size:15px;text-align:center}
+.q-lbl{margin:18px 0 6px;font-family:var(--num);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.q-list{list-style:none;margin:0;padding:0}
+.q-item{display:flex;align-items:center;gap:8px;padding:8px 2px;border-top:2px solid var(--line)}
+.q-item:first-child{border-top:0}
+.q-item-main{flex:1;min-width:0;background:none;border:0;padding:2px 0;text-align:left;font:inherit;color:var(--ink);cursor:pointer}
+.q-item-main b{display:block;font-weight:700;font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+.q-item-main small{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.q-item-main .tm{width:9px;height:9px}
+.q-item.fin b{text-decoration:line-through;color:var(--muted)}
+.m-done{margin-top:14px}
+.m-done summary{cursor:pointer;color:var(--muted);font-size:14px;padding:4px 0}
+.m-done summary .n{font-family:var(--num);font-size:15px}
+/* Missões da pausa: cartinhas que a pessoa liga, desliga, troca de pausa e remove */
+.pz-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+.pz-head h3{margin:0}
+.pz-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.pz-tabs button{background:none;border:2px solid var(--line);border-radius:999px;padding:2px 10px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.pz-tabs button:hover{color:var(--ink);border-color:var(--muted)}
+.pz-tabs button[aria-pressed="true"]{color:var(--on);background:var(--phase);border-color:var(--phase)}
+.pz-tabs .n{font-family:var(--num);font-size:14px;margin-left:4px;opacity:.85}
+.pz-grid{list-style:none;margin:10px 0 8px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.pz{position:relative;display:flex;flex-direction:column;background:var(--panel2);border:2px solid var(--line);border-radius:9px}
+.pz.on{border-color:var(--matcha);background:color-mix(in srgb,var(--matcha) 14%,var(--panel2))}
+.pz-t{flex:1;text-align:left;background:none;border:0;border-radius:7px 7px 0 0;padding:9px 28px 4px 10px;color:var(--ink);font:inherit;cursor:pointer}
+.pz-t .k{font-family:var(--jp);font-size:20px;line-height:1;color:var(--faint)}
+.pz.on .pz-t .k{color:var(--matcha)}
+.pz-t b{display:block;font-weight:700;font-size:14px;line-height:1.3;margin:5px 0 0;overflow-wrap:anywhere}
+.pz-w{align-self:flex-start;margin:4px 10px 9px;background:none;border:1px dashed var(--line);border-radius:5px;padding:0 6px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer}
+.pz-w:hover{color:var(--ink);border-color:var(--muted)}
+.pz .ibtn{position:absolute;top:4px;right:4px;width:24px;height:24px;font-size:12px;border:0}
+.pz-tip{margin:0 0 12px}
+.pz-tip button{background:none;border:0;padding:0;font:inherit;color:var(--phase);text-decoration:underline;cursor:pointer}
+.pz-form select{flex:0 1 150px}
 .row-item{display:flex;align-items:center;gap:10px;background:var(--panel2);border-radius:8px;padding:8px 10px}
 .row-item .n{flex:1;min-width:0;overflow-wrap:anywhere;font-size:15px}
 .cost{font-family:var(--num);font-size:20px;color:var(--gold);white-space:nowrap}
@@ -619,32 +696,49 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
 
     <!-- MISSÕES -->
     <section class="view" id="view-missoes" hidden>
-      <div class="stack">
-        <div class="page-h"><h2>Missões <em class="jp">任務</em></h2><span class="mono">Tarefa grande vira passos pequenos</span></div>
-        <div class="cols">
-          <div class="card">
-            <h3>Suas missões</h3>
-            <ul class="list" id="quests"></ul>
-            <form id="questForm" class="inrow" style="margin-top:14px">
-              <input type="text" id="questIn" placeholder="Nova missão, ex.: estudar biologia celular" maxlength="80" required aria-label="Nome da missão">
-              <select id="questCat" aria-label="Tipo de estudo"></select>
-              <select id="questEst" aria-label="Pomodoros estimados">
-                <option value="1">1 pomodoro</option><option value="2" selected>2 pomodoros</option><option value="3">3 pomodoros</option><option value="4">4 pomodoros</option><option value="6">6 pomodoros</option><option value="8">8 pomodoros</option>
-              </select>
-              <button class="btn primary sm" type="submit">Adicionar</button>
+      <div class="m-wrap">
+        <div class="m-head">
+          <h2 class="m-title">Missões <em class="jp">任務</em></h2>
+          <div class="m-tabs" role="tablist" aria-label="Partes das missões">
+            <button type="button" role="tab" data-mtab="estudo" id="mt-estudo" aria-controls="mp-estudo"><span class="jp" aria-hidden="true">学</span>Estudo<span class="n" id="mc-estudo"></span></button>
+            <button type="button" role="tab" data-mtab="pausa" id="mt-pausa" aria-controls="mp-pausa"><span class="jp" aria-hidden="true">休</span>Pausa<span class="n" id="mc-pausa"></span></button>
+            <button type="button" role="tab" data-mtab="perg" id="mt-perg" aria-controls="mp-perg"><span class="jp" aria-hidden="true">巻</span>Pergaminho<span class="n" id="mc-perg"></span></button>
+            <button type="button" role="tab" data-mtab="diario" id="mt-diario" aria-controls="mp-diario"><span class="jp" aria-hidden="true">記</span>Diário</button>
+          </div>
+        </div>
+
+        <div class="card m-panel" role="tabpanel" id="mp-estudo" aria-labelledby="mt-estudo">
+          <form id="questForm" class="q-cap">
+            <input type="text" id="questIn" placeholder="O que vai estudar?" maxlength="80" autocomplete="off" aria-label="Nova missão">
+            <button class="btn primary" type="submit">Criar</button>
+          </form>
+          <div class="q-ex" id="questEx"></div>
+          <div id="questFocus"></div>
+          <div id="questNextBox"><div class="q-lbl">Próximas</div><ul class="q-list" id="quests"></ul></div>
+          <details class="m-done" id="questsDoneBox" hidden><summary>Concluídas <span class="n" id="questsDoneN"></span></summary><ul class="q-list" id="questsDone"></ul></details>
+        </div>
+
+        <div class="card m-panel" role="tabpanel" id="mp-pausa" aria-labelledby="mt-pausa" hidden>
+          <div id="pausaCard">
+            <p class="m-sub">+2 ryō para cada missão feita</p>
+            <div class="pz-tabs" id="pausaTabs" role="group" aria-label="Filtrar missões da pausa"></div>
+            <ul class="pz-grid" id="pausaList"></ul>
+            <p class="small pz-tip" id="pausaTip"></p>
+            <form id="pausaForm" class="m-new">
+              <input type="text" id="pausaIn" placeholder="Nova missão da pausa" maxlength="60" required aria-label="Nova missão da pausa">
+              <select id="pausaWhen" aria-label="Em qual pausa"><option value="all">Toda pausa</option><option value="short">Só pausa curta</option><option value="long">Só no onsen</option></select>
+              <button class="btn primary sm" type="submit">Criar</button>
             </form>
           </div>
-          <div class="stack">
-            <div class="card">
-              <h3>Pergaminho de distrações</h3>
-              <p class="small" style="margin-bottom:10px">Tudo que surgiu durante o foco. Resolva na pausa e marque como feito.</p>
-              <ul class="list" id="distrList"></ul>
-            </div>
-            <div class="card">
-              <h3>Diário de aventura</h3>
-              <ul class="log" id="log"></ul>
-            </div>
-          </div>
+        </div>
+
+        <div class="card m-panel" role="tabpanel" id="mp-perg" aria-labelledby="mt-perg" hidden>
+          <p class="m-sub">O que surgiu no foco. Resolva na pausa.</p>
+          <ul class="list" id="distrList"></ul>
+        </div>
+
+        <div class="card m-panel" role="tabpanel" id="mp-diario" aria-labelledby="mt-diario" hidden>
+          <ul class="log m-log" id="log"></ul>
         </div>
       </div>
     </section>
@@ -1046,6 +1140,58 @@ const ENEMIES = [
 ];
 const BOSS = { n:'Daimyō do Caos', o:'#6a4a9a', k:'#e1b85a', boss:true };
 const SHORT_ITEMS = ['Beber um copo de água','Alongar pescoço e ombros','Olhar algo distante por 20 s','Respirar 4-4-6, cinco vezes','Ir até a janela e voltar','Lavar o rosto','Arrumar a mesa','Resolver um item do pergaminho'];
+/* Missões da pausa. As prontas saíram de guias de estudo sobre pausas (mexer o corpo, sair da tela,
+   olhar longe ou para o verde, beber e comer algo, tarefas rápidas da casa, falar com alguém).
+   when: all | short | long. Em S.pausa fica só o estado (on, when) de cada pronta e o texto das que a pessoa escreveu. */
+const PAUSE_GROUPS = { corpo:'Corpo', comer:'Comer e beber', casa:'Casa', mente:'Cabeça', gente:'Pessoas e pets', meu:'Minhas' };
+const PAUSE_PRESETS = [
+  { id:'agua', g:'corpo', k:'水', txt:'Beber um copo de água', when:'all', on:true },
+  { id:'alongar', g:'corpo', k:'伸', txt:'Alongar pescoço e ombros', when:'all', on:true },
+  { id:'olhos', g:'corpo', k:'目', txt:'Olhar pela janela, bem longe', when:'all', on:true },
+  { id:'levantar', g:'corpo', k:'立', txt:'Levantar e dar uma volta pela casa', when:'short', on:true },
+  { id:'banheiro', g:'corpo', k:'厠', txt:'Ir ao banheiro', when:'all', on:false },
+  { id:'rosto', g:'corpo', k:'顔', txt:'Lavar o rosto', when:'short', on:false },
+  { id:'dancar', g:'corpo', k:'踊', txt:'Dançar uma música', when:'short', on:false },
+  { id:'caminhar', g:'corpo', k:'歩', txt:'Caminhar lá fora 10 minutos', when:'long', on:true },
+  { id:'sol', g:'corpo', k:'陽', txt:'Pegar um pouco de sol', when:'long', on:false },
+  { id:'cochilo', g:'corpo', k:'眠', txt:'Cochilo de 20 min com alarme', when:'long', on:false },
+  { id:'cafe', g:'comer', k:'茶', txt:'Fazer um café ou chá', when:'all', on:false },
+  { id:'fruta', g:'comer', k:'果', txt:'Comer uma fruta ou lanchinho', when:'all', on:false },
+  { id:'refeicao', g:'comer', k:'食', txt:'Fazer uma refeição de verdade', when:'long', on:true },
+  { id:'garrafa', g:'comer', k:'瓶', txt:'Encher a garrafinha de água', when:'short', on:false },
+  { id:'mesa', g:'casa', k:'机', txt:'Arrumar a mesa', when:'short', on:false },
+  { id:'louca', g:'casa', k:'皿', txt:'Lavar ou guardar a louça', when:'short', on:false },
+  { id:'plantas', g:'casa', k:'植', txt:'Regar as plantas', when:'short', on:false },
+  { id:'cama', g:'casa', k:'寝', txt:'Arrumar a cama', when:'short', on:false },
+  { id:'lixo', g:'casa', k:'屑', txt:'Tirar o lixo', when:'short', on:false },
+  { id:'roupa', g:'casa', k:'服', txt:'Estender ou dobrar roupa', when:'long', on:false },
+  { id:'respirar', g:'mente', k:'息', txt:'Respirar fundo cinco vezes', when:'all', on:false },
+  { id:'semtela', g:'mente', k:'閉', txt:'Ficar longe do celular e das telas', when:'all', on:false },
+  { id:'musica', g:'mente', k:'音', txt:'Ouvir uma música de olhos fechados', when:'short', on:false },
+  { id:'rabiscar', g:'mente', k:'描', txt:'Rabiscar ou desenhar algo', when:'short', on:false },
+  { id:'pergaminho', g:'mente', k:'巻', txt:'Resolver um item do pergaminho', when:'short', on:false },
+  { id:'lembrar', g:'mente', k:'思', txt:'Lembrar o que aprendeu no ciclo', when:'long', on:false },
+  { id:'conversar', g:'gente', k:'話', txt:'Conversar com alguém da casa', when:'all', on:false },
+  { id:'pet', g:'gente', k:'猫', txt:'Dar carinho no pet', when:'all', on:false },
+  { id:'recado', g:'gente', k:'便', txt:'Mandar um oi para alguém querido', when:'long', on:false }
+];
+const PAUSE_BY_ID = Object.fromEntries(PAUSE_PRESETS.map(x => [x.id, x]));
+const PAUSE_WHEN = { all:'toda pausa', short:'só pausa curta', long:'só no onsen' };
+const PAUSE_NEXT = { all:'short', short:'long', long:'all' };
+const PAUSE_MAX = { short:4, long:5 };
+function pausaDefaults(){ return PAUSE_PRESETS.map(x => ({ id:x.id, on:x.on, when:x.when })); }
+/* Junta o que está salvo com a lista atual: prontas novas entram, prontas que saíram do jogo somem, as da pessoa ficam. */
+function pausaNorm(list, off){
+  const saved = Array.isArray(list) ? list : [], hidden = new Set(off || []), out = [];
+  PAUSE_PRESETS.forEach(p => {
+    if (hidden.has(p.id)) return;
+    const s = saved.find(x => x && x.id === p.id && !x.own);
+    out.push({ id:p.id, on:s ? !!s.on : p.on, when:s && PAUSE_WHEN[s.when] ? s.when : p.when });
+  });
+  saved.forEach(x => { if (x && x.own && x.txt) out.push({ id:x.id, own:true, txt:String(x.txt).slice(0, 60), when:PAUSE_WHEN[x.when] ? x.when : 'all', on:!!x.on }); });
+  return out;
+}
+function pausaInfo(x){ const p = PAUSE_BY_ID[x.id]; return x.own || !p ? { k:'心', txt:x.txt, g:'meu' } : p; }
 const LONG_ITEMS = ['Ficar longe de todas as telas','Caminhar 10 minutos','Fazer um lanche de verdade','Beber água ou chá','Alongar o corpo inteiro','Lembrar o que aprendeu no ciclo'];
 const ENERGY = { 1:'(－_－) cansado', 2:'(・_・) ok', 3:'(＾▽＾) animado' };
 const RESULTS = { tudo:'Tudo', parte:'Parte', travei:'Travei' };
@@ -1118,7 +1264,7 @@ function fresh(){
     log:[{ t:Date.now(), txt:'Você chegou ao dojo. Escreva seu plano e comece.', c:'' }],
     days:{}, lastDate:null, pendingSummary:null, pendingReview:null,
     ach:{}, totals:{ pomos:0, breaks:0, longs:0, quests:0, steps:0, minis:0, reviews:0 },
-    brk:{ items:[], checked:[] }, draft:{ plan:'', energy:null }, cur:null, view:'dojo'
+    brk:{ items:[], checked:[] }, pausa:pausaDefaults(), pausaOff:[], draft:{ plan:'', energy:null }, cur:null, view:'dojo'
   };
 }
 function merge(o){
@@ -1149,6 +1295,8 @@ function merge(o){
   }
   if (out.v < 5) { out.cfg.sky = 'auto'; out.v = 5; } /* o céu fixo ficava salvo e escondia o horário real */
   out.tasks = (out.tasks || []).map(t => Object.assign({ cat:'ler', steps:[] }, t));
+  out.pausaOff = Array.isArray(out.pausaOff) ? out.pausaOff.filter(id => PAUSE_BY_ID[id]) : [];
+  out.pausa = pausaNorm(out.pausa, out.pausaOff);
   Object.values(out.days || {}).forEach(x => { const b = newDay(x.date); Object.keys(b).forEach(k => { if (x[k] === undefined) x[k] = b[k]; }); });
   return out;
 }
@@ -1434,8 +1582,13 @@ function checkAch(){
   });
 }
 function pickBreakItems(p){
-  const pool = (p === 'long' ? LONG_ITEMS : SHORT_ITEMS).slice(), out = [];
-  while (out.length < (p === 'long' ? 4 : 3) && pool.length) out.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]);
+  /* Usa as missões da pausa ligadas para esta fase. Sem nenhuma ligada, volta ao sorteio antigo. */
+  const mine = (S.pausa || []).filter(x => x.on && (x.when === 'all' || x.when === p)).map(x => pausaInfo(x).txt);
+  const max = PAUSE_MAX[p] || 4;
+  const pool = (mine.length ? mine : (p === 'long' ? LONG_ITEMS : SHORT_ITEMS)).slice(), out = [];
+  const n = mine.length ? Math.min(max, mine.length) : (p === 'long' ? 4 : 3);
+  if (mine.length && mine.length <= max) out.push(...pool);
+  else while (out.length < n && pool.length) out.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]);
   S.brk = { items:out, checked:[] };
 }
 function charPal(ch){
@@ -3681,27 +3834,94 @@ function renderStrip(){
   ].map(([i, col, b, s]) => `<div><span style="color:${col}">${icon(i)}</span><div style="min-width:0"><b>${b}</b><span>${s}</span></div></div>`).join('');
   const sc = S.distr.length; $('#scrollCount').textContent = sc ? `${sc} ${sc === 1 ? 'item' : 'itens'} no pergaminho.` : 'Pergaminho vazio. Mente leve.';
 }
-function renderMissoes(){
-  const tasks = S.tasks.slice().sort((a, b) => a.fin - b.fin);
-  $('#quests').innerHTML = tasks.length ? tasks.map(t => {
-    let tm = ''; const n = Math.max(t.est, t.done);
-    for (let i = 0; i < n; i++) tm += `<span class="tm ${i < t.done ? (i >= t.est ? 'over' : 'f') : ''}"></span>`;
-    const C = CATS[t.cat] || CATS.ler;
-    return `<li class="quest ${t.id === S.active && !t.fin ? 'active' : ''} ${t.fin ? 'fin' : ''}">
-      <div class="q-top">
-        <button class="qsel" data-q="sel" data-id="${t.id}" aria-label="Escolher como missão ativa" ${t.fin ? 'disabled' : ''}></button>
-        <span class="qname">${esc(t.name)} ${t.ex ? '<span class="ex">exemplo</span>' : ''}</span>
-        <span class="cat">${C.k} ${C.n}</span>
-        ${t.fin ? '' : `<button class="ibtn" data-q="fin" data-id="${t.id}" aria-label="Concluir missão" title="Concluir">✓</button>`}
-        <button class="ibtn" data-q="del" data-id="${t.id}" aria-label="Remover missão" title="Remover">×</button>
+let mTab = 'estudo';
+const EST_STEPS = [1,2,3,4,6,8];
+const QUEST_EX = ['Ler o capítulo 3','Lista de exercícios','Revisar anotações da aula','Resumo para a prova'];
+/* Adivinha o tipo pelas palavras, para a pessoa não ter que escolher nada ao criar. Dá para trocar depois. */
+function guessCat(v){
+  const t = v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  if (/exerc|lista|quest|problema|calcul|conta/.test(t)) return 'exercicios';
+  if (/revis|reler|flashcard|anki|simulado/.test(t)) return 'revisar';
+  if (/resum|escrev|redac|texto|ensaio|relatorio|artigo/.test(t)) return 'escrever';
+  if (/program|codigo|code|projeto|app|site|bug/.test(t)) return 'programar';
+  return 'ler';
+}
+function renderMTabs(){
+  ['estudo','pausa','perg','diario'].forEach(k => { const on = k === mTab; $('#mt-' + k).setAttribute('aria-selected', on); $('#mt-' + k).tabIndex = on ? 0 : -1; $('#mp-' + k).hidden = !on; });
+  const open = S.tasks.filter(t => !t.fin).length;
+  $('#mc-estudo').textContent = open || '';
+  $('#mc-pausa').textContent = (S.pausa || []).filter(x => x.on).length || '';
+  $('#mc-perg').textContent = S.distr.length || '';
+}
+function toms(t){ let r = ''; const n = Math.max(t.est, t.done); for (let i = 0; i < n; i++) r += `<span class="tm ${i < t.done ? (i >= t.est ? 'over' : 'f') : ''}"></span>`; return r; }
+function questFocus(t){
+  const C = CATS[t.cat] || CATS.ler, ok = t.steps.filter(s => s.ok).length, nx = t.steps.find(s => !s.ok);
+  const pct = t.steps.length ? Math.round(ok / t.steps.length * 100) : 0;
+  const next = nx ? `<span>Próximo passo</span>${esc(nx.txt)}` : t.steps.length > 1 ? '<span>Tudo feito</span>Conclua a missão para ganhar o XP.' : '<span>Primeiro passo</span>Escreva abaixo a menor coisa que dá para fazer agora.';
+  return `<section class="qf" aria-label="Missão em foco">
+      <div class="qf-top">
+        <button type="button" class="qf-chip" data-q="cat" data-id="${t.id}" title="Trocar o tipo">${C.k} ${C.n}</button>
+        <button type="button" class="qf-chip" data-q="est" data-id="${t.id}" title="Pomodoros estimados. Toque para mudar." aria-label="${t.done} de ${t.est} pomodoros. Toque para mudar a estimativa.">${toms(t)}</button>
+        <span class="qf-tag">Em foco</span>
       </div>
-      <div class="toms" style="margin:8px 0 0 30px" title="${t.done} feitos de ${t.est} estimados">${tm}<span class="small" style="margin-left:6px">${t.done}/${t.est}</span></div>
-      <ul class="steps q-steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label><button class="ibtn" data-q="delstep" data-id="${t.id}" data-s="${s.id}" aria-label="Remover passo">×</button></li>`).join('')}</ul>
-      ${t.fin ? '' : `<form class="inrow addstep" data-id="${t.id}"><input type="text" maxlength="80" placeholder="Adicionar passo pequeno" aria-label="Novo passo"><button class="btn sm" type="submit">+ Passo</button></form>`}
-    </li>`;
-  }).join('') : '<li class="empty">Nenhuma missão ainda. Escreva o que vai estudar e estime os pomodoros.</li>';
-  $('#distrList').innerHTML = S.distr.length ? S.distr.map(d => `<li class="row-item"><span class="n">${esc(d.txt)}<br><span class="small">${hm(d.t)}</span></span><button class="btn sm" data-dact="ok" data-id="${d.id}">Resolvido</button></li>`).join('') : '<li class="empty">Nada anotado. Mente limpa.</li>';
+      <h3 class="qf-name">${esc(t.name)}</h3>
+      <div class="qf-next">${next}</div>
+      ${t.steps.length ? `<ul class="steps qf-steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label>${s.auto ? '' : `<button class="ibtn" data-q="delstep" data-id="${t.id}" data-s="${s.id}" aria-label="Remover passo">×</button>`}</li>`).join('')}</ul>
+      <div class="qf-prog"><div class="qf-bar"><i style="width:${pct}%"></i></div><span>${ok} de ${t.steps.length}</span></div>` : ''}
+      <form class="addstep qf-add" data-id="${t.id}"><input type="text" maxlength="80" placeholder="${nx || t.steps.length < 2 ? 'Próximo passo pequeno' : 'Mais um passo?'}" aria-label="Novo passo" autocomplete="off"><button class="btn sm" type="submit">+ Passo</button></form>
+      <div class="qf-act"><button type="button" class="btn ghost sm" data-q="del" data-id="${t.id}">Remover</button><button type="button" class="btn primary sm" data-q="fin" data-id="${t.id}">Concluir missão</button></div>
+    </section>`;
+}
+function questItem(t){
+  const C = CATS[t.cat] || CATS.ler, ok = t.steps.filter(s => s.ok).length;
+  const meta = `<small>${C.k} ${C.n} · ${toms(t)}${t.steps.length ? ` · ${ok}/${t.steps.length} passos` : ''}</small>`;
+  return t.fin
+    ? `<li class="q-item fin"><div class="q-item-main" style="cursor:default"><b>${esc(t.name)}</b>${meta}</div><button class="ibtn" data-q="del" data-id="${t.id}" aria-label="Remover missão" title="Remover">×</button></li>`
+    : `<li class="q-item"><button type="button" class="q-item-main" data-q="sel" data-id="${t.id}"><b>${esc(t.name)}</b>${meta}</button><button type="button" class="btn sm" data-q="sel" data-id="${t.id}">Focar</button><button class="ibtn" data-q="del" data-id="${t.id}" aria-label="Remover missão" title="Remover">×</button></li>`;
+}
+function renderMissoes(){
+  /* Guarda o que estava sendo digitado no passo, para um re-render não apagar a frase no meio. */
+  const st = $('#questFocus .qf-add input'), stVal = st ? st.value : '', stFocus = st && document.activeElement === st;
+  const open = S.tasks.filter(t => !t.fin), done = S.tasks.filter(t => t.fin);
+  const cur = open.find(t => t.id === S.active);
+  $('#questEx').innerHTML = $('#questIn').value.trim() ? '' : `<span class="lb">Ideias:</span>${QUEST_EX.map(x => `<button type="button" data-ex="${esc(x)}">${esc(x)}</button>`).join('')}`;
+  $('#questFocus').innerHTML = cur ? questFocus(cur) : open.length ? '<div class="qf-empty">Toque em Focar numa missão abaixo.</div>' : '<div class="qf-empty">Nenhuma missão. Escreva acima e aperte Enter.</div>';
+  const rest = open.filter(t => t !== cur);
+  $('#questNextBox').hidden = !rest.length;
+  $('#quests').innerHTML = rest.map(questItem).join('');
+  $('#questsDoneBox').hidden = !done.length;
+  $('#questsDoneN').textContent = done.length;
+  $('#questsDone').innerHTML = done.map(questItem).join('');
+  const st2 = $('#questFocus .qf-add input');
+  if (st2 && stVal && st && st.closest('form').dataset.id === st2.closest('form').dataset.id) st2.value = stVal;
+  if (st2 && stFocus) st2.focus();
+  renderMTabs();
+  renderPausa();
+  renderPausa();
+  $('#distrList').innerHTML = S.distr.length ? S.distr.map(d => `<li class="row-item"><span class="n">${esc(d.txt)} <span class="small">· ${hm(d.t)}</span></span><button class="btn sm" data-dact="ok" data-id="${d.id}">Resolvido</button></li>`).join('') : '<li class="empty">Nada anotado. Mente limpa.</li>';
   $('#log').innerHTML = S.log.map(l => `<li><time>${hm(l.t)}</time><span class="${l.c}">${esc(l.txt)}</span></li>`).join('');
+}
+let pzTab = 'on';
+function renderPausa(){
+  const L = S.pausa || [], on = L.filter(x => x.on);
+  const tabs = [['on', 'Ligadas', on.length], ['all', 'Todas', L.length]].concat(Object.entries(PAUSE_GROUPS).map(([g, n]) => [g, n, L.filter(x => pausaInfo(x).g === g).length]).filter(t => t[2] || t[0] === 'meu'));
+  if (!tabs.find(t => t[0] === pzTab)) pzTab = 'all';
+  $('#pausaTabs').innerHTML = tabs.map(([v, n, c]) => `<button type="button" data-pztab="${v}" aria-pressed="${v === pzTab}">${n}<span class="n">${c}</span></button>`).join('');
+  const show = L.filter(x => pzTab === 'on' ? x.on : pzTab === 'all' ? true : pausaInfo(x).g === pzTab);
+  const empty = pzTab === 'on' ? 'Nenhuma ligada. Abra Todas e escolha algumas.' : pzTab === 'meu' ? 'Nenhuma sua ainda. Escreva abaixo o que você gosta de fazer na pausa.' : 'Nada aqui.';
+  $('#pausaList').innerHTML = show.length ? show.map(x => { const i = pausaInfo(x); return `<li class="pz ${x.on ? 'on' : ''}">
+      <button type="button" class="pz-t" data-pz="tog" data-id="${x.id}" aria-pressed="${!!x.on}"><span class="k" aria-hidden="true">${esc(i.k)}</span><b>${esc(i.txt)}</b></button>
+      <button type="button" class="pz-w" data-pz="when" data-id="${x.id}" title="Trocar em qual pausa aparece">${PAUSE_WHEN[x.when] || PAUSE_WHEN.all}</button>
+      <button type="button" class="ibtn" data-pz="del" data-id="${x.id}" aria-label="Remover ${esc(i.txt)}" title="Remover">×</button>
+    </li>`; }).join('') : `<li class="empty" style="grid-column:1/-1">${empty}</li>`;
+  const off = (S.pausaOff || []).length;
+  $('#pausaTip').innerHTML = `Na pausa aparecem até ${PAUSE_MAX.short} (curta) ou ${PAUSE_MAX.long} (onsen).${off ? ` <button type="button" data-pz="restore">Trazer de volta ${off} ${off === 1 ? 'removida' : 'removidas'}</button>` : ''}`;
+}
+/* Se a pausa ainda não começou, as missões dela acompanham o que a pessoa acabou de mudar. */
+function pausaChanged(){
+  const T = S.timer;
+  if (T.phase !== 'focus' && !T.started) { pickBreakItems(T.phase); renderDialog(true); renderNext(); }
+  renderPausa(); renderMTabs(); save();
 }
 const COLS = [['s','Pele'],['h','Cabelo'],['e','Olhos'],['b','Roupa'],['a','Detalhe'],['l','Calça ou hakama'],['d','Sapatos'],['w','Arma'],['g','Lâmina e enfeites'],['x','Cor livre 1'],['y','Cor livre 2']];
 let edOpen = { id:true, look:true, col:false, spec:true }, delArmed = null;
@@ -4042,27 +4262,42 @@ function wire(){
   $('#bannerGo').addEventListener('click', () => { sumDay = S.pendingSummary; S.pendingSummary = null; save(); go('resumo'); });
   $('#bannerX').addEventListener('click', () => { S.pendingSummary = null; renderBanner(); save(); });
   // Missões
-  const cs = $('#questCat'); cs.innerHTML = Object.entries(CATS).map(([k, c]) => `<option value="${k}">${c.k} ${c.n}</option>`).join('');
+  if (S.qDraft) $('#questIn').value = S.qDraft;
+  let qDraftT = 0;
+  $('#questIn').addEventListener('input', e => { const had = !!(S.qDraft || '').trim(); S.qDraft = e.target.value; if (had !== !!S.qDraft.trim()) renderMissoes(); clearTimeout(qDraftT); qDraftT = setTimeout(save, 600); });
+  $('#questEx').addEventListener('click', e => { const b = e.target.closest('[data-ex]'); if (!b) return; const i = $('#questIn'); i.value = b.dataset.ex; S.qDraft = i.value; i.focus(); i.select(); renderMissoes(); });
   $('#questForm').addEventListener('submit', e => {
     e.preventDefault(); const v = $('#questIn').value.trim(); if (!v) return;
-    const t = { id:uid(), name:v, cat:cs.value, est:+$('#questEst').value, done:0, fin:false, steps:[] };
-    S.tasks.push(t); if (!activeTask()) S.active = t.id;
-    $('#questIn').value = ''; addLog(`Nova missão: ${v} (estimativa ${t.est}).`);
+    /* Nasce com um passo já feito (escrever a missão): começar com progresso faz a pessoa ir até o fim. */
+    const t = { id:uid(), name:v, cat:guessCat(v), est:2, done:0, fin:false, steps:[{ id:uid(), txt:'Escrever a missão', ok:true, auto:true }] };
+    S.tasks.push(t);
+    const busy = S.timer.phase === 'focus' && S.timer.running && activeTask();
+    if (!busy) S.active = t.id;
+    $('#questIn').value = ''; S.qDraft = ''; addLog(`Nova missão: ${v}.`);
+    if (busy) toast('Guardada nas próximas. A missão da batalha atual continua.');
     renderAll(); save();
-    const f = $(`.addstep[data-id="${t.id}"] input`); if (f) f.focus();
+    const f = !busy && $('#questFocus .qf-add input'); if (f) f.focus(); else $('#questIn').focus();
   });
-  $('#quests').addEventListener('submit', e => {
+  $('#view-missoes .m-tabs').addEventListener('click', e => { const b = e.target.closest('[data-mtab]'); if (!b) return; mTab = b.dataset.mtab; renderMissoes(); b.focus(); });
+  $('#view-missoes .m-tabs').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const ks = ['estudo','pausa','perg','diario'], i = ks.indexOf(mTab);
+    mTab = ks[(i + (e.key === 'ArrowRight' ? 1 : ks.length - 1)) % ks.length]; renderMissoes(); $('#mt-' + mTab).focus(); e.preventDefault();
+  });
+  $('#questFocus').addEventListener('submit', e => {
     const f = e.target.closest('.addstep'); if (!f) return; e.preventDefault();
     const inp = f.querySelector('input'), v = inp.value.trim(); if (!v) return;
     const t = S.tasks.find(x => x.id === f.dataset.id); if (!t) return;
-    t.steps.push({ id:uid(), txt:v, ok:false }); renderMissoes(); renderMissionCard(); save();
-    const again = $(`.addstep[data-id="${t.id}"] input`); if (again) again.focus();
+    t.steps.push({ id:uid(), txt:v, ok:false }); inp.value = ''; renderMissoes(); renderMissionCard(); save();
+    const again = $('#questFocus .qf-add input'); if (again) again.focus();
   });
-  $('#quests').addEventListener('click', e => {
+  const questClick = e => {
     const b = e.target.closest('[data-q]'); if (!b) return;
     const t = S.tasks.find(x => x.id === b.dataset.id); if (!t) return;
     const a = b.dataset.q;
-    if (a === 'sel') S.active = t.id;
+    if (a === 'sel') { S.active = t.id; }
+    if (a === 'cat') { const ks = Object.keys(CATS); t.cat = ks[(ks.indexOf(t.cat) + 1) % ks.length]; }
+    if (a === 'est') { const i = EST_STEPS.indexOf(t.est); t.est = EST_STEPS[(i + 1) % EST_STEPS.length]; }
     if (a === 'del') { S.tasks = S.tasks.filter(x => x !== t); if (S.active === t.id) S.active = null; }
     if (a === 'delstep') t.steps = t.steps.filter(s => s.id !== b.dataset.s);
     if (a === 'fin') {
@@ -4072,6 +4307,33 @@ function wire(){
       addXP(xp); sfx('coin'); checkAch(); toast(`Missão concluída! +${xp} XP`);
     }
     renderAll(); save();
+    if (a === 'sel') { const f = $('#questFocus .qf-name'); if (f) f.scrollIntoView({ block:'nearest', behavior:'smooth' }); }
+    if (a === 'cat' || a === 'est') { const f = $(`#questFocus [data-q="${a}"]`); if (f) f.focus(); }
+  };
+  $('#quests').addEventListener('click', questClick);
+  $('#questFocus').addEventListener('click', questClick);
+  $('#questsDone').addEventListener('click', questClick);
+  $('#pausaTabs').addEventListener('click', e => { const b = e.target.closest('[data-pztab]'); if (!b) return; pzTab = b.dataset.pztab; renderPausa(); const f = $(`[data-pztab="${pzTab}"]`); if (f) f.focus(); });
+  $('#pausaTip').addEventListener('click', e => {
+    if (!e.target.closest('[data-pz="restore"]')) return;
+    S.pausaOff = []; S.pausa = pausaNorm(S.pausa, []); toast('As missões prontas voltaram.'); pausaChanged();
+  });
+  $('#pausaList').addEventListener('click', e => {
+    const b = e.target.closest('[data-pz]'); if (!b) return;
+    const x = S.pausa.find(i => i.id === b.dataset.id); if (!x) return;
+    const a = b.dataset.pz;
+    if (a === 'tog') x.on = !x.on;
+    if (a === 'when') x.when = PAUSE_NEXT[x.when] || 'all';
+    if (a === 'del') { S.pausa = S.pausa.filter(i => i !== x); if (!x.own) S.pausaOff = (S.pausaOff || []).concat(x.id); }
+    pausaChanged();
+    if (a !== 'del') { const again = $(`[data-pz="${a}"][data-id="${x.id}"]`); if (again) again.focus(); }
+  });
+  $('#pausaForm').addEventListener('submit', e => {
+    e.preventDefault(); const v = $('#pausaIn').value.trim(); if (!v) return;
+    S.pausa.push({ id:uid(), own:true, txt:v, when:$('#pausaWhen').value, on:true });
+    $('#pausaIn').value = ''; toast('Missão da pausa criada.');
+    if (pzTab !== 'on' && pzTab !== 'all') pzTab = 'meu';
+    pausaChanged();
   });
   $('#distrList').addEventListener('click', e => { const b = e.target.closest('[data-dact]'); if (!b) return; S.distr = S.distr.filter(d => d.id !== b.dataset.id); renderMissoes(); renderStrip(); save(); });
   // Personagens
