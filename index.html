@@ -358,8 +358,12 @@ dl.terms dd{margin:0;color:var(--muted)}
 .bigs .k{font-size:13px;color:var(--muted)}
 .sum-sec h3{font-family:var(--px);font-size:18px;font-weight:600;margin-bottom:8px}
 .timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.timeline li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;background:var(--panel2);border-radius:8px;padding:8px 10px}
-.timeline time{font-family:var(--num);font-size:20px;color:var(--muted)}
+.timeline li{display:grid;grid-template-columns:50px minmax(0,1fr);gap:6px 10px;align-items:baseline;background:var(--panel2);border-radius:8px;padding:8px 12px}
+.timeline time{font-family:var(--num);font-size:19px;line-height:1;color:var(--muted)}
+.tl-tt{min-width:0;overflow-wrap:anywhere;line-height:1.35}
+.tl-tt .res{margin-left:6px;vertical-align:1px;white-space:nowrap}
+.tl-s{grid-column:1 / -1;margin:0;padding-top:5px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+.tl-s em{font-style:normal;color:var(--pink)}
 .res{display:inline-block;font-size:12px;border-radius:5px;padding:0 7px;margin-left:6px;border:2px solid var(--line)}
 .res.tudo{border-color:var(--matcha);color:var(--matcha)}.res.parte{border-color:var(--gold);color:var(--gold)}.res.travei{border-color:var(--danger);color:var(--danger)}.res.int{color:var(--muted)}
 .tbl{width:100%;border-collapse:collapse;font-size:15px}
@@ -376,6 +380,116 @@ dl.terms dd{margin:0;color:var(--muted)}
 .master{display:flex;gap:14px;align-items:flex-start;background:var(--dlg);color:var(--dlg-ink);border:3px solid var(--dlg-ink);box-shadow:0 0 0 4px var(--dlg);border-radius:6px;padding:14px 16px}
 .master canvas{width:48px;height:72px;image-rendering:pixelated;flex:none}
 .sugs{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+/* Resumo do dia: carta do dia + painel */
+.daytop{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.daycard{width:100%}
+.day-atts{margin:2px 0 0;display:grid;gap:1px}
+.day-atts div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted rgba(42,29,20,.35)}
+.day-atts dt{font-size:12.5px}.day-atts dd{margin:0;font-family:var(--num);font-size:16px}
+.daycard .tcg-foot{justify-content:center;text-align:center;font-size:11px}
+.daypanel{display:grid;gap:12px}
+.pm{background:var(--panel2);border-radius:10px;padding:12px 14px}
+.pm h3{font-family:var(--px);font-size:17px;font-weight:600;margin:0}
+.pm-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.pm-n{font-family:var(--num);font-size:17px;color:var(--muted);white-space:nowrap}
+.pm-bar{height:9px;background:var(--panel);border:2px solid var(--line);border-radius:4px;overflow:hidden}
+.pm-bar.big{height:16px}
+.pm-bar i{display:block;height:100%;background:var(--violet)}
+.pm-bar.big i{background:var(--pink)}.pm-bar i.done{background:var(--matcha)}.pm-bar i.over{background:var(--gold)}
+.pm-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px;font-size:15px}
+.pm-list .pm-row{margin-bottom:3px}
+.wk{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.wk i{display:block;width:26px;height:26px;margin:0 auto 2px;border-radius:50%;border:2px solid var(--line);background:var(--panel)}
+.wk i[data-l="1"]{background:color-mix(in srgb,var(--violet) 40%,var(--panel))}
+.wk i[data-l="2"]{background:color-mix(in srgb,var(--violet) 70%,var(--panel))}
+.wk i[data-l="3"]{background:var(--violet);border-color:var(--gold)}
+.wk li.now i{box-shadow:0 0 0 3px var(--pink)}
+.wk span{font-family:var(--num);font-size:14px;color:var(--muted)}
+.rh{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:2px}
+.rh i{height:22px;border-radius:3px;background:color-mix(in srgb,var(--violet) var(--a),var(--panel))}
+.rh i.hi{background:var(--pink)}
+.rh-ax{display:flex;justify-content:space-between;font-family:var(--num);font-size:14px;color:var(--muted);margin-top:3px}
+.sum-det{background:var(--panel2);border:2px solid var(--line);border-radius:10px;transition:border-color .15s}
+.sum-det[open]{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
+.sum-det summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;min-height:52px}
+.sum-det summary::-webkit-details-marker{display:none}
+.sum-det summary:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.sum-det summary:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.sd-ico{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--panel);border:2px solid var(--line);color:var(--pink)}
+.sd-ico .ico{width:18px;height:18px}
+.sd-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.sd-t b{font-family:var(--px);font-size:17px;font-weight:600}
+.sd-t small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-det[open] .sd-t small{visibility:hidden;height:0}
+.sd-n{flex:none;font-family:var(--num);font-size:17px;line-height:1;padding:3px 8px;border-radius:999px;background:var(--panel);border:2px solid var(--line);color:var(--ink)}
+.sd-ch{flex:none;width:10px;height:10px;border-right:3px solid var(--muted);border-bottom:3px solid var(--muted);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+.sum-det[open] .sd-ch{transform:rotate(225deg) translate(-2px,-2px);border-color:var(--pink)}
+.sum-det-in{padding:0 14px 14px}
+.sum-det.just .sum-det-in{animation:detIn .22s ease-out}
+@keyframes detIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sum-det .timeline li{background:var(--panel)}
+.distr{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.distr li{display:inline-flex;align-items:baseline;gap:7px;background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px;max-width:100%;overflow-wrap:anywhere}
+.distr time{font-family:var(--num);font-size:15px;color:var(--muted)}
+/* Como foi: faixa visual */
+.howday{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+.hd-tile{background:var(--panel2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.hd-tile h3{font-family:var(--px);font-size:17px;font-weight:600;margin:0}
+.hd-k{font-family:var(--px);font-size:15px;font-weight:600}
+.hd-s{font-size:12.5px;color:var(--muted)}
+.hd-bar{display:flex;height:14px;border-radius:4px;overflow:hidden;gap:2px;background:var(--panel)}
+.hd-bar i,.hd-leg li i{display:block;background:var(--line)}
+.hd-bar i.tudo,.hd-leg i.tudo{background:var(--matcha)}.hd-bar i.parte,.hd-leg i.parte{background:var(--gold)}.hd-bar i.travei,.hd-leg i.travei{background:var(--danger)}.hd-bar i.int,.hd-leg i.int{background:var(--faint)}.hd-bar i.mini,.hd-leg i.mini{background:var(--violet)}
+.hd-leg{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted)}
+.hd-leg li{display:inline-flex;align-items:center;gap:5px}
+.hd-leg li i{width:9px;height:9px;border-radius:2px}
+.hd-leg b{font-family:var(--num);font-size:16px;font-weight:400;color:var(--ink)}
+.hd-en{display:flex;align-items:center;gap:6px;font-size:15px;white-space:nowrap}
+.hd-en em{font-style:normal;color:var(--pink)}
+.hd-gain{font-size:13px;color:var(--muted)}.hd-gain b{font-family:var(--num);font-size:22px;font-weight:400;color:var(--violet)}.hd-gain.gold b{color:var(--gold)}
+/* Para amanhã: cartões curtos */
+.tips h3{font-family:var(--px);font-size:18px;font-weight:600;margin:0 0 8px}
+.tips ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.tips li{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--violet) 12%,var(--panel2));border:2px solid color-mix(in srgb,var(--violet) 35%,var(--line));border-radius:10px;padding:11px 12px}
+.tip-ico{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--panel);color:var(--gold)}
+.tip-ico .ico{width:18px;height:18px}
+.tips b{display:block;font-family:var(--px);font-size:15px;font-weight:600;line-height:1.25}
+.tips li span:not(.tip-ico){display:block;font-size:12.5px;line-height:1.35;color:var(--muted);margin-top:2px}
+@media (max-width:640px){.howday{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hd-res{grid-column:1 / -1}}
+/* Seletor de dia com setas */
+.daypick{display:flex;align-items:stretch;gap:6px;max-width:100%;min-width:min(100%,280px)}
+.dsel{position:relative;flex:1 1 auto;min-width:0}
+.dsel-btn{width:100%;height:100%;display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:7px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:15px;cursor:pointer;text-align:left}
+.dsel-btn #daySelTxt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dsel-dot{flex:none;width:12px;height:12px;border-radius:3px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.dsel-ar{flex:none;width:12px;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' shape-rendering='crispEdges'%3E%3Cpath fill='%23ff6fb5' d='M0 0h2v2H0zM2 2h2v2H2zM4 4h2v2H4zM6 2h2v2H6zM8 0h2v2H8z'/%3E%3C/svg%3E") no-repeat center/contain;transition:transform .15s}
+.dsel-btn[aria-expanded="true"]{border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
+.dsel-btn[aria-expanded="true"] .dsel-ar{transform:rotate(180deg)}
+.dsel-btn:hover,.dp-btn:hover:not(:disabled){border-color:color-mix(in srgb,var(--pink) 60%,var(--line))}
+.dsel-btn:focus-visible,.dp-btn:focus-visible,.dsel-list:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.dsel-list{position:absolute;z-index:45;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(330px,calc(100vw - 20px));max-height:min(360px,60vh);overflow:auto;margin:0;padding:6px;list-style:none;
+  background:var(--panel);border:2px solid var(--line);border-radius:12px;box-shadow:0 0 0 3px var(--bg),0 14px 34px rgba(0,0,0,.5);animation:dselIn .16s ease-out;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior:contain}
+.dsel-list::-webkit-scrollbar{display:none}
+@keyframes dselIn{from{opacity:0;margin-top:-6px}to{opacity:1;margin-top:0}}
+.dsel-list li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 14px;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;border:2px solid transparent}
+.dsel-list li + li{margin-top:2px}
+.dsel-list li.on{background:var(--panel2)}
+.dsel-list li[aria-selected="true"]{border-color:color-mix(in srgb,var(--pink) 55%,var(--line));background:color-mix(in srgb,var(--pink) 10%,var(--panel2))}
+.do-t{display:flex;flex-direction:column;min-width:0}
+.do-t b{font-family:var(--px);font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.do-t b em{font-style:normal;color:var(--pink)}
+.do-t small{font-size:12px;color:var(--muted)}
+.do-n{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-family:var(--num);font-size:16px;color:var(--ink)}
+.do-n > i{display:block;width:52px;height:5px;border-radius:3px;background:var(--panel2);border:1px solid var(--line);overflow:hidden}
+.do-n > i > i{display:block;height:100%;background:var(--pink)}
+.do-n > i > i.done{background:var(--matcha)}
+.do-ok{width:12px;height:12px}
+.dsel-list li[aria-selected="true"] .do-ok{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 5' shape-rendering='crispEdges'%3E%3Cpath fill='%23ff6fb5' d='M0 2h1v1H0zM1 3h1v1H1zM2 4h1v1H2zM3 2h1v2H3zM4 1h1v1H4zM5 0h1v1H5z'/%3E%3C/svg%3E") no-repeat center/contain}
+@media (prefers-reduced-motion:reduce){.dsel-list{animation:none}}
+.dp-btn{flex:none;width:40px;border-radius:7px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:22px;line-height:1;cursor:pointer}
+.dp-btn:disabled{opacity:.35;cursor:default}
+@media (prefers-reduced-motion:reduce){.sum-det.just .sum-det-in{animation:none}}
+@media (max-width:700px){.daytop{grid-template-columns:minmax(0,1fr)}.daycard{max-width:230px;margin:0 auto}}
 
 /* Navegação inferior */
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--nav) 97%,transparent);border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
@@ -677,7 +791,14 @@ body.focusing .bnav:hover,body.focusing .bnav:focus-within{opacity:1}
       <div class="stack">
         <div class="page-h">
           <h2>Resumo dos meus <em>pomodoros</em></h2>
-          <select id="daySel" aria-label="Escolher dia"></select>
+          <div class="daypick">
+            <button class="dp-btn" id="dayPrev" type="button" aria-label="Dia anterior">‹</button>
+            <div class="dsel">
+              <button class="dsel-btn" id="daySel" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="dayList"><span class="dsel-dot" id="daySelDot"></span><span id="daySelTxt"></span><span class="dsel-ar" aria-hidden="true"></span></button>
+              <ul class="dsel-list" id="dayList" role="listbox" aria-label="Escolher dia" tabindex="-1" hidden></ul>
+            </div>
+            <button class="dp-btn" id="dayNext" type="button" aria-label="Próximo dia">›</button>
+          </div>
         </div>
         <div id="sumBody"></div>
       </div>
@@ -3665,13 +3786,71 @@ function renderJogo(){
   $('#wxStatus').textContent = S.wx.status || 'Nenhuma previsão buscada ainda.';
   $('#wxOpts').innerHTML = `<button class="btn sm" data-wx="auto" aria-pressed="${S.wx.mode === 'auto'}">Seguir a previsão</button>` + Object.entries(WX).map(([k, v]) => `<button class="btn sm" data-wx="${k}" aria-pressed="${S.wx.mode === 'manual' && S.wx.manual === k}">${v.n}</button>`).join('');
 }
-let sumDay = null;
+let sumDay = null, sumKeys = [], dayListOpen = false, dayActiveK = null;
 function renderResumo(){
   const keys = Object.keys(S.days).filter(k => S.days[k].pomos || S.days[k].sessions.length || k === dayKey(new Date())).sort().reverse();
   if (!sumDay || !S.days[sumDay]) sumDay = keys[0];
-  $('#daySel').innerHTML = keys.map(k => `<option value="${k}" ${k === sumDay ? 'selected' : ''}>${k === dayKey(new Date()) ? 'Hoje · ' : ''}${fmtDate(k)}</option>`).join('');
+  sumKeys = keys;
+  const wd = ['dom','seg','ter','qua','qui','sex','sáb'], WD = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'], todayK = dayKey(new Date()), g = S.cfg.goal;
+  const info = k => { const dd = S.days[k], [y, m, d] = k.split('-').map(Number), dt = new Date(y, m-1, d), t = DAY_TIERS[dayTier(dd)];
+    return { dd, dt, d, m, tier:t[0], col:CARD_TIERS[t[1]][2], short:`${k === todayK ? 'Hoje · ' : ''}${wd[dt.getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')} · ${dd.pomos}/${g}` }; };
+  const cur = info(sumDay);
+  $('#daySelTxt').textContent = cur.short; $('#daySelDot').style.background = cur.col;
+  $('#daySel').setAttribute('aria-label', `Dia: ${fmtDate(sumDay)}, ${cur.dd.pomos} de ${g} pomodoros. Trocar dia`);
+  $('#dayList').innerHTML = keys.map(k => { const x = info(k), p = Math.min(100, Math.round(x.dd.pomos / g * 100));
+    return `<li role="option" id="dopt-${k}" data-k="${k}" aria-selected="${k === sumDay}" aria-label="${fmtDate(k)}, ${x.tier}, ${x.dd.pomos} de ${g} pomodoros">
+      <span class="dsel-dot" style="background:${x.col}"></span>
+      <span class="do-t"><b>${k === todayK ? '<em>Hoje</em> ' : ''}${WD[x.dt.getDay()]}, ${String(x.d).padStart(2, '0')}/${String(x.m).padStart(2, '0')}</b><small>${x.tier}</small></span>
+      <span class="do-n"><span>${x.dd.pomos}/${g}</span><i><i class="${p >= 100 ? 'done' : ''}" style="width:${p}%"></i></i></span>
+      <span class="do-ok" aria-hidden="true"></span></li>`; }).join('');
+  if (dayListOpen) dayActive(dayActiveK || sumDay);
+  const i = keys.indexOf(sumDay);
+  $('#dayPrev').disabled = i >= keys.length - 1; $('#dayNext').disabled = i <= 0;
   $('#sumBody').innerHTML = summaryHTML(sumDay);
-  const mc = $('#masterCv'); if (mc) { const c = mc.getContext('2d'); c.clearRect(0, 0, 24, 28); drawMap(c, MASTER, MPAL, 0, 6, 2/1); }
+  const dc = $('#dayCv'), dd = S.days[sumDay]; if (dc && dd) { const h = hourNow(); drawCardArtTo(dc, HERO(), DAY_TIERS[dayTier(dd)][1], h, effAmb(skyAt(h).amb, WX[wxNow()])); }
+}
+/* Resumo do dia: carta do dia (raridade pelo desempenho) + painel com meta, missões, semana e ritmo.
+   Os detalhes (batalhas, como foi, distrações) ficam em listas que abrem com um toque. */
+const DAY_TIERS = [ /* [nome, índice em CARD_TIERS (cor e estrelas), regra] */
+  ['Descanso', 0], ['Comum', 1], ['Rara', 2], ['Épica', 3], ['Lendária', 4]
+];
+function dayTier(d){
+  const g = S.cfg.goal;
+  if (!d.pomos) return 0;
+  if (d.pomos >= g && !d.skips && d.breaks > 0) return 4;
+  if (d.pomos >= g) return 3;
+  if (d.pomos >= Math.ceil(g * 2/3)) return 2;
+  return 1;
+}
+function dayTierNext(d, t){
+  const g = S.cfg.goal, falta = n => `${n} ${n === 1 ? 'pomodoro' : 'pomodoros'}`;
+  if (t === 0) return 'Um pomodoro já transforma o dia numa carta Comum.';
+  const f = n => `${n === 1 ? 'Falta' : 'Faltam'} ${falta(n)}`;
+  if (t === 1) return `${f(Math.ceil(g * 2/3) - d.pomos)} para Rara.`;
+  if (t === 2) return `${f(g - d.pomos)} para Épica.`;
+  if (t === 3) return d.skips ? 'Lendária pede a meta sem pular nenhuma pausa.' : 'Faça uma pausa completa para chegar a Lendária.';
+  return 'Raridade máxima. Dia lendário!';
+}
+function streakAt(k){
+  const [y, m, dd] = k.split('-').map(Number), d = new Date(y, m-1, dd); let n = 0;
+  if (!dayVal(dayKey(d))) d.setDate(d.getDate() - 1);
+  while (dayVal(dayKey(d)) > 0) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+/* Seções que abrem com um toque. O estado aberto fica guardado enquanto a aba estiver aberta,
+   porque o resumo é redesenhado a cada mudança no jogo. */
+const sumOpen = {};
+function dayActive(k, noScroll){
+  const list = $('#dayList'), li = list && document.getElementById('dopt-' + k); if (!li) return;
+  dayActiveK = k; list.querySelectorAll('.on').forEach(x => x.classList.remove('on')); li.classList.add('on');
+  list.setAttribute('aria-activedescendant', li.id); if (!noScroll) li.scrollIntoView({ block:'nearest' });
+}
+function det(id, ico, title, n, preview, openDefault){
+  const open = id in sumOpen ? sumOpen[id] : !!openDefault;
+  return `<details class="sum-det" data-det="${id}"${open ? ' open' : ''}><summary>
+    <span class="sd-ico">${icon(ico)}</span>
+    <span class="sd-t"><b>${esc(title)}</b><small>${esc(preview || '')}</small></span>
+    ${n ? `<span class="sd-n">${n}</span>` : ''}<span class="sd-ch" aria-hidden="true"></span></summary>`;
 }
 function summaryHTML(k){
   const d = S.days[k]; if (!d) return '<div class="card"><p class="empty">Sem registros ainda.</p></div>';
@@ -3691,55 +3870,92 @@ function summaryHTML(k){
   else if (d.pomos >= S.cfg.goal) phrase = 'Você bateu a meta. O dojo inteiro sente a sua disciplina.';
   else if (!d.skips && d.breaks > 0) phrase = 'Você respeitou todas as pausas. Isso também é sabedoria.';
   else phrase = `Cada pomodoro é um passo no caminho. Você deu ${d.pomos} ${d.pomos === 1 ? 'passo' : 'passos'} hoje.`;
+  /* Para amanhã: dicas curtas, uma ideia por cartão */
   const sug = [];
-  if (hours[best] > 0) sug.push(`Seu horário mais forte foi entre ${best}h e ${best+1}h. Coloque a missão mais difícil de amanhã nesse horário.`);
-  if (d.skips) sug.push(`Você pulou ${d.skips} ${d.skips === 1 ? 'pausa' : 'pausas'}. Amanhã, levante da cadeira nem que seja por 2 minutos.`);
-  if (d.distr.length >= 3) sug.push(`Foram ${d.distr.length} distrações. Deixe o celular em outro cômodo na primeira batalha.`);
-  if (res.travei) sug.push(`Você travou em ${res.travei} ${res.travei === 1 ? 'batalha' : 'batalhas'}. Divida essa missão em passos menores.`);
   const over = Object.keys(byTask).map(id => S.tasks.find(t => t.id === id)).filter(t => t && t.done > t.est);
-  if (over.length) sug.push(`"${over[0].name}" passou da estimativa. Aumente a estimativa ou quebre em partes.`);
-  if (!d.pomos) sug.push('Escolha uma missão pequena e toque em "Só 5 minutos".');
-  if (sug.length < 2) sug.push('Repita o ritmo de hoje. Constância vence intensidade.');
-  const week = []; const [y, m, dd] = k.split('-').map(Number);
-  for (let i = 6; i >= 0; i--) { const dt = new Date(y, m-1, dd - i); const kk = dayKey(dt); week.push({ k:kk, d:['dom','seg','ter','qua','qui','sex','sáb'][dt.getDay()], v:dayVal(kk) }); }
-  const wmax = Math.max(S.cfg.goal, ...week.map(w => w.v), 1);
+  const stuck = done.find(x => x.result === 'travei');
+  if (!d.pomos) sug.push({ ico:'tomato', t:'Comece com 5 minutos', d:'Escolha uma missão pequena e toque em "Só 5 minutos".' });
+  if (hours[best] > 0) sug.push({ ico:'flame', t:`Missão difícil às ${best}h`, d:'Foi o seu horário mais forte hoje.' });
+  if (stuck) sug.push({ ico:'sword', t:'Divida em passos menores', d:`Você travou em "${stuck.taskName || 'uma missão'}".` });
+  if (d.skips) sug.push({ ico:'cup', t:'Levante na pausa', d:`Você pulou ${d.skips} ${d.skips === 1 ? 'pausa' : 'pausas'}. Bastam 2 minutos.` });
+  if (d.distr.length >= 3) sug.push({ ico:'focus', t:'Celular em outro cômodo', d:`Foram ${d.distr.length} distrações hoje.` });
+  if (over.length) sug.push({ ico:'scroll', t:'Reveja a estimativa', d:`"${over[0].name}" passou do previsto.` });
+  if (sug.length < 2) sug.push({ ico:'torii', t:'Repita o ritmo de hoje', d:'Constância vence intensidade.' });
+
+  /* Carta do dia */
+  const ti = dayTier(d), T = DAY_TIERS[ti], C = CARD_TIERS[T[1]];
+  const [y, m, dd] = k.split('-').map(Number);
+  const short = new Date(y, m-1, dd).toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'2-digit' }).replace('.', '');
+  const pauses = d.breaks + d.skips;
+  const card = `<article class="tcg daycard" style="--tier:${C[2]}" data-holo="${ti === 4 ? 1 : 0}" aria-label="Carta do dia: ${T[0]}">
+    <div class="tcg-name"><h3>${esc(short.charAt(0).toUpperCase() + short.slice(1))}</h3><span class="tcg-attr">日</span></div>
+    <div class="tcg-stars" aria-label="${T[0]}: ${ti} de 4 estrelas">${'<i>★</i>'.repeat(ti)}</div>
+    <div class="tcg-art"><canvas width="120" height="112" id="dayCv"></canvas><div class="tcg-holo" aria-hidden="true"></div></div>
+    <div class="tcg-code"><span>${T[0]}</span><span>DIA-${String(m).padStart(2, '0')}${String(dd).padStart(2, '0')}</span></div>
+    <div class="tcg-text"><b>[Resumo do dia]</b>
+      <dl class="day-atts">
+        <div><dt>Foco</dt><dd>${d.mins} min</dd></div>
+        <div><dt>Disciplina</dt><dd>${pauses ? `${d.breaks}/${pauses} pausas` : '—'}</dd></div>
+        <div><dt>Calma</dt><dd>${d.distr.length} ${d.distr.length === 1 ? 'distração' : 'distrações'}</dd></div>
+        <div><dt>Vitórias</dt><dd>${done.length}</dd></div>
+      </dl>
+      <p class="tcg-q">“${esc(phrase)}”</p>
+    </div>
+    <div class="tcg-foot"><span>${esc(dayTierNext(d, ti))}</span></div>
+  </article>`;
+
+  /* Painel */
+  const g = S.cfg.goal, pct = Math.min(100, Math.round(d.pomos / g * 100));
+  const tasks = Object.entries(byTask).map(([id, v]) => {
+    const t = S.tasks.find(x => x.id === id);
+    if (!t || !t.est) return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${v.n} hoje</span></div></li>`;
+    const p = Math.min(100, Math.round(t.done / t.est * 100)), passou = t.done > t.est;
+    return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${t.done}/${t.est}${passou ? ' · passou' : ''}</span></div><div class="pm-bar"><i class="${passou ? 'over' : ''}" style="width:${p}%"></i></div></li>`;
+  }).join('');
+  const week = [];
+  for (let i = 6; i >= 0; i--) { const dt = new Date(y, m-1, dd - i), kk = dayKey(dt), v = dayVal(kk); week.push({ k:kk, d:['dom','seg','ter','qua','qui','sex','sáb'][dt.getDay()], v, lvl:!v ? 0 : v >= g ? 3 : v >= Math.ceil(g/2) ? 2 : 1 }); }
+  const st = streakAt(k);
   let h0 = 6; hours.forEach((v, i) => { if (v && i < h0) h0 = i; });
-  const hmax = Math.max(...hours, 1);
-  const hourBars = []; for (let i = h0; i < 24; i++) hourBars.push(`<div class="b ${i === best && hours[i] ? 'hi' : ''}" title="${i}h: ${hours[i]} min"><i style="height:${hours[i]/hmax*70}px"></i><span>${i % 3 === 0 ? i : ''}</span></div>`);
+  const hmax = Math.max(...hours, 1), cells = [];
+  for (let i = h0; i < 24; i++) cells.push(`<i class="${i === best && hours[i] ? 'hi' : ''}" style="--a:${hours[i] ? Math.round(25 + hours[i]/hmax*75) : 0}%" title="${i}h: ${hours[i]} min"></i>`);
+  const panel = `<div class="daypanel">
+    <section class="pm"><div class="pm-row"><h3>Meta do dia</h3><span class="pm-n">${d.pomos} de ${g} pomodoros</span></div>
+      <div class="pm-bar big" role="progressbar" aria-valuemin="0" aria-valuemax="${g}" aria-valuenow="${d.pomos}" aria-label="Meta do dia"><i class="${d.pomos >= g ? 'done' : ''}" style="width:${pct}%"></i></div>
+      ${!final ? `<p class="small">O resumo final sai às ${esc(S.cfg.summaryAt)}.</p>` : ''}</section>
+    <section class="pm"><h3>Missões</h3>${tasks ? `<ul class="pm-list">${tasks}</ul>` : '<p class="empty">Nenhuma missão trabalhada.</p>'}</section>
+    <section class="pm"><div class="pm-row"><h3>Semana</h3><span class="pm-n">${st} ${st === 1 ? 'dia seguido' : 'dias seguidos'}</span></div>
+      <ol class="wk">${week.map(w => `<li class="${w.k === k ? 'now' : ''}" title="${w.v} pomodoros"><i data-l="${w.lvl}"></i><span>${w.d}</span></li>`).join('')}</ol></section>
+    <section class="pm"><div class="pm-row"><h3>Ritmo do dia</h3>${hours[best] ? `<span class="pm-n">pico às ${best}h</span>` : ''}</div>
+      <div class="rh" style="--n:${24 - h0}">${cells.join('')}</div>
+      <div class="rh-ax"><span>${h0}h</span><span>${Math.round((h0 + 23) / 2)}h</span><span>23h</span></div></section>
+  </div>`;
+
   return `<div class="scroll-card">
-    <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div>
-    ${!final ? `<span class="small">O resumo final sai às ${esc(S.cfg.summaryAt)}.</span>` : ''}</div>
-    <div class="big5">
-      <div class="bigs"><div class="v">${d.pomos}</div><div class="k">pomodoros de ${S.cfg.goal}</div></div>
-      <div class="bigs"><div class="v">${d.mins}</div><div class="k">minutos de foco</div></div>
-      <div class="bigs"><div class="v">${d.breaks}</div><div class="k">pausas feitas</div></div>
-      <div class="bigs"><div class="v">${d.skips}</div><div class="k">pausas puladas</div></div>
-      <div class="bigs"><div class="v">${d.distr.length}</div><div class="k">distrações anotadas</div></div>
-    </div>
-    <div class="master"><canvas id="masterCv" width="24" height="36" aria-hidden="true"></canvas><div><div class="mono" style="color:#a99fd6;font-size:16px">Mestre do dojo</div><p style="font-size:17px">${esc(phrase)}</p></div></div>
-    <div class="cols">
-      <div class="sum-sec"><h3>Batalhas do dia</h3>
-        ${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => `<li><time>${hm(s.t)}</time><div><b>${esc(s.taskName || 'Sem missão')}</b>${s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : ''}
-          <div class="small">${s.mins} min${s.energy ? ' · ' + ENERGY[s.energy] : ''}</div>
-          ${s.plan ? `<div style="font-size:15px">Plano: ${esc(s.plan)}</div>` : ''}${s.note ? `<div style="font-size:15px">Conseguiu: ${esc(s.note)}</div>` : ''}</div></li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}
-      </div>
-      <div class="stack" style="gap:16px">
-        <div class="sum-sec"><h3>Missões</h3>
-          ${Object.keys(byTask).length ? `<div class="tblw"><table class="tbl"><thead><tr><th>Missão</th><th>Hoje</th><th>Real / estimado</th></tr></thead><tbody>${Object.entries(byTask).map(([id, v]) => { const t = S.tasks.find(x => x.id === id); return `<tr><td>${esc(v.name)}</td><td class="num">${v.n}</td><td class="num">${t ? t.done + ' / ' + t.est : '—'}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="empty">Nenhuma missão trabalhada.</p>'}
-        </div>
-        <div class="sum-sec"><h3>Como foi</h3>
-          <p style="font-size:15px">Resultados: <b>${res.tudo}</b> tudo · <b>${res.parte}</b> parte · <b>${res.travei}</b> travei${aband.length ? ` · ${aband.length} interrompidas` : ''}${minis.length ? ` · ${minis.length} de 5 min` : ''}</p>
-          <p style="font-size:15px">Energia: ${en.length ? `${ENERGY[en[0].v]} no começo → ${ENERGY[en[en.length-1].v]} no fim` : 'sem check-in'}</p>
-          <p style="font-size:15px">Ganhos: <b>+${d.xp}</b> XP · <b>+${d.ryo}</b> ryō${ach.length ? ' · ' + ach.map(a => a.n + ' ' + a.k).join(', ') : ''}</p>
-        </div>
-      </div>
-    </div>
-    <div class="cols">
-      <div class="sum-sec"><h3>Minutos de foco por hora</h3><div class="bars">${hourBars.join('')}</div>${hours[best] ? `<p class="small">Pico: ${best}h, com ${hours[best]} min.</p>` : ''}</div>
-      <div class="sum-sec"><h3>Semana</h3><div class="bars">${week.map(w => `<div class="b ${w.k === k ? 'hi' : ''}"><em>${w.v}</em><i style="height:${w.v/wmax*60}px"></i><span>${w.d}</span></div>`).join('')}</div><p class="small">Meta diária: ${S.cfg.goal} pomodoros.</p></div>
-    </div>
-    <div class="sum-sec"><h3>Para amanhã</h3><ul class="sugs">${sug.slice(0, 3).map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
-    ${d.distr.length ? `<div class="sum-sec"><h3>O que passou pela cabeça</h3><ul class="sugs">${d.distr.map(x => `<li>${hm(x.t)} · ${esc(x.txt)}</li>`).join('')}</ul></div>` : ''}
+    <div class="page-h" style="align-items:baseline"><div><div class="mono" style="color:var(--pink)">${final ? 'Resumo final do dia' : 'Hoje até agora'}</div><h3 class="px" style="font-size:24px;margin:4px 0 0">${fmtDate(k)}</h3></div></div>
+    <div class="daytop">${card}${panel}</div>
+    ${(() => {
+      const parts = [['tudo', res.tudo, 'tudo'], ['parte', res.parte, 'parte'], ['travei', res.travei, 'travei'], ['int', aband.length, 'interrompida'], ['mini', minis.length, '5 min']].filter(x => x[1]);
+      const tot = parts.reduce((n, x) => n + x[1], 0);
+      const face = v => (ENERGY[v] || '').split(' ');
+      const e0 = en.length ? face(en[0].v) : null, e1 = en.length ? face(en[en.length - 1].v) : null;
+      return `<section class="howday" aria-label="Como foi o dia">
+        <div class="hd-tile hd-res"><h3>Como foi</h3>
+          ${tot ? `<div class="hd-bar" role="img" aria-label="${parts.map(x => `${x[1]} ${x[2]}`).join(', ')}">${parts.map(x => `<i class="${x[0]}" style="flex:${x[1]}"></i>`).join('')}</div>
+          <ul class="hd-leg">${parts.map(x => `<li><i class="${x[0]}"></i><b>${x[1]}</b> ${x[2]}</li>`).join('')}</ul>` : '<p class="empty">Nenhuma batalha ainda.</p>'}</div>
+        <div class="hd-tile"><span class="hd-k">Energia</span>${e0 ? `<div class="hd-en"><span title="${e0[1]}">${e0[0]}</span><em>→</em><span title="${e1[1]}">${e1[0]}</span></div><span class="hd-s">${e0[1]} → ${e1[1]}</span>` : '<span class="hd-s">sem check-in</span>'}</div>
+        <div class="hd-tile"><span class="hd-k">Ganhos</span><div class="hd-gain"><b>+${d.xp}</b> XP</div><div class="hd-gain gold"><b>+${d.ryo}</b> ryō</div>${ach.length ? `<span class="hd-s">${ach.length} ${ach.length === 1 ? 'conquista' : 'conquistas'}</span>` : ''}</div>
+      </section>`;
+    })()}
+    <section class="tips" aria-labelledby="tipsH"><h3 id="tipsH">Para amanhã</h3>
+      <ul>${sug.slice(0, 3).map(x => `<li><span class="tip-ico">${icon(x.ico)}</span><div><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div></li>`).join('')}</ul>
+    </section>
+    ${det('batalhas', 'sword', 'Batalhas do dia', d.sessions.length, d.sessions.length ? `${done.length} ${done.length === 1 ? 'concluída' : 'concluídas'}${aband.length ? ` · ${aband.length} interrompida${aband.length > 1 ? 's' : ''}` : ''}` : 'nenhuma ainda', d.sessions.length > 0 && d.sessions.length <= 3)}
+      <div class="sum-det-in">${d.sessions.length ? `<ul class="timeline">${d.sessions.map(s => { const badge = s.abandoned ? '<span class="res int">interrompida</span>' : s.mini ? '<span class="res">5 min</span>' : s.result ? `<span class="res ${s.result}">${RESULTS[s.result]}</span>` : '';
+        const story = [s.plan, s.note].filter(Boolean).map(esc).join(' <em>→</em> ');
+        return `<li><time>${hm(s.t)}</time><div class="tl-tt"><b>${esc(s.taskName || 'Sem missão')}</b>${badge}</div>
+          <p class="tl-s">${story ? story + ' · ' : ''}${s.mins} min</p></li>`; }).join('')}</ul>` : '<p class="empty">Nenhuma batalha registrada.</p>'}</div>
+    </details>
+    ${d.distr.length ? `${det('distr', 'scroll', 'O que passou pela cabeça', d.distr.length, 'anote e resolva na pausa')}<div class="sum-det-in"><ul class="distr">${d.distr.map(x => `<li><time>${hm(x.t)}</time>${esc(x.txt)}</li>`).join('')}</ul></div></details>` : ''}
   </div>`;
 }
 function renderAll(){
@@ -3968,7 +4184,33 @@ function wire(){
     if (!resetArmed) { resetArmed = true; e.target.textContent = 'Clique de novo para apagar tudo'; setTimeout(() => { resetArmed = false; e.target.textContent = 'Apagar progresso'; }, 4000); return; }
     S = fresh(); S.view = 'jogo'; resetArmed = false; e.target.textContent = 'Apagar progresso'; checkDay(); applyUI(); renderAll(); save(); toast('Progresso apagado. Um novo caminho começa.');
   });
-  $('#daySel').addEventListener('change', e => { sumDay = e.target.value; renderResumo(); });
+  const dayStep = n => { const i = sumKeys.indexOf(sumDay), j = i + n; if (j < 0 || j >= sumKeys.length) return; sumDay = sumKeys[j]; renderResumo(); };
+  const dayBtn = $('#daySel'), dayList = $('#dayList');
+  const dayOpen = () => {
+    dayListOpen = true; dayList.hidden = false; dayBtn.setAttribute('aria-expanded', 'true'); dayList.style.translate = '';
+    const r = dayList.getBoundingClientRect(), pad = 10;
+    if (r.right > innerWidth - pad) dayList.style.translate = `${innerWidth - pad - r.right}px 0`; else if (r.left < pad) dayList.style.translate = `${pad - r.left}px 0`;
+    dayActive(sumDay); dayList.focus({ preventScroll:true });
+  };
+  const dayClose = focusBtn => { if (!dayListOpen) return; dayListOpen = false; dayList.hidden = true; dayBtn.setAttribute('aria-expanded', 'false'); dayList.removeAttribute('aria-activedescendant'); if (focusBtn) dayBtn.focus(); };
+  const dayPick = k => { if (!k) return; sumDay = k; dayClose(true); renderResumo(); };
+  dayBtn.addEventListener('click', () => dayListOpen ? dayClose(true) : dayOpen());
+  dayBtn.addEventListener('keydown', e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); dayOpen(); } });
+  dayList.addEventListener('click', e => { const li = e.target.closest('[role="option"]'); if (li) dayPick(li.dataset.k); });
+  dayList.addEventListener('pointermove', e => { const li = e.target.closest('[role="option"]'); if (li && li.dataset.k !== dayActiveK) dayActive(li.dataset.k, true); });
+  dayList.addEventListener('keydown', e => {
+    const i = Math.max(0, sumKeys.indexOf(dayActiveK)), go = j => { e.preventDefault(); dayActive(sumKeys[Math.max(0, Math.min(sumKeys.length - 1, j))]); };
+    if (e.key === 'ArrowDown') go(i + 1); else if (e.key === 'ArrowUp') go(i - 1);
+    else if (e.key === 'Home') go(0); else if (e.key === 'End') go(sumKeys.length - 1);
+    else if (e.key === 'PageDown') go(i + 5); else if (e.key === 'PageUp') go(i - 5);
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dayPick(dayActiveK); }
+    else if (e.key === 'Escape') { e.preventDefault(); dayClose(true); }
+    else if (e.key === 'Tab') dayClose(false);
+  });
+  document.addEventListener('pointerdown', e => { if (dayListOpen && !e.target.closest('.dsel')) dayClose(false); });
+  $('#dayPrev').addEventListener('click', () => dayStep(1));
+  $('#dayNext').addEventListener('click', () => dayStep(-1));
+  $('#sumBody').addEventListener('toggle', e => { const el = e.target; if (!el.matches || !el.matches('details[data-det]') || sumOpen[el.dataset.det] === el.open) return; sumOpen[el.dataset.det] = el.open; if (el.open) { el.classList.add('just'); setTimeout(() => el.classList.remove('just'), 300); } }, true);
   document.addEventListener('visibilitychange', () => {
     const T = S.timer, focusing = T.running && T.phase === 'focus';
     if (document.visibilityState === 'hidden') { if (focusing) awayAt = Date.now(); return; }
