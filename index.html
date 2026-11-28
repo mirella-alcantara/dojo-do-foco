@@ -1344,7 +1344,7 @@ p,.small,.quote,.dl-sub,.next-sub{text-wrap:pretty}
                 <div><b>Conta</b><p id="cloudInfo"></p><p class="d-st" id="cloudStatus"></p></div>
                 <button class="btn sm" id="cloudOut" type="button">Sair</button>
               </div>
-              <div class="d-card">
+              <div class="d-card" id="vaultCard" hidden>
                 <span class="d-ico" aria-hidden="true">🗂️</span>
                 <div><b>Obsidian</b><p id="vaultInfo"></p><p class="d-st" id="vaultStatus"></p></div>
               </div>
@@ -2023,8 +2023,8 @@ async function vaultLoad(){
 }
 function renderVault(){
   const i = $('#vaultInfo'), st = $('#vaultStatus'); if (!i) return;
-  if (!LOCAL) { i.textContent = 'Para salvar no Obsidian, rode o jogo pelo servidor local do projeto (npm start) e abra http://localhost:4321. Aqui os dados ficam só neste navegador.'; st.textContent = ''; return; }
-  if (!vault.on) { i.textContent = 'O servidor local não respondeu. Rode npm start na pasta do projeto.'; st.textContent = ''; return; }
+  /* O cartão do Obsidian só aparece com o cofre conectado (servidor local); no site publicado ele fica escondido. */
+  $('#vaultCard').hidden = !(LOCAL && vault.on); if (!LOCAL || !vault.on) return;
   i.textContent = `Seus dados ficam no cofre: ${vault.path}. Abra essa pasta no Obsidian como cofre para ver os resumos, missões e personagens em notas.`;
   st.textContent = vault.err || (vault.last ? `Salvo às ${hm(vault.last)}.` : 'Conectado.');
 }
