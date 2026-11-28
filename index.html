@@ -321,8 +321,10 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
 .wpn[aria-checked="true"]{border-color:var(--pink);box-shadow:0 0 0 2px color-mix(in srgb,var(--pink) 30%,transparent)}
 .wpn canvas{width:32px;height:32px;image-rendering:pixelated}
 #wpnName{color:var(--ink);font-weight:600;text-transform:none;letter-spacing:0}
-.ros-sub{display:inline-flex;align-items:center;gap:4px}
-.ros canvas.wpn-mini{width:32px;height:32px;image-rendering:pixelated}
+.ros-sub{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+/* arma do elenco: ícone do tamanho do texto (16px = 1 pixel da arte por ponto), dentro de uma etiqueta com o nome */
+.ros-wpn{display:inline-flex;align-items:center;gap:5px;padding:1px 8px 1px 5px;border-radius:99px;background:color-mix(in srgb,var(--pink) 10%,transparent);border:1px solid color-mix(in srgb,var(--pink) 30%,transparent);font-size:12px;line-height:18px;color:var(--ink)}
+.ros canvas.wpn-mini{width:16px;height:16px;flex:none;image-rendering:pixelated}
 .vis-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .vis-opts button{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--body);font-weight:600;font-size:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .08s}
 .vis-opts button:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
@@ -4686,7 +4688,7 @@ function renderRoster(){
   $('#roster').innerHTML = S.chars.map(ch => {
     const C = CLASSES[ch.cls] || CLASSES.samurai, act = ch.id === S.activeChar;
     return `<li class="row-item ros ${ch.id === S.editChar ? 'editing' : ''}" data-id="${ch.id}"><canvas width="24" height="30"></canvas>
-      <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small ros-sub">${esc(ch.title || C.n)} <canvas class="wpn-mini" width="16" height="16" data-wi="${ch.weapon}" role="img" aria-label="${esc(WEAPONS[ch.weapon] || '')}"></canvas></span>
+      <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small ros-sub">${esc(ch.title || C.n)}<span class="ros-wpn"><canvas class="wpn-mini" width="16" height="16" data-wi="${ch.weapon}" aria-hidden="true"></canvas>${esc(WEAPONS[ch.weapon] || '')}</span></span>
       <div class="spec-mini">${Object.entries(SPEC).map(([k, n]) => `<span>${n.slice(0, 3).toUpperCase()} ${ch.spec[k]}</span>`).join('')}</div></div>
       <div class="acts"><button class="btn sm" data-r="edit">Editar</button>${act ? '' : '<button class="btn sm primary" data-r="use">Usar</button>'}</div></li>`;
   }).join('');
