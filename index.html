@@ -2372,11 +2372,12 @@ function pipBuild(w){
   </style>`;
   d.body.innerHTML = '<div id="l"></div><div id="t"></div><div class="bar"><div id="b"></div></div><div class="r"><button id="go" type="button"></button><button id="back" type="button">Voltar ao dojo</button></div>';
   d.getElementById('go').addEventListener('click', () => { toggle(); pipDraw(); });
-  d.getElementById('back').addEventListener('click', () => { try { window.focus(); } catch(e){} w.close(); });
+  d.getElementById('back').addEventListener('click', () => { try { window.focus(); } catch(e){} }); /* não fecha: o mini timer é fixo */
   pipDraw(); PIP.iv = w.setInterval(pipDraw, 250); /* o relógio roda dentro da janelinha, que não é freada quando a aba some */
 }
 async function pipOpen(){
-  if (!CAN_PIP || pipOn()) return;
+  if (!CAN_PIP || pipOn() || PIP.opening) return;
+  PIP.opening = true;
   try {
     if (CAN_DPIP) {
       const w = await documentPictureInPicture.requestWindow({ width:280, height:170 });
@@ -2395,6 +2396,7 @@ async function pipOpen(){
       if (PIP.vid.requestPictureInPicture) await PIP.vid.requestPictureInPicture(); else PIP.vid.webkitSetPresentationMode('picture-in-picture');
     }
   } catch(e){ /* recusado ou sem toque: segue sem mini timer */ }
+  PIP.opening = false;
   renderPipBtn();
 }
 function pipClose(){
@@ -5209,6 +5211,7 @@ function wire(){
   $('#brkOpts').addEventListener('click', e => { const b = e.target.closest('[data-brk]'); if (!b) return; const v = b.dataset.brk; S.cfg.music = v !== 'off'; if (v !== 'off') S.cfg.musicKind = v; sndPreview(v); renderDialog(true); renderJogo(); save(); });
   renderPipBtn();
   try { navigator.mediaSession && navigator.mediaSession.setActionHandler('enterpictureinpicture', () => { if (S.timer.running) pipOpen(); }); } catch(e){}
+  document.addEventListener('click', () => { if (S.timer.running && CAN_PIP && !pipOn()) pipOpen(); }, true);
   $('#cfg-vol').addEventListener('input', e => { S.cfg.vol = +e.target.value; save(); });
   $('#cfg-bg3d').addEventListener('change', e => { S.cfg.bg3d = e.target.checked; if (S.cfg.bg3d) { S3.failed = false; S3.lite = false; if (PERF.lvl > 1) PERF.lvl = 1; init3d(); } else show3d(false); save(); });
   $('#realmBtn').addEventListener('click', () => realmView(true));
