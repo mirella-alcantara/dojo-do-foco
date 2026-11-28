@@ -1030,7 +1030,7 @@ p,.small,.quote,.dl-sub,.next-sub{text-wrap:pretty}
             </div>
             <label class="scene-pick dj-chip"><span class="sr-only">Reino</span><select id="sceneSel" aria-label="Reino"></select></label>
             <button class="btn sm outline" id="realmBtn" type="button" title="Ver o reino em 3D, sem distrações">🌄 3D</button>
-            <button class="btn sm outline" id="pipBtn" type="button" title="Timer pequeno que fica por cima das outras janelas" hidden>⧉ Mini timer</button>
+
           </div>
         </div>
 
@@ -1261,7 +1261,6 @@ p,.small,.quote,.dl-sub,.next-sub{text-wrap:pretty}
             <p class="j-lead">Como o jogo te ajuda a ficar na tarefa.</p>
             <div class="j-list">
               <label class="tog"><span class="tog-ico" aria-hidden="true">🎯</span><div><b>Modo foco</b><span>Na batalha, só a cena, o timer e o seu plano.</span></div><input type="checkbox" role="switch" id="cfg-focusMode"></label>
-              <label class="tog" id="pipTog"><span class="tog-ico" aria-hidden="true">⧉</span><div><b>Mini timer flutuante</b><span id="pipHint">Abre ao começar o foco e fica por cima das outras janelas.</span></div><input type="checkbox" role="switch" id="cfg-pip"></label>
               <label class="tog"><span class="tog-ico" aria-hidden="true">🔁</span><div><b>Seguir sozinho</b><span>A próxima fase começa sem precisar tocar.</span></div><input type="checkbox" role="switch" id="cfg-auto"></label>
               <label class="tog"><span class="tog-ico" aria-hidden="true">⚡</span><div><b>Penalidades</b><span>Desistir ou pular a pausa custa energia.</span></div><input type="checkbox" role="switch" id="cfg-penalties"></label>
             </div>
@@ -2248,15 +2247,17 @@ function musicVolume(v){ if (!AC) return; const t = AC.currentTime; [MUS.on && M
 const AMB = { kind:null, out:null, nodes:[], iv:0, bufs:{} };
 function ambBuf(kind){
   if (AMB.bufs[kind]) return AMB.bufs[kind];
-  const len = AC.sampleRate * 6, b = AC.createBuffer(2, len, AC.sampleRate);
+  /* 20 s de ruído + 2 s a mais: o pedaço extra é misturado no começo, então a volta do loop não tem buraco nem estalo. */
+  const len = AC.sampleRate * 20, F = AC.sampleRate * 2, b = AC.createBuffer(2, len, AC.sampleRate);
   for (let c = 0; c < 2; c++) {
-    const d = b.getChannelData(c); let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, last = 0;
-    for (let i = 0; i < len; i++) {
+    const d = new Float32Array(len + F); let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, last = 0;
+    for (let i = 0; i < len + F; i++) {
       const w = Math.random()*2 - 1;
       if (kind === 'brown') { last = (last + 0.02*w)/1.02; d[i] = last*3.2; }
       else { b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759; b2 = 0.969*b2 + w*0.153852; b3 = 0.8665*b3 + w*0.3104856; b4 = 0.55*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.016898; d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362)*0.11; b6 = w*0.115926; }
     }
-    const f = Math.floor(AC.sampleRate*0.05); for (let i = 0; i < f; i++) { const k = i/f; d[i] *= k; d[len-1-i] *= k; } /* emenda do loop sem estalo */
+    for (let i = 0; i < F; i++) { const k = i/F; d[i] = d[i]*Math.sqrt(k) + d[len + i]*Math.sqrt(1 - k); } /* mistura de potência igual */
+    b.copyToChannel(d.subarray(0, len), c);
   }
   return AMB.bufs[kind] = b;
 }
@@ -2275,7 +2276,7 @@ function ambStart(kind){
   else { hp.frequency.value = 120; lp.frequency.value = 2200; g.gain.value = 0.3; }
   ambLoop(kind === 'marrom' ? 'brown' : 'pink', out, [hp, lp, g]);
   const lfo = AC.createOscillator(), lg = AC.createGain();
-  lfo.frequency.value = 0.07; lg.gain.value = g.gain.value*0.18; lfo.connect(lg).connect(g.gain); lfo.start(); AMB.nodes.push(lfo);
+  lfo.frequency.value = 0.05; lg.gain.value = g.gain.value*0.05; lfo.connect(lg).connect(g.gain); lfo.start(); AMB.nodes.push(lfo);
 }
 function ambStop(now){
   if (!AMB.kind) return;
@@ -2326,7 +2327,7 @@ function start(){
   atkIdx = Math.floor((T.total - T.left) / ATK_EVERY);
   if (T.phase !== 'focus') phaseStartPerf = performance.now() - (T.total - T.left)*1000;
   wake(); musicSync(); renderAll(); save();
-  if (T.phase === 'focus' && S.cfg.pip && CAN_PIP && !pipOn()) pipOpen();
+  if (CAN_PIP && !pipOn()) pipOpen(); /* mini timer fixo: abre em todo começo e fica por cima ao sair da tela */
 }
 /* ================= Mini timer flutuante =================
    Computador (Chrome/Edge 116+) e Android (Chrome recente): Document Picture-in-Picture, uma janelinha sempre por cima.
@@ -4731,9 +4732,7 @@ function renderJogo(){
   if (jTab === 'guia') renderGuia();
   ['focus','short','long','cycles','goal'].forEach(k => { const el = $('#cfg-' + k); if (document.activeElement !== el) el.value = c[k]; });
   $('#cfg-summaryAt').value = c.summaryAt;
-  ['focusMode','auto','penalties','sound','pip'].forEach(k => $('#cfg-' + k).checked = !!c[k]);
-  $('#cfg-pip').disabled = !CAN_PIP; $('#pipTog').classList.toggle('off', !CAN_PIP);
-  if (!CAN_PIP) $('#pipHint').textContent = 'Este navegador não tem janela flutuante. No computador, use Chrome ou Edge.';
+  ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).checked = !!c[k]);
   $('#cfg-vol').value = c.vol; $('#cfg-musicVol').value = c.musicVol;
   $('#cfg-bg3d').checked = c.bg3d === true;
   /* som: três escolhas em cada bloco */
@@ -5202,13 +5201,12 @@ function wire(){
     const el = e.target; const v = clamp(Math.round(+el.value) || S.cfg[k], +el.min, +el.max); el.value = v; S.cfg[k] = v; applyLen(); renderAll(); save();
   }));
   $('#presets').addEventListener('click', e => { const b = e.target.closest('[data-preset]'); if (!b) return; const [f, s, l] = b.dataset.preset.split(',').map(Number); Object.assign(S.cfg, { focus:f, short:s, long:l }); applyLen(); renderAll(); save(); toast(`Ritmo ${f}/${s} aplicado.`); });
-  ['focusMode','auto','penalties','sound','pip'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } if (k === 'pip' && e.target.checked && S.timer.running && S.timer.phase === 'focus') pipOpen(); renderAll(); save(); }));
+  ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } renderAll(); save(); }));
   $('#alarmOpts').addEventListener('click', e => { const b = e.target.closest('[data-alarm]'); if (!b) return; S.cfg.alarm = b.dataset.alarm; unlockAudio(); sfx('rin', true); renderJogo(); save(); });
   $('#ambOpts').addEventListener('click', e => { const b = e.target.closest('[data-amb]'); if (!b) return; S.cfg.amb = b.dataset.amb; sndPreview(S.cfg.amb); renderJogo(); save(); });
   $('#brkOpts').addEventListener('click', e => { const b = e.target.closest('[data-brk]'); if (!b) return; const v = b.dataset.brk; S.cfg.music = v !== 'off'; if (v !== 'off') S.cfg.musicKind = v; sndPreview(v); renderDialog(true); renderJogo(); save(); });
-  $('#pipBtn').addEventListener('click', () => { pipOn() ? pipClose() : pipOpen(); });
   renderPipBtn();
-  try { navigator.mediaSession && navigator.mediaSession.setActionHandler('enterpictureinpicture', () => { if (S.cfg.pip && S.timer.running) pipOpen(); }); } catch(e){}
+  try { navigator.mediaSession && navigator.mediaSession.setActionHandler('enterpictureinpicture', () => { if (S.timer.running) pipOpen(); }); } catch(e){}
   $('#cfg-vol').addEventListener('input', e => { S.cfg.vol = +e.target.value; save(); });
   $('#cfg-bg3d').addEventListener('change', e => { S.cfg.bg3d = e.target.checked; if (S.cfg.bg3d) { S3.failed = false; S3.lite = false; if (PERF.lvl > 1) PERF.lvl = 1; init3d(); } else show3d(false); save(); });
   $('#realmBtn').addEventListener('click', () => realmView(true));
