@@ -133,6 +133,9 @@ body.focusing .scene-pick{display:none}
 #view-dojo::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(#0b0a1a,#140f26)}
 #view-dojo .dj-stage{position:fixed;left:0;right:0;top:0;height:var(--djsh,62svh);z-index:0;border:0;border-radius:0;pointer-events:none;background:#0b0a1a}
 #view-dojo .dj-stage #scene{width:100%;height:100%;aspect-ratio:auto!important;object-fit:cover;object-position:50% 100%}
+/* Tela em pé (celular): o corte mostra só o meio da cena e deixava a personagem de fora. O enquadramento vai para a esquerda,
+   onde fica a mesa dela; ela é quem estuda junto com você. */
+@media (max-aspect-ratio:3/4){#view-dojo .dj-stage #scene{object-position:24% 100%}}
 #view-dojo .dj-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(8,6,20,.55),rgba(8,6,20,0) 24%,rgba(8,6,20,0) 82%,rgba(11,10,26,.9))}
 body[data-view="dojo"] .top-mid{display:none}
 body[data-view="dojo"] .brand h1,body[data-view="dojo"] .brand .mono{text-shadow:0 2px 0 rgba(10,6,25,.8)}
@@ -158,6 +161,21 @@ body[data-view="dojo"] .brand h1,body[data-view="dojo"] .brand .mono{text-shadow
 .dj-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding-top:clamp(0px,3vh,40px);text-align:center;pointer-events:none}
 .dj-center > *{pointer-events:auto}
 #view-dojo .clock-ov{position:static;transform:none;width:auto;max-width:min(92vw,760px)}
+/* Placa de vidro lilás atrás do timer: o cenário atrás fica desfocado e o número sempre legível
+   (desfoque e fundo translúcido são os recursos mais eficazes para texto sobre fundo cheio). */
+#view-dojo .clock-ov{position:relative;left:auto;top:auto;padding:12px clamp(18px,3vw,34px) 14px;border-radius:26px;
+  background:linear-gradient(180deg,rgba(214,196,255,.18),rgba(170,140,255,.08)),rgba(16,11,34,.42);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(225,210,255,.30);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 0 22px rgba(200,180,255,.08),0 16px 40px -18px rgba(10,4,30,.8)}
+#view-dojo .clock-ov::before{content:"";position:absolute;inset:1px 1px 55% 1px;border-radius:25px 25px 40% 40% / 25px 25px 16px 16px;background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,0));pointer-events:none}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#view-dojo .clock-ov{background:rgba(22,16,44,.86)}}
+#view-dojo .clock-label{color:#d9ccff;letter-spacing:.14em}
+#view-dojo .clock-time{text-shadow:0 2px 0 rgba(20,10,50,.45)}
+.clock-bar{display:none}
+#view-dojo .clock-bar{display:block;height:5px;margin:10px auto 0;width:min(78%,320px);border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}
+#view-dojo .clock-bar i{display:block;height:100%;border-radius:3px;background:#d4c4ff;transition:width .25s linear}
+#view-dojo .clock-sub{color:#efe8ff}
 #view-dojo .clock-time{font-size:clamp(72px,14vw,148px)}
 #view-dojo .clock-label{font-size:clamp(13px,1.6vw,18px)}
 #view-dojo .clock-sub{font-size:clamp(14px,1.7vw,18px);font-weight:700;margin-top:6px;overflow-wrap:anywhere}
@@ -192,6 +210,8 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
   .dj-center{gap:4px;padding-top:0}
   #view-dojo .etag{display:none}
   #view-dojo .clock-time{font-size:56px}
+  #view-dojo .clock-ov{padding:8px 18px 10px;border-radius:20px}
+  #view-dojo .clock-bar{margin-top:7px}
   #view-dojo .clock-sub{font-size:14px;margin-top:2px}
   #view-dojo .lanterns{display:none}
   #view-dojo .dlg{padding:12px 12px 16px;gap:8px}
@@ -215,6 +235,16 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
 /* Diálogo retrô */
 .dlg{position:relative;background:var(--dlg);color:var(--dlg-ink);border:3px solid var(--dlg-ink);border-radius:6px;box-shadow:0 0 0 4px var(--dlg),0 10px 30px rgba(0,0,0,.25);padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px}
 .dl-line{font-size:19px;line-height:1.45}
+/* faixa compacta da batalha: meta e próximo passo à esquerda, botões à direita */
+.dlg.compact{padding:10px 14px 12px;gap:8px}
+.dl-compact{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
+.dl-cline{flex:1 1 260px;min-width:0;margin:0;display:flex;gap:8px;align-items:flex-start;line-height:1.3}
+.dl-cline > span:last-child{display:flex;flex-direction:column;gap:3px;min-width:0}
+.dl-cline b{font-size:17px;overflow-wrap:anywhere}
+.dl-cline small{font-size:14px;opacity:.78;overflow-wrap:anywhere}
+.dl-cact{flex:0 0 auto;gap:6px}
+.dl-cact .btn.big{min-height:42px;padding:0 18px;font-size:15px}
+.dl-cact .btn:not(.big){min-height:42px;padding:0 12px;font-size:14px}
 .dl-line .star{color:var(--phase);margin-right:6px;font-family:var(--num);font-size:22px}
 .dl-sub{font-size:14px;color:#bdb4e0}
 .dl-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -1057,6 +1087,7 @@ p,.small,.quote,.dl-sub,.next-sub{text-wrap:pretty}
           <div class="ov clock-ov" aria-live="off">
             <div class="clock-label" id="clockLabel"></div>
             <div class="clock-time" id="clockTime">25:00</div>
+            <div class="clock-bar" aria-hidden="true"><i id="cbar"></i></div>
             <div class="clock-sub" id="clockSub"></div>
           </div>
           <div class="lanterns dj-chip" id="lanterns" title="Ciclo até a pausa longa"></div>
@@ -2902,11 +2933,21 @@ function drawBG(h){
   if (OX > 0) { c.font = '14px DotGothic16, monospace'; c.fillText('勉', -20, 78); c.fillText('強', -20, 104); c.fillText('休', 340, 78); c.fillText('憩', 340, 104); }
   c.font = '8px "Pixelify Sans", monospace'; c.fillText('FOCO', 46, 94); c.fillText('CHÁ 24H', 274, 94); c.fillText('ESTUDO', 44, 117.5); c.fillText('ONSEN ♨', 276, 117.5);
 }
+/* Durante o foco os letreiros de neon baixam para 25%: o timer fica sendo a única coisa que chama o olho.
+   A troca é suave (cerca de 1,5 s) e volta ao normal na pausa ou quando o timer para. */
+let signK = 1, signT = 0;
+function signDim(){
+  const now = performance.now(); if (now === signT) return signK;
+  const dt = signT ? Math.min(0.1, (now - signT)/1000) : 1; signT = now;
+  const T = S && S.timer, want = T && T.running && T.phase === 'focus' ? 0.25 : 1;
+  signK += (want - signK)*Math.min(1, dt*2); return signK;
+}
 function neonText(txt, x, y, font, col, k){
+  k *= signDim();
   g.save(); g.font = font; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = k;
   g.shadowColor = col; g.shadowBlur = 8; g.fillStyle = col; g.fillText(txt, x, y); g.shadowBlur = 0; g.fillStyle = '#fff4fb'; g.globalAlpha = k*0.7; g.fillText(txt, x, y); g.restore();
 }
-function neonBox(x, y, w, h, col, k){ g.save(); g.globalAlpha = k; g.shadowColor = col; g.shadowBlur = 8; g.strokeStyle = col; g.lineWidth = 1.5; g.strokeRect(x + 1.5, y + 1.5, w - 3, h - 3); g.restore(); }
+function neonBox(x, y, w, h, col, k){ k *= signDim(); g.save(); g.globalAlpha = k; g.shadowColor = col; g.shadowBlur = 8; g.strokeStyle = col; g.lineWidth = 1.5; g.strokeRect(x + 1.5, y + 1.5, w - 3, h - 3); g.restore(); }
 function drawEnv(now){
   const k = clamp((amb - 0.3)/0.4, 0, 1);
   const senv = SCENE_ENV[S.cfg.scene]; if (senv) { senv(now, k); groundMist(now, k); return; }
@@ -4328,6 +4369,7 @@ function renderDialog(force){
   const key = [st, T.running, T.started, armed, T.phase, S.brk.checked.length, S.tasks.length, S.active, S.cfg.music].join('|');
   if (!force && key === dlgKey) return; dlgKey = key;
   const D = $('#dlg'); let h = '';
+  D.classList.toggle('compact', st === 'focus');
   const open = S.tasks.filter(t => !t.fin);
   if (st === 'plan') {
     h = `<div class="dl-form">
@@ -4343,9 +4385,11 @@ function renderDialog(force){
     const t = activeTask(), plan = S.cur && S.cur.plan;
     const verb = t && CATS[t.cat] ? CATS[t.cat].verb : 'meditando';
     const line = T.running ? pick([`Estou ${verb} com você. Um trecho de cada vez.`, 'Respira. Você está indo bem.', 'Se distrair, anota no pergaminho e volta.'], Math.floor(Date.now()/60000)) : 'Pausado. Quando estiver pronto, a gente continua de onde parou.';
-    h = `<p class="dl-line"><span class="star">*</span>${esc(line)}</p>
-      <div class="dl-plan"><span class="mono">Meta desta batalha</span><br>${plan ? esc(plan) : 'Sem meta escrita. Foque na missão ativa.'}</div>
-      <div class="dl-actions"><button class="btn primary big" data-act="toggle">${T.running ? 'Pausar' : 'Continuar'}</button><button class="btn outline" data-act="distr">Anotar distração</button><button class="btn ${armed ? 'warn' : 'ghost'}" data-act="skip">${armed ? (S.cfg.penalties ? 'Confirmar (−15 de energia)' : 'Confirmar desistência') : 'Desistir'}</button></div>
+    const nx = t && (t.steps || []).find(x => !x.ok);
+    h = `<div class="dl-compact">
+        <p class="dl-cline"><span class="star">*</span><span><b>${esc(plan || (t ? t.name : 'Foque numa coisa só'))}</b><small>${nx ? 'Próximo passo: ' + esc(nx.txt) : esc(line)}</small></span></p>
+      <div class="dl-actions dl-cact"><button class="btn primary big" data-act="toggle">${T.running ? 'Pausar' : 'Continuar'}</button><button class="btn outline" data-act="distr">Anotar distração</button><button class="btn ${armed ? 'warn' : 'ghost'}" data-act="skip">${armed ? (S.cfg.penalties ? 'Confirmar (−15 de energia)' : 'Confirmar desistência') : 'Desistir'}</button></div>
+      </div>
       <div class="dl-row" id="dlDistr" hidden><input type="text" id="dlDistrIn" maxlength="120" placeholder="O que surgiu? Escreva e aperte Enter" aria-label="Distração"><button class="btn sm" data-act="distrSave">Anotar</button></div>`;
   } else if (st === 'mini') {
     h = `<p class="dl-line"><span class="star">*</span>5 minutos feitos! Começar era a parte difícil. Quer continuar até completar ${S.cfg.focus} minutos?</p>
@@ -4381,7 +4425,7 @@ function renderStage(){
   $('#etag').innerHTML = T.phase === 'focus' ? `${e.boss ? 'CHEFE · ' : ''}${esc(e.n)}<small>Nv. ${enemyLvl()} · HP <span id="eHP"></span></small>` : (T.phase === 'short' ? 'Casa de chá<small>Recupere energia</small>' : 'Onsen<small>Descanso profundo</small>');
   /* Embaixo do relógio fica a tarefa de agora: o plano da batalha ou a missão ativa. */
   const at = activeTask(), plan = S.cur && S.cur.plan;
-  $('#clockSub').textContent = T.phase === 'focus' ? (T.started ? (plan || (at ? at.name : '')) + (T.mini ? ' · só 5 minutos' : '') : (at ? at.name : 'Escreva o plano e comece')) : (T.started ? '' : 'Levante da cadeira');
+  $('#clockSub').textContent = T.phase === 'focus' ? (T.started ? (T.mini ? 'Só 5 minutos' : '') : (at ? at.name : 'Escreva o plano e comece')) : (T.started ? '' : 'Levante da cadeira');
   document.body.classList.toggle('focusing', S.cfg.focusMode && T.phase === 'focus' && T.running);
   updateClock();
 }
@@ -4389,8 +4433,9 @@ function updateClock(){
   const T = S.timer, P = PHASES[T.phase];
   const m = Math.floor(T.left/60), s = T.left % 60, str = `${pad(m)}:${pad(s)}`;
   $('#clockTime').textContent = str;
-  $('#clockLabel').textContent = `${P.name.toUpperCase()}${!T.running && T.started ? ' · PAUSADO' : ''}`;
-  $('#tbar').style.width = (T.total ? T.left/T.total*100 : 100) + '%';
+  $('#clockLabel').textContent = `${P.name.toUpperCase()}${T.phase === 'focus' ? ` · ${Math.min(T.cycle + 1, S.cfg.cycles)} DE ${S.cfg.cycles}` : ''}${!T.running && T.started ? ' · PAUSADO' : ''}`;
+  const pct = (T.total ? T.left/T.total*100 : 100) + '%';
+  $('#tbar').style.width = pct; const cb = $('#cbar'); if (cb) cb.style.width = pct;
   const eh = $('#eHP'); if (eh) eh.textContent = `${T.started ? Math.ceil(enemyMax()*Math.max(0.02, T.left/T.total - stepBonus)) : enemyMax()}/${enemyMax()}`;
   document.title = T.started ? `${str} ${P.name} · Dojo do Foco` : 'Dojo do Foco';
   renderNext();
@@ -4529,7 +4574,7 @@ function sizeHero(){
   document.documentElement.style.setProperty('--djh', Math.max(420, window.innerHeight - top - nb - 14) + 'px');
   /* A cena termina um pouco abaixo do topo do diálogo, para as personagens ficarem à vista acima dele. */
   const d = $('#view-dojo .dlgwrap'); if (!d) return;
-  const dt = Math.round(d.getBoundingClientRect().top + window.scrollY + 18), cur = parseInt(document.documentElement.style.getPropertyValue('--djsh')) || 0;
+  const dt = Math.round(d.getBoundingClientRect().top + window.scrollY + (innerWidth < 640 ? -6 : 18)) /* no celular o diálogo é mais alto: a cena termina acima dele para a personagem aparecer inteira */, cur = parseInt(document.documentElement.style.getPropertyValue('--djsh')) || 0;
   if (Math.abs(dt - cur) > 2) document.documentElement.style.setProperty('--djsh', Math.max(240, dt) + 'px');
 }
 function heroLine(){
