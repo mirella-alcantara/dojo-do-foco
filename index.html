@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&family=VT323&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Figtree:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&family=VT323&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 /* Layout: cena pixel do dojo no centro (timer sobreposto) + caixa de diálogo retrô embaixo; próxima ação à esquerda, cartão do herói à direita; abas na barra inferior. A paleta segue a hora do dia (data-ui = light | dusk | dark). */
 :root{
@@ -10,9 +10,10 @@
   --violet:#a07fff; --pink:#ff6fb5; --cyan:#5ce1e6; --gold:#f5c66b; --matcha:#8fd18b; --danger:#ff8a8a;
   --on:#140d2b; --dlg:#07060f; --dlg-ink:#f4f0ff; --nav:#0f0c1f;
   --px:'Pixelify Sans','DotGothic16',ui-monospace,monospace;
-  --body:'Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Figtree','Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,-apple-system,'Segoe UI',sans-serif;
   --num:'VT323','DotGothic16',ui-monospace,monospace;
   --jp:'DotGothic16','Zen Maru Gothic',sans-serif;
+  --label:600 12px/1.2 var(--body);
   --phase:var(--violet);
   color-scheme:dark;
 }
@@ -63,8 +64,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--phase);outline-offset:2px}
 .px{font-family:var(--px)}
-.mono{font-family:var(--num);font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);line-height:1.1}
-.jp{font-family:var(--jp)}
+.mono{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.25}
+.jp{font-family:var(--jp);font-weight:400;letter-spacing:0;text-transform:none}
 svg.ico{width:22px;height:22px;flex:none}
 
 /* Topo */
@@ -73,7 +74,7 @@ svg.ico{width:22px;height:22px;flex:none}
 .brand-ico{width:44px;height:44px;border-radius:10px;background:var(--panel);border:2px solid var(--pink);display:grid;place-items:center;color:var(--pink);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 45%,transparent)}
 .brand-ico svg{width:24px;height:24px}
 .brand h1{font-family:var(--px);font-weight:700;font-size:24px;line-height:1;letter-spacing:.02em}
-.brand .mono{font-size:15px;margin-top:3px}
+.brand .mono{font-size:10.5px;font-weight:600;letter-spacing:.14em;margin-top:5px;opacity:.85}
 .top-mid{text-align:center;color:var(--violet)}
 .top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pill{display:flex;align-items:center;gap:6px;background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px;white-space:nowrap}
@@ -102,7 +103,7 @@ body.focusing .dojo-left,body.focusing .dojo-right,body.focusing .strip,body.foc
 
 .stage-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:-6px}
 .seg{display:flex;gap:4px;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:4px}
-.seg button{background:none;border:0;color:var(--muted);font-family:var(--jp);font-size:14px;padding:4px 10px;border-radius:6px;line-height:1.3}
+.seg button{background:none;border:0;color:var(--muted);font-family:var(--body);font-weight:600;font-size:14px;padding:4px 10px;border-radius:6px;line-height:1.3}
 .seg button[aria-pressed="true"]{background:var(--phase);color:var(--on)}
 .seg button:disabled{opacity:.4;cursor:not-allowed}
 .scene-pick{display:flex;align-items:center;gap:8px;margin-right:auto}
@@ -114,7 +115,7 @@ body.focusing .scene-pick{display:none}
 #scene{display:block;width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated;image-rendering:crisp-edges}
 .ov{position:absolute;color:#fff7ea;text-shadow:0 2px 0 rgba(15,8,35,.85),0 0 10px rgba(15,8,35,.6)}
 .clock-ov{left:50%;top:2.5%;transform:translateX(-50%);text-align:center;pointer-events:none;width:70%}
-.clock-label{font-family:var(--px);font-size:clamp(12px,2.2cqw,17px);letter-spacing:.08em}
+.clock-label{font-family:var(--body);font-weight:700;font-size:clamp(12px,2.2cqw,17px);letter-spacing:.08em}
 .clock-time{font-family:var(--num);font-size:clamp(52px,13cqw,108px);line-height:.85;font-variant-numeric:tabular-nums}
 .clock-sub{font-size:clamp(12px,1.9cqw,15px);opacity:.9}
 .corner{right:10px;top:10px;text-shadow:none}
@@ -200,6 +201,10 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
   #view-dojo .dl-row .mono{min-width:0;font-size:13px}
   #view-dojo .dl-row{flex-wrap:wrap;row-gap:6px}
   #view-dojo .dl-actions{gap:6px}
+  #view-dojo .dl-form{gap:6px 10px}
+  #view-dojo .en-seg{max-width:none}
+  #view-dojo .en-seg button{gap:6px;font-size:13px}
+  #view-dojo .dl-hint{display:none}
   #view-dojo .dl-actions .btn{padding:8px 12px;font-size:14px}
   #view-dojo .dl-actions .btn.big{min-width:0;font-size:16px;padding:0 16px;min-height:44px}
   #view-dojo .dl-actions .btn{flex:1 1 auto}
@@ -223,12 +228,26 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
 .chipb[aria-pressed="true"]{border-color:var(--phase);background:color-mix(in srgb,var(--phase) 28%,transparent)}
 .chipb.done{border-color:var(--matcha);color:#cfe9cc;text-decoration:line-through}
 .dl-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dl-form{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 16px;align-items:center}
+.dl-form > .mono{color:#a99fd6}
+.dlg .dl-form input[type=text]{border:2px solid rgba(244,240,255,.3);border-radius:7px;padding:8px 12px;font-size:16px;min-height:40px}
+.dlg .dl-form input[type=text]:focus{border-color:var(--phase);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--phase) 30%,transparent)}
+.dlg .dl-form .dsel.auto{flex:none;width:100%}
+.en-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:3px;border-radius:9px;border:2px solid rgba(244,240,255,.18);background:rgba(244,240,255,.04);max-width:380px}
+.en-seg button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:34px;border:0;border-radius:6px;background:transparent;color:#bdb4e0;font-weight:600;font-size:14px;transition:background-color .15s,color .15s}
+.en-seg button:hover{color:var(--dlg-ink);background:rgba(244,240,255,.07)}
+.en-seg button[aria-checked="true"]{background:color-mix(in srgb,var(--phase) 30%,transparent);color:var(--dlg-ink);box-shadow:inset 0 0 0 2px var(--phase)}
+.en-seg button[aria-checked="true"] .en-ico{color:var(--phase)}
+.en-ico{width:16px;height:16px}
+.hd-en .en-ico{width:20px;height:20px;color:var(--pink)}
+.btn-meta{font-weight:600;font-size:.8em;opacity:.75;padding-left:10px;margin-left:2px;border-left:2px solid color-mix(in srgb,currentColor 35%,transparent)}
+.dl-hint{font-size:12px;color:#8a82ad;margin-left:auto}
 .dl-plan{background:rgba(244,240,255,.06);border-left:3px solid var(--phase);padding:8px 12px;border-radius:0 6px 6px 0;font-size:16px;overflow-wrap:anywhere}
 .caret{position:absolute;right:14px;bottom:6px;font-size:12px;color:var(--dlg-ink);animation:blink 1.1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 
 /* Botões: um padrão só. Tamanhos sm / normal / big; variantes primary, outline, ghost e warn. */
-.btn{--bc:var(--line);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;font-family:var(--px);font-weight:600;font-size:15px;letter-spacing:.02em;line-height:1.15;
+.btn{--bc:var(--line);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;font-family:var(--body);font-weight:700;font-size:15px;letter-spacing:0;line-height:1.15;
   border:2px solid var(--bc);background:var(--panel2);color:var(--ink);border-radius:8px;text-decoration:none;text-align:center;user-select:none;
   transition:background-color .15s,border-color .15s,color .15s,box-shadow .15s,transform .08s}
 .btn:hover:not(:disabled){--bc:color-mix(in srgb,var(--pink) 55%,var(--line));background:color-mix(in srgb,var(--ink) 5%,var(--panel2))}
@@ -296,8 +315,16 @@ body.focusing .dj-sheet,body.focusing .dj-more{display:none}
 .attr{background:var(--panel2);border-radius:7px;padding:6px;text-align:center}
 .attr .v{font-family:var(--num);font-size:24px;line-height:1}
 .attr .k{font-size:11px;color:var(--muted)}
+.wpn-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.wpn{width:48px;height:48px;display:grid;place-items:center;border-radius:9px;border:2px solid var(--line);background:var(--panel2);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .08s}
+.wpn:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
+.wpn[aria-checked="true"]{border-color:var(--pink);box-shadow:0 0 0 2px color-mix(in srgb,var(--pink) 30%,transparent)}
+.wpn canvas{width:32px;height:32px;image-rendering:pixelated}
+#wpnName{color:var(--ink);font-weight:600;text-transform:none;letter-spacing:0}
+.ros-sub{display:inline-flex;align-items:center;gap:4px}
+.ros canvas.wpn-mini{width:32px;height:32px;image-rendering:pixelated}
 .vis-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.vis-opts button{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--px);font-size:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .08s}
+.vis-opts button{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--ink);font-family:var(--body);font-weight:600;font-size:14px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .08s}
 .vis-opts button:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
 .vis-opts button[aria-pressed="true"]{border-color:#ff6fb5;box-shadow:0 0 0 2px color-mix(in srgb,#ff6fb5 30%,transparent)}
 .vis-opts canvas{width:36px;height:45px;image-rendering:pixelated}
@@ -420,7 +447,7 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .pz{position:relative;display:flex;flex-direction:column;background:var(--panel2);border:2px solid var(--line);border-radius:9px}
 .pz.on{border-color:var(--matcha);background:color-mix(in srgb,var(--matcha) 14%,var(--panel2))}
 .pz-t{flex:1;text-align:left;background:none;border:0;border-radius:7px 7px 0 0;padding:9px 28px 4px 10px;color:var(--ink);font:inherit;cursor:pointer}
-.pz-t .k{font-family:var(--jp);font-size:20px;line-height:1;color:var(--faint)}
+.pz-t .k{font-family:var(--jp);font-size:16px;line-height:1;color:var(--faint)}
 .pz.on .pz-t .k{color:var(--matcha)}
 .pz-t b{display:block;font-weight:700;font-size:14px;line-height:1.3;margin:5px 0 0;overflow-wrap:anywhere}
 .pz-w{align-self:flex-start;margin:4px 10px 9px;background:none;border:1px dashed var(--line);border-radius:5px;padding:0 6px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer}
@@ -455,9 +482,16 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .path li.now{color:var(--ink);outline:2px solid var(--gold)}
 .path li.got{color:var(--ink)}
 .stats4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.ach{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.badge{aspect-ratio:1;border-radius:10px;display:grid;place-items:center;font-family:var(--jp);font-size:22px;background:var(--panel2);color:var(--faint);border:2px dashed var(--line)}
-.badge.on{color:var(--on);background:var(--gold);border:2px solid var(--gold)}
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;list-style:none;margin:0;padding:0}
+.badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:12px 8px 10px;border-radius:10px;background:var(--panel2);border:2px dashed var(--line);color:var(--muted)}
+.badge-i{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--faint)}
+.badge-i .ico{width:24px;height:24px}
+.badge b{font-size:13px;font-weight:700;line-height:1.25;color:var(--ink);opacity:.7}
+.badge small{font-size:11.5px;line-height:1.3;color:var(--faint)}
+.badge.on{border:2px solid color-mix(in srgb,var(--gold) 70%,transparent);background:color-mix(in srgb,var(--gold) 12%,var(--panel2))}
+.badge.on .badge-i{background:var(--gold);color:var(--on)}
+.badge.on b{opacity:1}
+.badge.on small{color:var(--gold)}
 
 .presets-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .pre{display:flex;flex-direction:column;align-items:center;gap:1px;border:2px solid var(--line);background:var(--panel2);border-radius:9px;padding:8px 4px;transition:border-color .15s,background-color .15s,transform .08s}
@@ -499,21 +533,230 @@ input[type=text],input[type=number],input[type=time],select{background:var(--pan
 .ros .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .spec-mini{display:flex;gap:8px;font-family:var(--num);font-size:15px;color:var(--muted);flex-wrap:wrap}
 
-/* Jogo */
-.set{display:flex;flex-direction:column;gap:12px}
-.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.set-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
-.tog{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--panel2);border-radius:8px;cursor:pointer}
-.tog input{margin-top:5px;accent-color:var(--violet);width:18px;height:18px;flex:none}
+/* Jogo (ajustes): abas à esquerda no computador e em grade no celular; um painel por vez, com no máximo ~8 controles.
+   Cada grupo tem título curto, explicação de uma linha e o controle à direita (interruptor) para leitura rápida. */
+.j-wrap{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.j-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px 16px;flex-wrap:wrap}
+.j-sum{margin:8px 0 0;font-family:var(--num);font-size:19px;letter-spacing:.03em;color:var(--muted);line-height:1.1}
+.j-sum b{font-weight:400;color:var(--ink)}
+.j-saved{font-size:13px;color:var(--matcha);background:color-mix(in srgb,var(--matcha) 12%,transparent);border-radius:99px;padding:4px 10px;white-space:nowrap}
+.j-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:14px;align-items:start}
+.j-tabs{flex-direction:column;flex-wrap:nowrap;position:sticky;top:12px}
+.j-tabs button{justify-content:flex-start;min-height:42px}
+.j-tabs .jp{width:18px;text-align:center}
+.j-panel{display:flex;flex-direction:column;gap:18px;padding:20px;background:color-mix(in srgb,var(--panel) 94%,transparent);animation:jIn .2s ease-out}
+@keyframes jIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.j-lead{margin:0;color:var(--muted);font-size:15px}
+.j-group{display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:2px solid var(--line)}
+.j-group h3{font-family:var(--px);font-size:16px;font-weight:600;margin:0}
+.j-list{display:flex;flex-direction:column;gap:8px}
+.j-box{background:var(--panel2);border-radius:10px;overflow:hidden}
+.j-box .tog{background:none}
+/* interruptor: texto à esquerda, chave à direita */
+.tog{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--panel2);border-radius:10px;cursor:pointer}
+.tog > div{min-width:0}
 .tog b{display:block;font-size:15px}
-.tog span{font-size:13px;color:var(--muted)}
-.presets{display:flex;gap:8px;flex-wrap:wrap}
-.presets button[aria-pressed="true"]{--bc:var(--violet);color:var(--violet);background:color-mix(in srgb,var(--violet) 12%,var(--panel2))}
-.rules{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+.tog span{display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-top:2px}
+.tog input{appearance:none;-webkit-appearance:none;flex:none;width:44px;height:26px;margin:0;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background-color .18s}
+.tog input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink);transition:transform .18s}
+.tog input:checked{background:var(--violet)}
+.tog input:checked::after{transform:translateX(18px);background:var(--on)}
+.tog input:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+.j-vol{display:flex;align-items:center;gap:10px;padding:0 14px 12px}
+.j-vol > span{width:18px;text-align:center;color:var(--muted)}
+.j-vol input{flex:1 1 auto;min-width:0;accent-color:var(--violet)}
+/* ritmos prontos como cartas grandes */
+.j-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.j-presets button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px;background:var(--panel2);border:2px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;cursor:pointer;transition:border-color .15s,background-color .15s,transform .08s}
+.j-presets button:hover{border-color:color-mix(in srgb,var(--violet) 60%,var(--line))}
+.j-presets button:active{transform:scale(.98)}
+.j-presets b{font-family:var(--px);font-size:15px}
+.j-presets .j-pn{font-family:var(--num);font-size:30px;line-height:1}
+.j-presets small{font-size:12px;color:var(--muted);line-height:1.3}
+.j-presets button[aria-pressed="true"]{border-color:var(--violet);background:color-mix(in srgb,var(--violet) 14%,var(--panel2))}
+.j-presets button[aria-pressed="true"] b{color:var(--violet)}
+/* um ciclo desenhado: foco, pausa curta… e a longa no fim */
+.j-cyc{display:flex;flex-direction:column;gap:6px}
+.j-cyc-bar{display:flex;gap:3px;height:14px}
+.j-cyc-bar i{display:block;border-radius:4px;min-width:4px;background:var(--violet)}
+.j-cyc-bar i.s{background:var(--matcha)}
+.j-cyc-bar i.l{background:var(--cyan)}
+.j-cyc-t{margin:0;font-size:13px;color:var(--muted)}
+.j-cyc-t i{display:inline-block;width:9px;height:9px;border-radius:3px;margin:0 4px 0 8px;vertical-align:0;font-style:normal}
+.j-cyc-t i:first-child{margin-left:0}
+.j-more{border-radius:10px;background:var(--panel2)}
+.j-more summary{cursor:pointer;padding:12px 14px;font-family:var(--px);font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px}
+.j-more summary::-webkit-details-marker{display:none}
+.j-more summary::before{content:"▸";color:var(--violet);transition:transform .15s}
+.j-more[open] summary::before{transform:rotate(90deg)}
+.j-more .j-nums{padding:0 14px 14px}
+.j-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.j-num{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.j-step{display:flex;align-items:center;gap:6px}
+.j-step input{width:64px;text-align:center;font-family:var(--num);font-size:22px;padding:4px 6px;-moz-appearance:textfield}
+.j-step input::-webkit-inner-spin-button,.j-step input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.j-step input[type=time]{width:auto;font-family:var(--body);font-size:15px;padding:8px 10px}
+.j-step .ibtn{width:34px;height:34px;font-size:18px}
+/* listas de escolha (reino, céu, clima) */
+.j-chips{display:flex;flex-wrap:wrap;gap:6px}
+.j-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.j-chips button{min-height:36px;padding:6px 12px;border:2px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--ink);font:inherit;font-size:14px;text-align:left;cursor:pointer;transition:border-color .15s,background-color .15s}
+.j-chips button:hover{border-color:color-mix(in srgb,var(--violet) 60%,var(--line))}
+.j-chips button[aria-pressed="true"]{border-color:var(--violet);color:var(--violet);background:color-mix(in srgb,var(--violet) 14%,var(--panel2))}
+.j-segs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;background:var(--panel2);border-radius:10px}
+.j-segs button{border-color:transparent;background:none;text-align:center;color:var(--muted)}
+.j-segs button[aria-pressed="true"]{background:var(--violet);color:var(--on);border-color:var(--violet)}
+.j-danger{border-top-style:dashed;border-top-color:color-mix(in srgb,var(--danger) 45%,var(--line))}
+.j-danger h3{color:var(--danger)}
+.rules{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;max-width:65ch}
 .rules li::marker{font-family:var(--num);color:var(--pink)}
-dl.terms{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:15px}
+dl.terms{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;font-size:15px}
 dl.terms dt{font-family:var(--px);color:var(--violet)}
 dl.terms dd{margin:0;color:var(--muted)}
+@media (max-width:760px){
+  .j-layout{grid-template-columns:minmax(0,1fr)}
+  .j-tabs{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .j-tabs button{justify-content:center;padding:6px 4px;font-size:14px;gap:4px}
+  .j-tabs .jp{display:none}
+  .j-panel{padding:16px}
+  .j-presets{gap:6px}
+  .j-presets button{padding:10px}
+  .j-presets small{display:none}
+  .j-presets .j-pn{font-size:24px}
+  .j-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .j-nums{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
+  .j-step{gap:4px}
+  .j-step input[type=number]{width:52px}
+  .j-step .ibtn{width:30px;height:30px}
+  .j-segs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .j-sum{font-size:17px}
+  .j-head{flex-wrap:nowrap;align-items:flex-start}
+  .j-head-t{min-width:0}
+  .j-saved{font-size:12px;padding:3px 8px}
+}
+@media (prefers-reduced-motion:reduce){.j-panel{animation:none}}
+
+/* Como jogar: um ciclo desenhado, passos em cartões coloridos e termos com o valor atual da pessoa */
+.g-panel{gap:20px}
+.g-hero{display:flex;flex-direction:column;gap:16px;padding:18px;border-radius:12px;background:radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--violet) 26%,transparent),transparent 60%),radial-gradient(120% 140% at 100% 100%,color-mix(in srgb,var(--pink) 18%,transparent),transparent 60%),var(--panel2);border:2px solid color-mix(in srgb,var(--violet) 35%,var(--line))}
+.g-kicker{font-family:var(--num);font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink)}
+.g-hero h3{font-family:var(--px);font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.15;margin:4px 0 0}
+.g-hero h3 em{font-style:normal;color:var(--violet)}
+.g-loop{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;position:relative}
+.g-loop li{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;padding:10px 4px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,var(--panel));border:2px solid color-mix(in srgb,var(--c) 45%,transparent);position:relative}
+.g-loop li:not(:last-child)::after{content:"›";position:absolute;right:-7px;top:50%;translate:0 -50%;z-index:1;font-family:var(--px);font-size:16px;color:var(--muted)}
+.g-loop .g-ico{font-size:24px;line-height:1.1}
+.g-loop b{font-family:var(--px);font-size:13px;color:var(--c)}
+.g-loop small{font-family:var(--num);font-size:15px;color:var(--muted);line-height:1}
+.g-ico{display:inline-block;animation:gBob 3s ease-in-out infinite}
+.g-loop li:nth-child(2) .g-ico{animation-delay:.3s}.g-loop li:nth-child(3) .g-ico{animation-delay:.6s}.g-loop li:nth-child(4) .g-ico{animation-delay:.9s}.g-loop li:nth-child(5) .g-ico{animation-delay:1.2s}
+@keyframes gBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.g-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.g-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:start;padding:14px;border-radius:12px;background:var(--panel2);border-left:4px solid var(--c);position:relative;transition:transform .15s,box-shadow .15s}
+.g-steps li:hover{transform:translateY(-2px);box-shadow:0 6px 18px -10px var(--c)}
+.g-steps .g-n{position:absolute;top:10px;right:12px;font-family:var(--num);font-size:22px;line-height:1;color:color-mix(in srgb,var(--c) 70%,transparent)}
+.g-steps .g-ico{grid-row:1 / span 2;width:44px;height:44px;display:grid;place-items:center;font-size:24px;border-radius:12px;background:color-mix(in srgb,var(--c) 18%,transparent);animation:none}
+.g-steps b{display:block;font-family:var(--px);font-size:15px;padding-right:22px}
+.g-steps p{margin:2px 0 8px;font-size:14px;color:var(--ink);opacity:.85;line-height:1.4}
+.g-tip{display:inline-block;font-size:12px;line-height:1.35;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);border-radius:6px;padding:4px 8px}
+.g-terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.g-term{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:12px;background:var(--panel2);border:2px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.g-term-h{display:flex;align-items:center;gap:10px}
+.g-term-h .g-ico{width:36px;height:36px;display:grid;place-items:center;font-size:20px;border-radius:10px;background:color-mix(in srgb,var(--c) 18%,transparent);animation:none}
+.g-term-h b{font-family:var(--px);font-size:16px;color:var(--c)}
+.g-term-h .g-val{margin-left:auto;font-family:var(--num);font-size:22px;line-height:1;color:var(--ink)}
+.g-term p{margin:0;font-size:14px;line-height:1.4;color:var(--muted)}
+.g-meter{height:8px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,var(--panel));overflow:hidden}
+.g-meter i{display:block;height:100%;border-radius:99px;background:var(--c)}
+.g-how{font-size:12px;color:var(--c)}
+.g-end{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px;border-radius:12px;background:color-mix(in srgb,var(--matcha) 10%,var(--panel2))}
+.g-end > span{font-size:22px}
+.g-end p{flex:1 1 220px;margin:0;font-size:14px;color:var(--muted)}
+.g-end p b{color:var(--ink)}
+.tog-ico{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:color-mix(in srgb,var(--violet) 14%,transparent);font-size:17px}
+.tog > div{flex:1 1 auto}
+.tog.off{opacity:.55;cursor:default}
+/* Som: três blocos, cada um com três escolhas */
+.j-snd{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:var(--panel2)}
+.j-snd-h{display:flex;align-items:center;gap:12px}
+.j-snd-h > div{flex:1 1 auto;min-width:0}
+.j-snd-h h3{font-family:var(--px);font-size:16px;font-weight:600;margin:0}
+.j-snd-h p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.35}
+.j-snd-i{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-size:19px;background:color-mix(in srgb,var(--violet) 14%,transparent)}
+.j-snd .j-segs{background:var(--panel)}
+.j-snd .j-vol{padding:0}
+.j-snd.off .j-segs,.j-snd.off .j-vol{opacity:.4}
+.j-seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.j-segs button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.j-segs button > span{font-size:15px}
+.j-snd-h input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:none;width:44px;height:26px;margin:0;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background-color .18s}
+.j-snd-h input[type=checkbox]::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink);transition:transform .18s}
+.j-snd-h input:checked{background:var(--violet)}
+.j-snd-h input:checked::after{transform:translateX(18px);background:var(--on)}
+/* Cena: céu e clima no mesmo bloco */
+.j-first{border-top:0;padding-top:0}
+.j-sub{display:flex;flex-direction:column;gap:8px}
+.j-sub h4{margin:4px 0 0;font-family:var(--num);font-size:16px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.j-wx{grid-template-columns:repeat(3,minmax(0,1fr))}
+.j-wxbox{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:10px;border:2px dashed var(--line)}
+/* clima: campo, Buscar, A cada hora e localização na mesma altura (40px), numa grade */
+.j-wxgrid{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;grid-template-areas:"in bu au geo";gap:6px;align-items:stretch}
+.j-wx-in{grid-area:in;min-width:0}.j-wx-bu{grid-area:bu}.j-wx-au{grid-area:au}.j-wx-geo{grid-area:geo}
+.j-wxgrid > *{height:40px;min-height:40px;margin:0;box-sizing:border-box}
+.j-wxgrid .btn{padding:0 14px;font-size:13px}
+.j-wx-geo > span{font-size:15px}
+.j-wx-au{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;border:2px solid var(--line);border-radius:8px;background:var(--panel2);font-family:var(--px);font-weight:600;font-size:13px;color:var(--ink);cursor:pointer;white-space:nowrap;transition:border-color .15s}
+.j-wx-au:hover{border-color:color-mix(in srgb,var(--violet) 60%,var(--line))}
+.j-wx-au:has(input:checked){border-color:var(--violet)}
+.j-wx-au input{appearance:none;-webkit-appearance:none;flex:none;width:34px;height:20px;margin:0;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background-color .18s}
+.j-wx-au input::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--ink);transition:transform .18s}
+.j-wx-au input:checked{background:var(--violet)}
+.j-wx-au input:checked::after{transform:translateX(14px);background:var(--on)}
+.j-wx-au input:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+.j-wxbox .wx-status{margin:0;font-size:13px}
+@media (max-width:760px){
+  .j-wxgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"in in" "bu au" "geo geo"}
+}
+/* Dados: cartões de status e zona de perigo bem visível */
+.d-list{display:flex;flex-direction:column;gap:8px}
+.d-card{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;background:var(--panel2)}
+.d-card > div{flex:1 1 auto;min-width:0}
+.d-card b{font-family:var(--px);font-size:15px}
+.d-card p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.4;overflow-wrap:anywhere}
+.d-ico{flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-size:19px;background:color-mix(in srgb,var(--cyan) 14%,transparent)}
+.d-st:not(:empty)::before{content:"●";margin-right:6px;color:var(--matcha)}
+.danger{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:12px;border:2px solid var(--danger);background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--danger) 10%,transparent) 0 12px,color-mix(in srgb,var(--danger) 4%,transparent) 12px 24px),var(--panel2);box-shadow:0 0 0 4px color-mix(in srgb,var(--danger) 10%,transparent)}
+.danger-h{display:flex;align-items:center;gap:12px}
+.danger-i{flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:var(--danger);color:#2a0a0a;font-size:22px;font-weight:700;animation:dPulse 2.4s ease-in-out infinite}
+@keyframes dPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--danger) 55%,transparent)}50%{box-shadow:0 0 0 7px transparent}}
+.danger h3{margin:0;font-family:var(--px);font-size:17px;color:var(--danger)}
+.danger-h p{margin:2px 0 0;font-size:14px;color:var(--ink)}
+.danger-what{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.danger-what li{font-size:12px;padding:3px 9px;border-radius:99px;color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 50%,transparent)}
+.btn.danger-btn{--bc:var(--danger);background:var(--danger);color:#2a0a0a;align-self:flex-start}
+.btn.danger-btn:hover:not(:disabled){background:color-mix(in srgb,var(--danger) 85%,#fff)}
+.danger-ask{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:10px;background:color-mix(in srgb,var(--danger) 16%,var(--panel));animation:jIn .18s ease-out}
+.danger-ask p{margin:0;font-size:14px}
+.danger-ask b{color:var(--danger)}
+.danger-row{display:flex;gap:8px;flex-wrap:wrap}
+@media (max-width:760px){
+  .g-hero{padding:14px}
+  .g-loop{gap:4px}
+  .g-loop li{padding:8px 2px}
+  .g-loop .g-ico{font-size:20px}
+  .g-loop b{font-size:11px}
+  .g-loop small{font-size:13px}
+  .g-loop li:not(:last-child)::after{display:none}
+  .g-steps,.g-terms{grid-template-columns:minmax(0,1fr)}
+  .j-seg3 button{flex-direction:column;gap:2px;font-size:12px;padding:6px 4px}
+  .j-wx{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .j-wx button{font-size:12px;padding:6px 4px}
+}
+@media (prefers-reduced-motion:reduce){.g-ico,.danger-i{animation:none}}
+
+/* Mini timer: botão no dojo */
+#pipBtn{background:rgba(10,8,25,.66);color:#fff7ea;border-color:rgba(244,240,255,.25)}
+#pipBtn[hidden]{display:none}
 
 /* Resumo */
 .scroll-card{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:18px;position:relative}
@@ -726,12 +969,20 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
 .dsel-pop li span{min-width:0;overflow-wrap:anywhere}
 /* Transições: troca de aba e avisos entram suaves */
 .view:not([hidden]){animation:viewIn .24s ease-out}
+#sumBody.swap{animation:sumSwap .18s ease-out}
+@keyframes sumSwap{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#sumBody.swap{animation:none}}
 @keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .toast:not([hidden]){animation:toastIn .22s ease-out}
 .toast.out{animation:toastOut .2s ease-in forwards}
 @keyframes toastIn{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
 @keyframes toastOut{to{opacity:0;translate:0 10px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Tipografia: leitura do português */
+body{font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"kern"}
+p,.small,.quote,.dl-sub,.next-sub{text-wrap:pretty}
+.dl-row .mono,#view-dojo .dl-row .mono{font-size:12px}
 </style>
 
 <canvas id="skybg" aria-hidden="true"></canvas>
@@ -744,11 +995,11 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
   <header class="top">
     <div class="brand">
       <span class="brand-ico" data-ico="torii"></span>
-      <div><h1>DOJO DO FOCO</h1><div class="mono">Pomodoro · 集中の道</div></div>
+      <div><h1>DOJO DO FOCO</h1><div class="mono">Pomodoro de estudos</div></div>
     </div>
     <div class="top-mid mono">Sem pressa. Sem culpa.<br>Só o próximo passo.</div>
     <div class="top-right">
-      <button class="pill" id="wxPill" data-go="jogo" title="Clima: ajuste na aba Jogo"></button>
+      <button class="pill" id="wxPill" data-go="jogo" data-jtab="cena" title="Clima: ajuste em Jogo → Cena"></button>
       <span class="pill" id="clockPill"></span>
       <span class="pill" id="todayPill"></span>
     </div>
@@ -773,12 +1024,13 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
           <button type="button" class="dj-me" id="djMe" data-go="perfil" title="Ver perfil"></button>
           <div class="dj-ctrl">
             <div class="seg" id="seg" aria-label="Fase">
-              <button data-phase="focus">集中 Foco</button>
-              <button data-phase="short">休憩 Pausa</button>
-              <button data-phase="long">温泉 Onsen</button>
+              <button data-phase="focus">Foco</button>
+              <button data-phase="short">Pausa</button>
+              <button data-phase="long">Onsen</button>
             </div>
             <label class="scene-pick dj-chip"><span class="sr-only">Reino</span><select id="sceneSel" aria-label="Reino"></select></label>
             <button class="btn sm outline" id="realmBtn" type="button" title="Ver o reino em 3D, sem distrações">🌄 3D</button>
+            <button class="btn sm outline" id="pipBtn" type="button" title="Timer pequeno que fica por cima das outras janelas" hidden>⧉ Mini timer</button>
           </div>
         </div>
 
@@ -803,7 +1055,7 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
         <div class="dj-grid">
           <div class="card" id="missionCard"></div>
           <div class="card">
-            <div class="mono">Pergaminho · 巻物</div>
+            <div class="mono">Pergaminho</div>
             <p class="small" style="margin:6px 0 10px">Pensou em outra coisa? Anote e volte.</p>
             <div class="inrow">
               <input type="text" id="scrollIn" placeholder="ex.: responder a Ana" maxlength="120" aria-label="Anotar distração">
@@ -836,12 +1088,12 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
     <section class="view" id="view-missoes" hidden>
       <div class="m-wrap">
         <div class="m-head">
-          <h2 class="m-title">Missões <em class="jp">任務</em></h2>
+          <h2 class="m-title">Missões</h2>
           <div class="m-tabs" role="tablist" aria-label="Partes das missões">
-            <button type="button" role="tab" data-mtab="estudo" id="mt-estudo" aria-controls="mp-estudo"><span class="jp" aria-hidden="true">学</span>Estudo<span class="n" id="mc-estudo"></span></button>
-            <button type="button" role="tab" data-mtab="pausa" id="mt-pausa" aria-controls="mp-pausa"><span class="jp" aria-hidden="true">休</span>Pausa<span class="n" id="mc-pausa"></span></button>
-            <button type="button" role="tab" data-mtab="perg" id="mt-perg" aria-controls="mp-perg"><span class="jp" aria-hidden="true">巻</span>Pergaminho<span class="n" id="mc-perg"></span></button>
-            <button type="button" role="tab" data-mtab="diario" id="mt-diario" aria-controls="mp-diario"><span class="jp" aria-hidden="true">記</span>Diário</button>
+            <button type="button" role="tab" data-mtab="estudo" id="mt-estudo" aria-controls="mp-estudo">Estudo<span class="n" id="mc-estudo"></span></button>
+            <button type="button" role="tab" data-mtab="pausa" id="mt-pausa" aria-controls="mp-pausa">Pausa<span class="n" id="mc-pausa"></span></button>
+            <button type="button" role="tab" data-mtab="perg" id="mt-perg" aria-controls="mp-perg">Pergaminho<span class="n" id="mc-perg"></span></button>
+            <button type="button" role="tab" data-mtab="diario" id="mt-diario" aria-controls="mp-diario">Diário</button>
           </div>
         </div>
 
@@ -884,7 +1136,7 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
     <!-- PERFIL -->
     <section class="view" id="view-perfil" hidden>
       <div class="stack">
-        <div class="page-h"><h2>Personagens <em class="jp">人物</em></h2><span class="mono">Crie, edite e escolha quem estuda com você</span></div>
+        <div class="page-h"><h2>Personagens</h2><span class="mono">Crie, edite e escolha quem estuda com você</span></div>
         <div class="cols">
           <div class="card" id="editor"></div>
           <div class="stack">
@@ -900,7 +1152,7 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
             </div>
             <div class="card"><h3>Título e caminho</h3><ol class="path" id="path"></ol></div>
             <div class="card"><h3>Atributos do seu estudo</h3><div class="stats4" id="stats4"></div></div>
-            <div class="card"><h3>Conquistas <span class="mono" id="achCount"></span></h3><div class="ach" id="ach"></div></div>
+            <div class="card"><h3>Conquistas <span class="mono" id="achCount"></span></h3><ul class="ach" id="ach"></ul></div>
             <div class="card">
               <h3>Loja de recompensas <span class="cost" id="shopRyo"></span></h3>
               <ul class="list" id="rewards" style="gap:6px"></ul>
@@ -915,103 +1167,196 @@ button.pill:hover{border-color:color-mix(in srgb,var(--pink) 55%,var(--line))}
       </div>
     </section>
 
-    <!-- JOGO -->
+    <!-- JOGO: ajustes em abas (uma parte de cada vez). Ordem: aprender (Como jogar), o mais usado (Ritmo) e, por último, Dados com a zona de perigo. -->
     <section class="view" id="view-jogo" hidden>
-      <div class="stack">
-        <div class="page-h"><h2>Especificações <em class="jp">設定</em></h2><span class="mono">Ajuste o jogo ao seu ritmo</span></div>
-        <div class="cols">
-          <div class="stack">
-            <div class="card set">
-              <h3>Ritmo</h3>
-              <div class="presets" id="presets">
-                <button class="btn sm" data-preset="15,5,15">15 / 5 leve</button>
-                <button class="btn sm" data-preset="25,5,15">25 / 5 clássico</button>
-                <button class="btn sm" data-preset="50,10,30">50 / 10 profundo</button>
-              </div>
-              <div class="set-grid">
-                <label>Foco (min)<input type="number" id="cfg-focus" min="1" max="90"></label>
-                <label>Pausa curta (min)<input type="number" id="cfg-short" min="1" max="30"></label>
-                <label>Pausa longa (min)<input type="number" id="cfg-long" min="5" max="60"></label>
-                <label>Ciclos até a pausa longa<input type="number" id="cfg-cycles" min="2" max="8"></label>
-                <label>Meta diária (pomodoros)<input type="number" id="cfg-goal" min="1" max="24"></label>
-                <label>Horário do resumo<input type="time" id="cfg-summaryAt"></label>
-              </div>
-            </div>
-            <div class="card set">
-              <h3>Ajuda para o foco</h3>
-              <label class="tog"><input type="checkbox" id="cfg-focusMode"><div><b>Modo foco</b><span>Durante a batalha, esconde tudo menos a cena, o timer e o seu plano.</span></div></label>
-              <label class="tog"><input type="checkbox" id="cfg-auto"><div><b>Começar a próxima fase sozinho</b><span>A pausa começa assim que você salva a revisão, e o foco volta quando a pausa acaba.</span></div></label>
-              <label class="tog"><input type="checkbox" id="cfg-penalties"><div><b>Penalidades</b><span>Desistir do foco custa 15 de energia e pular a pausa custa 10. Desligado, o jogo só te encoraja.</span></div></label>
-            </div>
-            <div class="card set">
-              <h3>Som e céu</h3>
-              <label class="tog"><input type="checkbox" id="cfg-sound"><div><b>Sino, gongo e moedas</b><span>Inclui um aviso suave 1 minuto antes do fim de cada fase.</span></div></label>
-              <div class="inrow" style="align-items:center"><span class="small" style="flex:0 0 auto">Volume</span><input type="range" id="cfg-vol" min="0" max="1" step="0.05" style="flex:1 1 140px"><button class="btn sm" id="testSound" type="button">Testar</button></div>
-              <label class="tog"><input type="checkbox" id="cfg-music"><div><b>Música nas pausas</b><span>Uma música lo-fi tranquila começa junto com a pausa e para quando ela acaba.</span></div></label>
-              <div class="inrow" style="align-items:center"><span class="small" style="flex:0 0 auto">Volume da música</span><input type="range" id="cfg-musicVol" min="0" max="1" step="0.05" style="flex:1 1 140px"><button class="btn sm" id="testMusic" type="button">Ouvir</button></div>
-              <div class="presets" id="skyOpts">
-                <button class="btn sm" data-sky="auto">Seguir o horário</button>
-                <button class="btn sm" data-sky="dia">Sempre dia</button>
-                <button class="btn sm" data-sky="por">Pôr do sol</button>
-                <button class="btn sm" data-sky="noite">Sempre noite</button>
-              </div>
-            </div>
-            <div class="card set">
-              <h3>Reino</h3>
-              <p class="small">Onde o seu herói estuda. A batalha, o chá e o onsen acontecem em qualquer um deles.</p>
-              <div class="presets" id="sceneOpts"></div>
-              <label class="tog" style="margin-top:12px"><input type="checkbox" id="cfg-bg3d"><div><b>Reino em 3D no fundo</b><span>Uma paisagem animada em 3D (three.js) atrás do jogo, do mesmo reino. Desligue se o computador ficar lento.</span></div></label>
-            </div>
-            <div class="card set" id="cloudCard" hidden>
-              <h3>Conta</h3>
-              <p class="small" id="cloudInfo"></p>
-              <p class="wx-status" id="cloudStatus"></p>
-              <button class="btn sm" id="cloudOut" type="button">Sair da conta</button>
-            </div>
-            <div class="card set">
-              <h3>Obsidian</h3>
-              <p class="small" id="vaultInfo"></p>
-              <p class="wx-status" id="vaultStatus"></p>
-            </div>
-            <div class="card set">
-              <h3>Clima</h3>
-              <p class="small">A cena e o fundo da página mostram o tempo lá fora: nuvens, chuva, tempestade, neblina ou neve. A previsão vem da Open-Meteo, um serviço gratuito.</p>
-              <div class="inrow">
-                <input type="text" id="wxCity" maxlength="60" placeholder="Sua cidade, ex.: Recife" aria-label="Cidade">
-                <button class="btn sm primary" id="wxFetch" type="button">Buscar clima</button>
-                <button class="btn sm" id="wxGeo" type="button" hidden>Usar minha localização</button>
-              </div>
-              <p class="wx-status" id="wxStatus"></p>
-              <label class="tog"><input type="checkbox" id="wxAuto"><div><b>Atualizar sozinho a cada hora</b><span id="wxAutoHint">Funciona no site publicado, no servidor local e no app Claude para desktop.</span></div></label>
-              <div class="mono" style="margin-top:4px">Ou escolha o clima</div>
-              <div class="presets" id="wxOpts"></div>
-            </div>
+      <div class="j-wrap">
+        <div class="j-head">
+          <div class="j-head-t">
+            <h2 class="m-title">Ajustes</h2>
+            <p class="j-sum" id="jSum"></p>
           </div>
-          <div class="stack">
-            <div class="card">
-              <h3>Regras do dojo</h3>
-              <ol class="rules">
-                <li>Escolha uma missão e escreva numa linha o que vai fazer.</li>
-                <li>Foque numa coisa só até o sino. O yōkai perde vida enquanto você estuda.</li>
-                <li>Distração? Anote no pergaminho e volte. Ela espera a pausa.</li>
-                <li>No sino, conte o que conseguiu e vá para a casa de chá. Longe da tela.</li>
-                <li>A cada ciclo vem o chefe. Vencendo, você ganha o onsen: a pausa longa.</li>
-                <li>No fim do dia, leia o seu resumo e ajuste o plano de amanhã.</li>
+          <span class="j-saved" title="Não precisa de botão de salvar">✓ Salva sozinho</span>
+        </div>
+        <div class="j-layout">
+          <div class="m-tabs j-tabs" role="tablist" aria-label="Partes dos ajustes">
+            <button type="button" role="tab" data-jtab="guia" id="jt-guia" aria-controls="jp-guia">Como jogar</button>
+            <button type="button" role="tab" data-jtab="ritmo" id="jt-ritmo" aria-controls="jp-ritmo">Ritmo</button>
+            <button type="button" role="tab" data-jtab="foco" id="jt-foco" aria-controls="jp-foco">Foco</button>
+            <button type="button" role="tab" data-jtab="som" id="jt-som" aria-controls="jp-som">Som</button>
+            <button type="button" role="tab" data-jtab="cena" id="jt-cena" aria-controls="jp-cena">Cena</button>
+            <button type="button" role="tab" data-jtab="dados" id="jt-dados" aria-controls="jp-dados">Dados</button>
+          </div>
+
+          <!-- COMO JOGAR -->
+          <div class="card j-panel g-panel" role="tabpanel" id="jp-guia" aria-labelledby="jt-guia" hidden>
+            <div class="g-hero">
+              <div class="g-hero-t">
+                <span class="g-kicker">Como jogar</span>
+                <h3>Estude em batalhas curtas.<br><em>Sua personagem luta junto.</em></h3>
+              </div>
+              <ol class="g-loop" aria-label="Um ciclo do jogo">
+                <li style="--c:var(--gold)"><span class="g-ico" aria-hidden="true">📜</span><b>Plano</b><small>1 linha</small></li>
+                <li style="--c:var(--violet)"><span class="g-ico" aria-hidden="true">⚔️</span><b>Foco</b><small id="gLoopF">25 min</small></li>
+                <li style="--c:var(--matcha)"><span class="g-ico" aria-hidden="true">🍵</span><b>Chá</b><small id="gLoopS">5 min</small></li>
+                <li style="--c:var(--pink)"><span class="g-ico" aria-hidden="true">👹</span><b>Chefe</b><small id="gLoopB">4º foco</small></li>
+                <li style="--c:var(--cyan)"><span class="g-ico" aria-hidden="true">♨️</span><b>Onsen</b><small id="gLoopL">15 min</small></li>
               </ol>
             </div>
-            <div class="card">
-              <h3>Termos</h3>
-              <dl class="terms">
-                <dt>XP</dt><dd>Vem de pomodoros, pausas, passos e missões. Sobe nível e título.</dd>
-                <dt>Energia</dt><dd>Cada foco cansa um pouco e cada pausa recupera. Abaixo de 30, o herói pede descanso.</dd>
-                <dt>Ryō</dt><dd>Moedas para trocar por recompensas reais que você define.</dd>
-                <dt>Salvo</dt><dd>Tudo fica guardado neste navegador, neste aparelho.</dd>
-              </dl>
+
+            <div class="j-group g-sec">
+              <h3>Passo a passo</h3>
+              <ol class="g-steps">
+                <li style="--c:var(--gold)"><span class="g-n">1</span><span class="g-ico" aria-hidden="true">📜</span><div><b>Escolha a missão</b><p>Escreva numa linha o que vai fazer agora.</p><span class="g-tip">Dica: “ler 5 páginas” é melhor que “estudar história”.</span></div></li>
+                <li style="--c:var(--violet)"><span class="g-n">2</span><span class="g-ico" aria-hidden="true">⚔️</span><div><b>Foque até o sino</b><p>Uma coisa só. O yōkai perde vida enquanto você estuda.</p><span class="g-tip">Dica: marcar um passo solta um golpe especial.</span></div></li>
+                <li style="--c:var(--pink)"><span class="g-n">3</span><span class="g-ico" aria-hidden="true">🪶</span><div><b>Distraiu? Anote</b><p>Escreva no pergaminho e volte. Ela espera a pausa.</p><span class="g-tip">Dica: não resolva agora, só anote.</span></div></li>
+                <li style="--c:var(--matcha)"><span class="g-n">4</span><span class="g-ico" aria-hidden="true">🍵</span><div><b>Pausa de verdade</b><p>No sino, conte como foi e saia da tela.</p><span class="g-tip">Dica: água, alongar, olhar para longe.</span></div></li>
+                <li style="--c:var(--danger)"><span class="g-n">5</span><span class="g-ico" aria-hidden="true">👹</span><div><b>Vença o chefe</b><p>O último foco do ciclo é o chefe. Depois, onsen.</p><span class="g-tip">Dica: o chefe dá mais XP e ryō.</span></div></li>
+                <li style="--c:var(--cyan)"><span class="g-n">6</span><span class="g-ico" aria-hidden="true">🌙</span><div><b>Leia o resumo</b><p>No fim do dia, veja a sua carta e ajuste amanhã.</p><span class="g-tip">Dica: está na aba Resumo.</span></div></li>
+              </ol>
             </div>
-            <div class="card set">
-              <h3>Recomeçar do zero</h3>
-              <p class="small">Apaga herói, missões, histórico e resumos deste navegador.</p>
-              <div><button class="btn sm warn" id="resetBtn" type="button">Apagar progresso</button></div>
+
+            <div class="j-group g-sec">
+              <h3>O que cada coisa significa</h3>
+              <div class="g-terms" id="gTerms"></div>
+            </div>
+
+            <div class="g-end">
+              <span aria-hidden="true">🧡</span><p><b>Sem culpa.</b> Desistir ou pular não apaga nada. O jogo só conta o que você fez.</p>
+              <button class="btn sm primary" type="button" data-go="dojo">Ir para o dojo</button>
+            </div>
+          </div>
+
+          <!-- RITMO -->
+          <div class="card j-panel" role="tabpanel" id="jp-ritmo" aria-labelledby="jt-ritmo" hidden>
+            <p class="j-lead">Quanto dura cada fase. Vale para a próxima batalha.</p>
+            <div class="j-presets" id="presets">
+              <button type="button" data-preset="15,5,15"><b>Leve</b><span class="j-pn">15 · 5</span><small>Para começar ou dias cansados</small></button>
+              <button type="button" data-preset="25,5,15"><b>Clássico</b><span class="j-pn">25 · 5</span><small>O pomodoro tradicional</small></button>
+              <button type="button" data-preset="50,10,30"><b>Profundo</b><span class="j-pn">50 · 10</span><small>Para tarefas longas</small></button>
+            </div>
+            <div class="j-cyc">
+              <div class="j-cyc-bar" id="jCycBar" aria-hidden="true"></div>
+              <p class="j-cyc-t" id="jCycTxt"></p>
+            </div>
+            <details class="j-more" id="jMore">
+              <summary>Personalizar os minutos</summary>
+              <div class="j-nums">
+                <div class="j-num"><label for="cfg-focus">Foco (min)</label><span class="j-step"><button type="button" class="ibtn" data-jstep="focus" data-d="-5" aria-label="Menos 5 minutos de foco">−</button><input type="number" id="cfg-focus" min="1" max="90" inputmode="numeric"><button type="button" class="ibtn" data-jstep="focus" data-d="5" aria-label="Mais 5 minutos de foco">+</button></span></div>
+                <div class="j-num"><label for="cfg-short">Pausa curta (min)</label><span class="j-step"><button type="button" class="ibtn" data-jstep="short" data-d="-1" aria-label="Menos 1 minuto de pausa curta">−</button><input type="number" id="cfg-short" min="1" max="30" inputmode="numeric"><button type="button" class="ibtn" data-jstep="short" data-d="1" aria-label="Mais 1 minuto de pausa curta">+</button></span></div>
+                <div class="j-num"><label for="cfg-long">Pausa longa (min)</label><span class="j-step"><button type="button" class="ibtn" data-jstep="long" data-d="-5" aria-label="Menos 5 minutos de pausa longa">−</button><input type="number" id="cfg-long" min="5" max="60" inputmode="numeric"><button type="button" class="ibtn" data-jstep="long" data-d="5" aria-label="Mais 5 minutos de pausa longa">+</button></span></div>
+                <div class="j-num"><label for="cfg-cycles">Focos por ciclo</label><span class="j-step"><button type="button" class="ibtn" data-jstep="cycles" data-d="-1" aria-label="Um foco a menos por ciclo">−</button><input type="number" id="cfg-cycles" min="2" max="8" inputmode="numeric"><button type="button" class="ibtn" data-jstep="cycles" data-d="1" aria-label="Um foco a mais por ciclo">+</button></span></div>
+              </div>
+            </details>
+            <div class="j-group">
+              <h3>Meta do dia</h3>
+              <div class="j-nums">
+                <div class="j-num"><label for="cfg-goal">Pomodoros por dia</label><span class="j-step"><button type="button" class="ibtn" data-jstep="goal" data-d="-1" aria-label="Um pomodoro a menos na meta">−</button><input type="number" id="cfg-goal" min="1" max="24" inputmode="numeric"><button type="button" class="ibtn" data-jstep="goal" data-d="1" aria-label="Um pomodoro a mais na meta">+</button></span></div>
+                <div class="j-num"><label for="cfg-summaryAt">Hora do resumo</label><span class="j-step"><input type="time" id="cfg-summaryAt"></span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FOCO -->
+          <div class="card j-panel" role="tabpanel" id="jp-foco" aria-labelledby="jt-foco" hidden>
+            <p class="j-lead">Como o jogo te ajuda a ficar na tarefa.</p>
+            <div class="j-list">
+              <label class="tog"><span class="tog-ico" aria-hidden="true">🎯</span><div><b>Modo foco</b><span>Na batalha, só a cena, o timer e o seu plano.</span></div><input type="checkbox" role="switch" id="cfg-focusMode"></label>
+              <label class="tog" id="pipTog"><span class="tog-ico" aria-hidden="true">⧉</span><div><b>Mini timer flutuante</b><span id="pipHint">Abre ao começar o foco e fica por cima das outras janelas.</span></div><input type="checkbox" role="switch" id="cfg-pip"></label>
+              <label class="tog"><span class="tog-ico" aria-hidden="true">🔁</span><div><b>Seguir sozinho</b><span>A próxima fase começa sem precisar tocar.</span></div><input type="checkbox" role="switch" id="cfg-auto"></label>
+              <label class="tog"><span class="tog-ico" aria-hidden="true">⚡</span><div><b>Penalidades</b><span>Desistir ou pular a pausa custa energia.</span></div><input type="checkbox" role="switch" id="cfg-penalties"></label>
+            </div>
+          </div>
+
+          <!-- SOM -->
+          <div class="card j-panel" role="tabpanel" id="jp-som" aria-labelledby="jt-som" hidden>
+            <p class="j-lead">Toque numa opção para ouvir.</p>
+            <div class="j-snd">
+              <div class="j-snd-h"><span class="j-snd-i" aria-hidden="true">🔔</span><div><h3>Aviso do sino</h3><p>Fim de cada fase e 1 minuto antes.</p></div><input type="checkbox" role="switch" id="cfg-sound" aria-label="Avisos ligados"></div>
+              <div class="j-chips j-segs j-seg3" id="alarmOpts" role="group" aria-label="Som do aviso">
+                <button type="button" data-alarm="sino"><span aria-hidden="true">🛕</span>Sino</button>
+                <button type="button" data-alarm="furin"><span aria-hidden="true">🎐</span>Fūrin</button>
+                <button type="button" data-alarm="retro"><span aria-hidden="true">👾</span>Retrô</button>
+              </div>
+              <div class="j-vol" id="jVolSfx"><span aria-hidden="true">🔈</span><input type="range" id="cfg-vol" min="0" max="1" step="0.05" aria-label="Volume dos avisos"><span aria-hidden="true">🔊</span></div>
+            </div>
+            <div class="j-snd">
+              <div class="j-snd-h"><span class="j-snd-i" aria-hidden="true">⚔️</span><div><h3>Fundo do foco</h3><p id="ambHint"></p></div></div>
+              <div class="j-chips j-segs j-seg3" id="ambOpts" role="group" aria-label="Som de fundo durante o foco">
+                <button type="button" data-amb="off"><span aria-hidden="true">🤫</span>Silêncio</button>
+                <button type="button" data-amb="marrom"><span aria-hidden="true">🌰</span>Ruído marrom</button>
+                <button type="button" data-amb="rosa"><span aria-hidden="true">🌸</span>Ruído rosa</button>
+              </div>
+            </div>
+            <div class="j-snd">
+              <div class="j-snd-h"><span class="j-snd-i" aria-hidden="true">🍵</span><div><h3>Som da pausa</h3><p>Começa com a pausa e para quando ela acaba.</p></div></div>
+              <div class="j-chips j-segs j-seg3" id="brkOpts" role="group" aria-label="Som durante a pausa">
+                <button type="button" data-brk="lofi"><span aria-hidden="true">🎶</span>Lo-fi</button>
+                <button type="button" data-brk="caixinha"><span aria-hidden="true">🎼</span>Caixinha</button>
+                <button type="button" data-brk="off"><span aria-hidden="true">🤫</span>Silêncio</button>
+              </div>
+              <div class="j-vol" id="jVolMus"><span aria-hidden="true">🔈</span><input type="range" id="cfg-musicVol" min="0" max="1" step="0.05" aria-label="Volume do fundo e da música"><span aria-hidden="true">🔊</span></div>
+            </div>
+          </div>
+
+          <!-- CENA -->
+          <div class="card j-panel" role="tabpanel" id="jp-cena" aria-labelledby="jt-cena" hidden>
+            <div class="j-group j-first">
+              <h3>Reino</h3>
+              <div class="j-chips j-grid" id="sceneOpts"></div>
+            </div>
+            <div class="j-group">
+              <h3>Céu e clima</h3>
+              <div class="j-sub">
+                <h4>Hora do dia</h4>
+                <div class="j-chips j-segs" id="skyOpts">
+                  <button type="button" data-sky="auto"><span aria-hidden="true">🕒</span>Automático</button>
+                  <button type="button" data-sky="dia"><span aria-hidden="true">☀️</span>Dia</button>
+                  <button type="button" data-sky="por"><span aria-hidden="true">🌇</span>Pôr do sol</button>
+                  <button type="button" data-sky="noite"><span aria-hidden="true">🌙</span>Noite</button>
+                </div>
+              </div>
+              <div class="j-sub">
+                <h4>Tempo</h4>
+                <div class="j-chips j-segs j-wx" id="wxOpts"></div>
+                <div class="j-wxbox" id="wxBox">
+                  <div class="j-wxgrid">
+                    <input type="text" id="wxCity" class="j-wx-in" maxlength="60" placeholder="Sua cidade" aria-label="Cidade">
+                    <button class="btn sm primary j-wx-bu" id="wxFetch" type="button">Buscar</button>
+                    <label class="j-wx-au"><input type="checkbox" role="switch" id="wxAuto"><span>A cada hora</span></label>
+                    <button class="btn sm j-wx-geo" id="wxGeo" type="button" hidden><span aria-hidden="true">📍</span>Sua localização</button>
+                  </div>
+                  <p class="wx-status" id="wxStatus" aria-live="polite"></p>
+                </div>
+              </div>
+            </div>
+            <div class="j-group">
+              <h3>Desempenho</h3>
+              <label class="tog"><span class="tog-ico" aria-hidden="true">🌄</span><div><b>Paisagem 3D</b><span>Mais bonita, mais pesada.</span></div><input type="checkbox" role="switch" id="cfg-bg3d"></label>
+            </div>
+          </div>
+
+          <!-- DADOS -->
+          <div class="card j-panel" role="tabpanel" id="jp-dados" aria-labelledby="jt-dados" hidden>
+            <p class="j-lead">Onde o seu progresso fica guardado.</p>
+            <div class="d-list">
+              <div class="d-card" id="cloudCard" hidden>
+                <span class="d-ico" aria-hidden="true">☁️</span>
+                <div><b>Conta</b><p id="cloudInfo"></p><p class="d-st" id="cloudStatus"></p></div>
+                <button class="btn sm" id="cloudOut" type="button">Sair</button>
+              </div>
+              <div class="d-card">
+                <span class="d-ico" aria-hidden="true">🗂️</span>
+                <div><b>Obsidian</b><p id="vaultInfo"></p><p class="d-st" id="vaultStatus"></p></div>
+              </div>
+            </div>
+            <div class="danger" id="danger">
+              <div class="danger-h"><span class="danger-i" aria-hidden="true">⚠</span><div><h3>Zona de perigo</h3><p>Apaga tudo e não dá para desfazer.</p></div></div>
+              <ul class="danger-what" aria-label="O que é apagado"><li>Personagens</li><li>Nível e ryō</li><li>Missões</li><li>Histórico</li><li>Resumos</li></ul>
+              <button class="btn danger-btn" id="resetBtn" type="button">Apagar todo o progresso</button>
+              <div class="danger-ask" id="resetAsk" hidden role="alertdialog" aria-labelledby="resetQ">
+                <p id="resetQ"><b>Tem certeza?</b> Isso não volta.</p>
+                <div class="danger-row"><button class="btn sm" id="resetNo" type="button">Cancelar</button><button class="btn sm danger-btn" id="resetYes" type="button">Sim, apagar tudo</button></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1097,7 +1442,13 @@ const ICONS = {
   sword:['..........##','.........###','........###.','.......###..','......###...','.#...###....','..#.###.....','...###......','..###.......','.##.#.......','##...#......','#...........'],
   cup:['..#..#......','...#..#.....','..#..#......','............','#########...','##########..','#########.#.','#########.#.','##########..','.#######....','..#####.....','............'],
   tomato:['.....#......','...#.#.#....','....###.....','..########..','.##########.','############','############','############','.##########.','.##########.','..########..','....####....'],
-  flame:['.....#......','.....##.....','....###.....','....####....','...#####.#..','..#########.','..#########.','.####.#####.','.###...####.','.###...###..','..##...##...','...######...']
+  flame:['.....#......','.....##.....','....###.....','....####....','...#####.#..','..#########.','..#########.','.####.#####.','.###...####.','.###...###..','..##...##...','...######...'],
+  clock:['...######...','..#......#..','.#...##...#.','#....##....#','#....##....#','#....####..#','#....####..#','#..........#','#..........#','.#........#.','..#......#..','...######...'],
+  crown:['............','#....##....#','##..####..##','###.####.###','############','############','############','############','.##########.','............','############','############'],
+  flag:['##..........','##########..','###########.','###########.','##########..','##.#####....','##..........','##..........','##..........','##..........','##..........','####........'],
+  check:['............','...........#','..........##','.........###','........###.','#......###..','##....###...','###..###....','.######.....','..####......','...##.......','............'],
+  star:['.....##.....','.....##.....','....####....','....####....','############','.##########.','..########..','...######...','..###..###..','..##....##..','.##......##.','.#........#.'],
+  trophy:['############','#.########.#','#.########.#','.##########.','..########..','...######...','....####....','.....##.....','.....##.....','....####....','...######...','..########..']
 };
 function icon(name){
   const m = ICONS[name]; let r = '';
@@ -1331,7 +1682,9 @@ function pausaNorm(list, off){
 }
 function pausaInfo(x){ const p = PAUSE_BY_ID[x.id]; return x.own || !p ? { k:'心', txt:x.txt, g:'meu' } : p; }
 const LONG_ITEMS = ['Ficar longe de todas as telas','Caminhar 10 minutos','Fazer um lanche de verdade','Beber água ou chá','Alongar o corpo inteiro','Lembrar o que aprendeu no ciclo'];
-const ENERGY = { 1:'(－_－) cansado', 2:'(・_・) ok', 3:'(＾▽＾) animado' };
+const ENERGY = { 1:'Baixa', 2:'Média', 3:'Alta' };
+/* Barras de energia em pixel (como sinal de celular): as barras acima do nível ficam apagadas. */
+function energyIcon(v){ return `<svg class="ico en-ico" viewBox="0 0 11 11" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">${[4,7,11].map((h, i) => `<rect x="${i*4}" y="${11-h}" width="3" height="${h}" opacity="${i < v ? 1 : .25}"/>`).join('')}</svg>`; }
 const RESULTS = { tudo:'Tudo', parte:'Parte', travei:'Travei' };
 const TALK = [
   'Não precisa terminar hoje. Precisa só começar o próximo passo.',
@@ -1351,16 +1704,16 @@ const HAIR = ['#2a1f1a','#5a3a22','#c9a227','#b0402e','#e7e2f3','#6d4ad8'];
 const OUTFIT = ['#3c5aa8','#30364a','#f4f2ec','#d9822b','#4f7a4a','#8b5cf6'];
 const ACCENT = ['#c8442e','#e1b85a','#ff6fb5','#5ce1e6','#8a2f3a','#f4f2ec'];
 const ACH = [
-  { id:'first', k:'初', n:'Primeiro golpe', d:'Complete 1 pomodoro', f:()=>S.totals.pomos>=1 },
-  { id:'mini', k:'始', n:'Começar é vencer', d:'Use o botão Só 5 minutos', f:()=>S.totals.minis>=1 },
-  { id:'cycle', k:'四', n:'Quatro estações', d:'Derrote um chefe', f:()=>S.totals.longs>=1 },
-  { id:'tea', k:'茶', n:'Mestre do chá', d:'Complete 10 pausas', f:()=>S.totals.breaks>=10 },
-  { id:'goal', k:'志', n:'Determinação', d:'Bata a meta diária', f:()=>day().pomos>=S.cfg.goal },
-  { id:'steps', k:'歩', n:'Passo a passo', d:'Marque 10 passos', f:()=>S.totals.steps>=10 },
-  { id:'quest', k:'巻', n:'Pergaminhos fechados', d:'Conclua 5 missões', f:()=>S.totals.quests>=5 },
-  { id:'lvl5', k:'侍', n:'Verdadeiro samurai', d:'Chegue ao nível 5', f:()=>S.lvl>=5 },
-  { id:'streak', k:'炎', n:'Chama constante', d:'Estude 3 dias seguidos', f:()=>streak()>=3 },
-  { id:'hund', k:'百', n:'Cem batalhas', d:'Complete 100 pomodoros', f:()=>S.totals.pomos>=100 }
+  { id:'first', ic:'sword', n:'Primeiro golpe', d:'Complete 1 pomodoro', f:()=>S.totals.pomos>=1 },
+  { id:'mini', ic:'clock', n:'Começar é vencer', d:'Use o botão Só 5 minutos', f:()=>S.totals.minis>=1 },
+  { id:'cycle', ic:'crown', n:'Quatro estações', d:'Derrote um chefe', f:()=>S.totals.longs>=1 },
+  { id:'tea', ic:'cup', n:'Mestre do chá', d:'Complete 10 pausas', f:()=>S.totals.breaks>=10 },
+  { id:'goal', ic:'flag', n:'Determinação', d:'Bata a meta diária', f:()=>day().pomos>=S.cfg.goal },
+  { id:'steps', ic:'check', n:'Passo a passo', d:'Marque 10 passos', f:()=>S.totals.steps>=10 },
+  { id:'quest', ic:'scroll', n:'Pergaminhos fechados', d:'Conclua 5 missões', f:()=>S.totals.quests>=5 },
+  { id:'lvl5', ic:'star', n:'Verdadeiro samurai', d:'Chegue ao nível 5', f:()=>S.lvl>=5 },
+  { id:'streak', ic:'flame', n:'Chama constante', d:'Estude 3 dias seguidos', f:()=>streak()>=3 },
+  { id:'hund', ic:'trophy', n:'Cem batalhas', d:'Complete 100 pomodoros', f:()=>S.totals.pomos>=100 }
 ];
 
 function exampleTasks(){
@@ -1389,12 +1742,12 @@ function hasPerk(k){ return HERO().perk === k; }
 function fresh(){
   const c0 = newChar({ name:'Viajante', cls:'samurai' });
   return {
-    v:5,
+    v:6,
     chars:[c0], activeChar:c0.id, editChar:c0.id,
     wx:{ mode:'auto', manual:'limpo', city:'', geoCity:'', lat:null, lon:null, place:'', data:null, tabId:null, auto:false, status:'' },
     lvl:1, xp:0, hp:100, ryo:0,
     stats:{ foco:1, sab:1, disc:1, vit:1 },
-    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00', scene:'dojo', music:true, musicVol:0.5, bg3d:true },
+    cfg:{ focus:25, short:5, long:15, cycles:4, goal:8, auto:false, sound:true, vol:0.7, penalties:false, focusMode:true, sky:'auto', summaryAt:'22:00', scene:'dojo', music:true, musicVol:0.5, bg3d:false, alarm:'sino', amb:'off', musicKind:'lofi', pip:true },
     timer:{ phase:'focus', running:false, started:false, endAt:0, left:1500, total:1500, cycle:0, mini:false, miniDone:false, warned:false },
     enemyN:0,
     tasks:exampleTasks(), active:null, distr:[],
@@ -1432,6 +1785,11 @@ function merge(o){
     out.v = 4;
   }
   if (out.v < 5) { out.cfg.sky = 'auto'; out.v = 5; } /* o céu fixo ficava salvo e escondia o horário real */
+  if (out.cfg.amb === 'chuva') out.cfg.amb = 'marrom';
+  if (out.cfg.musicKind === 'chuva') out.cfg.musicKind = 'caixinha';
+  if (out.cfg.alarm === 'kalimba') out.cfg.alarm = 'furin';
+  if (/📍/.test(out.wx.status || '')) out.wx.status = ''; /* aviso antigo: o botão agora se chama Sua localização */
+  if (out.v < 6) { out.cfg.bg3d = false; out.cfg.focusMode = true; out.v = 6; } /* 3D pesa: começa desligado; modo foco começa ligado. Depois vale a escolha da pessoa. */
   out.tasks = (out.tasks || []).map(t => Object.assign({ cat:'ler', steps:[] }, t));
   out.pausaOff = Array.isArray(out.pausaOff) ? out.pausaOff.filter(id => PAUSE_BY_ID[id]) : [];
   out.pausa = pausaNorm(out.pausa, out.pausaOff);
@@ -1716,7 +2074,7 @@ function hurt(n){ S.hp = Math.max(0, S.hp - n); }
 function heal(n){ S.hp = Math.min(100, S.hp + n); }
 function checkAch(){
   ACH.forEach(a => {
-    if (!S.ach[a.id] && a.f()) { S.ach[a.id] = Date.now(); day().ach.push(a.id); addLog(`Conquista: ${a.n} ${a.k}`, 'gold'); toast(`Conquista desbloqueada: ${a.n} ${a.k}`); }
+    if (!S.ach[a.id] && a.f()) { S.ach[a.id] = Date.now(); day().ach.push(a.id); addLog(`Conquista: ${a.n}`, 'gold'); toast(`Conquista desbloqueada: ${a.n}`); }
   });
 }
 function pickBreakItems(p){
@@ -1753,12 +2111,32 @@ function tone(f, dur, { type='sine', vol=0.3, delay=0, slide=0 } = {}){
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   o.connect(g).connect(MG); o.start(t); o.stop(t + dur + 0.05);
 }
-function sfx(name){
-  if (!S.cfg.sound || !AC) return;
+/* Avisos em três timbres. A pesquisa (RMIT, PLoS ONE 2020) liga sons melódicos a menos sensação de "susto" que bipes ásperos,
+   então os dois primeiros são melódicos e o retrô fica curto e baixo. end = fim do foco, brk = fim da pausa, warn = falta 1 minuto. */
+function furin(f, d, v){ [[1, 1, 2.4], [2.76, .38, 1.1], [5.4, .16, .5]].forEach(([r, a, len]) => tone(f*r, len, { vol:v*a, delay:d + Math.random()*0.02 })); }
+const ALARMS = {
+  sino:{ n:'Sino de templo',
+    end(){ [1046,1568,2093].forEach((f,i) => tone(f, 2.6, { vol:0.2/(i+1) })); },
+    brk(){ [98,196,293,415].forEach((f,i) => tone(f, 4, { vol:0.42/(i+1), slide:0.985 })); },
+    warn(){ [659,784].forEach((f,i) => tone(f, 1.2, { vol:0.12, delay:i*0.18 })); } },
+  furin:{ n:'Fūrin',
+    /* sino de vento japonês: vidro fino, brilho agudo e parciais "tortas" (1 · 2,76 · 5,4) como num sino de verdade,
+       tocado algumas vezes como se o vento batesse. Diferente do sino de templo, que é grave e longo. */
+    end(){ [[1319,0],[1480,.28],[1319,.62],[1760,.95]].forEach(([f,d]) => furin(f, d, 0.11)); },
+    brk(){ [[1175,0],[988,.4],[1175,.9]].forEach(([f,d]) => furin(f, d, 0.1)); },
+    warn(){ furin(1480, 0, 0.08); } },
+  retro:{ n:'Retrô 8-bit',
+    end(){ [523,659,784,1046,1319].forEach((f,i) => tone(f, 0.16, { type:'square', vol:0.05, delay:i*0.09 })); },
+    brk(){ [784,659,523,392].forEach((f,i) => tone(f, 0.2, { type:'square', vol:0.05, delay:i*0.12 })); },
+    warn(){ [988,988].forEach((f,i) => tone(f, 0.09, { type:'square', vol:0.04, delay:i*0.16 })); } }
+};
+function sfx(name, force){
+  if ((!S.cfg.sound && !force) || !AC) return;
   MG.gain.value = S.cfg.vol;
-  if (name === 'rin') [1046,1568,2093].forEach((f,i) => tone(f, 2.6, { vol:0.2/(i+1) }));
-  if (name === 'gong') [98,196,293,415].forEach((f,i) => tone(f, 4, { vol:0.42/(i+1), slide:0.985 }));
-  if (name === 'chime') [659,784].forEach((f,i) => tone(f, 1.2, { vol:0.12, delay:i*0.18 }));
+  const A = ALARMS[S.cfg.alarm] || ALARMS.sino;
+  if (name === 'rin') A.end();
+  if (name === 'gong') A.brk();
+  if (name === 'chime') A.warn();
   if (name === 'coin') { tone(988, 0.08, { type:'square', vol:0.06 }); tone(1319, 0.2, { type:'square', vol:0.06, delay:0.08 }); }
   if (name === 'step') tone(880, 0.15, { type:'triangle', vol:0.12 });
   if (name === 'level') [523,659,784,1046].forEach((f,i) => tone(f, 0.25, { type:'square', vol:0.05, delay:i*0.1 }));
@@ -1818,17 +2196,37 @@ function musicStep(step, t, e){
   }
   if (bar === 7 && pos === 6) { voice('sine', mf(86), t, 0.05, 0.01, 2.2, out); voice('sine', mf(93), t + e, 0.035, 0.01, 2.2, out); }
 }
+/* Caixinha de música: arpejos lentos e agudos sobre os mesmos acordes do lo-fi, sem bateria, com respiros.
+   Cada nota é uma "lâmina" de caixinha: ataque rápido, cauda longa e um parcial agudo que some logo. */
+const BOX_ARP = [[0,2,1,3,2,1,null,2],[3,2,0,1,2,null,1,0]];
+function musicStepBox(step, t, e){
+  const bar = Math.floor(step/8) % 8, pos = step % 8, ch = MCHORDS[bar % 4], out = MUS.out;
+  if (pos === 0) {
+    const pf = AC.createBiquadFilter(); pf.type = 'lowpass'; pf.frequency.value = 900; pf.connect(out);
+    voice('sine', mf(MBASS[bar % 4] + 24), t, 0.06, 0.4, e*7, pf);
+    voice('sine', mf(ch[0]), t, 0.025, 1.2, e*7, pf);
+  }
+  const k = BOX_ARP[bar < 4 ? 0 : 1][pos];
+  if (k === null || (bar === 7 && pos > 4)) return;
+  const n = ch[k] + 12, tt = t + (Math.random() - 0.5)*0.012;
+  voice('sine', mf(n), tt, 0.1, 0.004, 1.9, out);
+  voice('sine', mf(n)*4.2, tt, 0.012, 0.002, 0.25, out);
+  if (pos === 0 && bar % 2 === 0) voice('triangle', mf(n + 12), tt + e*0.5, 0.03, 0.004, 1.4, out);
+}
 function musicTick(){
   if (!MUS.on || !AC) return;
-  const e = 60/MUS.bpm/2;
-  while (MUS.next < AC.currentTime + 0.35) { musicStep(MUS.step, MUS.next, e); MUS.next += e; MUS.step++; }
+  const e = 60/MUS.bpm/2, step = MUS.kind === 'caixinha' ? musicStepBox : musicStep;
+  while (MUS.next < AC.currentTime + 0.35) { step(MUS.step, MUS.next, e); MUS.next += e; MUS.step++; }
 }
-function musicStart(phase){
+function musicStart(phase, kind){
   if (!S.cfg.music) return;
   unlockAudio();
+  kind = kind || (S.cfg.musicKind === 'caixinha' ? 'caixinha' : 'lofi');
+  if (MUS.on && MUS.kind !== kind) musicStop();
   if (!AC || MUS.on) return;
   musicSetup();
-  MUS.on = true; MUS.bpm = phase === 'long' ? 62 : 72; MUS.step = 0;
+  MUS.on = true; MUS.kind = kind; MUS.step = 0;
+  MUS.bpm = kind === 'caixinha' ? (phase === 'long' ? 54 : 60) : (phase === 'long' ? 62 : 72);
   const t = AC.currentTime, master = AC.createGain(), lp = AC.createBiquadFilter(), verb = AC.createConvolver(), wet = AC.createGain();
   lp.type = 'lowpass'; lp.frequency.value = 3200; verb.buffer = MUS.ir; wet.gain.value = 0.32;
   master.gain.setValueAtTime(0.0001, t); master.gain.exponentialRampToValueAtTime(Math.max(0.001, S.cfg.musicVol), t + 2.5);
@@ -1843,10 +2241,71 @@ function musicStop(){
   try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(Math.max(0.0001, g.gain.value), t); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5); } catch(e){}
   setTimeout(() => { try { g.disconnect(); } catch(e){} }, 2600);
 }
-function musicVolume(v){ if (MUS.on && MUS.out) { const t = AC.currentTime; MUS.out.gain.cancelScheduledValues(t); MUS.out.gain.setTargetAtTime(Math.max(0.001, v), t, 0.2); } }
-function musicSync(){ const T = S.timer; if (T.phase !== 'focus' && T.running && S.cfg.music) musicStart(T.phase); else musicStop(); }
+function musicVolume(v){ if (!AC) return; const t = AC.currentTime; [MUS.on && MUS.out, AMB.out].forEach((g, i) => { if (!g) return; g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(Math.max(0.001, v*(i ? 0.7 : 1)), t, 0.2); }); }
+/* Som de fundo, feito no Web Audio (sem arquivos). Foco: silêncio, ruído marrom ou ruído rosa. Pausa: lo-fi, caixinha de música ou silêncio.
+   Ruído branco/rosa tem efeito pequeno e positivo em quem tem TDAH, mas pode atrapalhar quem não tem (meta-análise, JAACAP 2024),
+   por isso o padrão do foco é silêncio e a escolha fica com a pessoa. */
+const AMB = { kind:null, out:null, nodes:[], iv:0, bufs:{} };
+function ambBuf(kind){
+  if (AMB.bufs[kind]) return AMB.bufs[kind];
+  const len = AC.sampleRate * 6, b = AC.createBuffer(2, len, AC.sampleRate);
+  for (let c = 0; c < 2; c++) {
+    const d = b.getChannelData(c); let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, last = 0;
+    for (let i = 0; i < len; i++) {
+      const w = Math.random()*2 - 1;
+      if (kind === 'brown') { last = (last + 0.02*w)/1.02; d[i] = last*3.2; }
+      else { b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759; b2 = 0.969*b2 + w*0.153852; b3 = 0.8665*b3 + w*0.3104856; b4 = 0.55*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.016898; d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362)*0.11; b6 = w*0.115926; }
+    }
+    const f = Math.floor(AC.sampleRate*0.05); for (let i = 0; i < f; i++) { const k = i/f; d[i] *= k; d[len-1-i] *= k; } /* emenda do loop sem estalo */
+  }
+  return AMB.bufs[kind] = b;
+}
+function ambLoop(kind, dest, setup){ const src = AC.createBufferSource(); src.buffer = ambBuf(kind); src.loop = true; let n = src; (setup || []).forEach(x => { n.connect(x); n = x; }); n.connect(dest); src.start(); AMB.nodes.push(src); return src; }
+function ambStart(kind){
+  unlockAudio(); if (!AC) return;
+  if (AMB.kind === kind) return;
+  ambStop(true);
+  const t = AC.currentTime, out = AC.createGain();
+  out.gain.setValueAtTime(0.0001, t); out.gain.exponentialRampToValueAtTime(Math.max(0.001, S.cfg.musicVol*0.7), t + 3);
+  out.connect(AC.destination); AMB.out = out; AMB.kind = kind;
+  /* marrom: grave e macio (quase um rio ao longe). rosa: chiado leve, com os agudos cortados para não cansar. */
+  const hp = AC.createBiquadFilter(), lp = AC.createBiquadFilter(), g = AC.createGain();
+  hp.type = 'highpass'; lp.type = 'lowpass';
+  if (kind === 'marrom') { hp.frequency.value = 40; lp.frequency.value = 650; g.gain.value = 0.6; }
+  else { hp.frequency.value = 120; lp.frequency.value = 2200; g.gain.value = 0.3; }
+  ambLoop(kind === 'marrom' ? 'brown' : 'pink', out, [hp, lp, g]);
+  const lfo = AC.createOscillator(), lg = AC.createGain();
+  lfo.frequency.value = 0.07; lg.gain.value = g.gain.value*0.18; lfo.connect(lg).connect(g.gain); lfo.start(); AMB.nodes.push(lfo);
+}
+function ambStop(now){
+  if (!AMB.kind) return;
+  clearInterval(AMB.iv); AMB.iv = 0;
+  const out = AMB.out, nodes = AMB.nodes; AMB.kind = null; AMB.out = null; AMB.nodes = [];
+  const t = AC.currentTime, d = now ? 0.15 : 1.5;
+  try { out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(Math.max(0.0001, out.gain.value), t); out.gain.exponentialRampToValueAtTime(0.0001, t + d); } catch(e){}
+  setTimeout(() => { nodes.forEach(n => { try { n.stop(); } catch(e){} }); try { out.disconnect(); } catch(e){} }, d*1000 + 200);
+}
+let sndPrevT = 0, sndPrev = false;
+function sndPreview(kind){
+  unlockAudio(); clearTimeout(sndPrevT); sndPrev = false;
+  if (S.timer.running) { musicSync(); return; } /* com o timer andando, a troca já vale na hora */
+  musicStop(); ambStop(true);
+  if (!kind || kind === 'off') return;
+  sndPrev = true;
+  if (kind === 'lofi' || kind === 'caixinha') { const was = S.cfg.music; S.cfg.music = true; musicStart('short', kind); S.cfg.music = was; }
+  else ambStart(kind);
+  sndPrevT = setTimeout(() => { sndPrev = false; if (!S.timer.running) { musicStop(); ambStop(); } }, 6000);
+}
+function musicSync(){
+  const T = S.timer; let want = null;
+  if (T.running && T.phase === 'focus' && S.cfg.amb && S.cfg.amb !== 'off') want = S.cfg.amb;
+  if (T.running && T.phase !== 'focus' && S.cfg.music) want = S.cfg.musicKind === 'caixinha' ? 'caixinha' : 'lofi';
+  if (!want && sndPrev && !T.running) return; /* deixa a prévia tocar até o fim */
+  if (want === 'lofi' || want === 'caixinha') { ambStop(); musicStart(T.phase, want); }
+  else { musicStop(); if (want) ambStart(want); else ambStop(); }
+}
 function setPhase(p){
-  musicStop();
+  musicStop(); ambStop();
   const T = S.timer;
   Object.assign(T, { phase:p, running:false, started:false, total:phaseLen(p), left:phaseLen(p), endAt:0, mini:false, miniDone:false, warned:false });
   if (p !== 'focus') pickBreakItems(p);
@@ -1867,7 +2326,80 @@ function start(){
   atkIdx = Math.floor((T.total - T.left) / ATK_EVERY);
   if (T.phase !== 'focus') phaseStartPerf = performance.now() - (T.total - T.left)*1000;
   wake(); musicSync(); renderAll(); save();
+  if (T.phase === 'focus' && S.cfg.pip && CAN_PIP && !pipOn()) pipOpen();
 }
+/* ================= Mini timer flutuante =================
+   Computador (Chrome/Edge 116+) e Android (Chrome recente): Document Picture-in-Picture, uma janelinha sempre por cima.
+   Onde não existe, usa o PiP de vídeo: um canvas com o timer vira vídeo (Safari e outros).
+   O navegador só deixa abrir depois de um toque: por isso abre junto com o botão Começar (ou pelo botão Mini timer). */
+const PIP = { win:null, vid:null, cv:null, iv:0 };
+const CAN_DPIP = 'documentPictureInPicture' in window && window.isSecureContext;
+const CAN_VPIP = !CAN_DPIP && !!(document.pictureInPictureEnabled || ('webkitSetPresentationMode' in HTMLVideoElement.prototype)) && 'captureStream' in HTMLCanvasElement.prototype;
+const CAN_PIP = CAN_DPIP || CAN_VPIP;
+function pipOn(){ return !!(PIP.win || (PIP.vid && (document.pictureInPictureElement === PIP.vid || PIP.vid.webkitPresentationMode === 'picture-in-picture'))); }
+function pipInfo(){
+  const T = S.timer, P = PHASES[T.phase], left = T.running ? Math.max(0, Math.ceil((T.endAt - Date.now())/1000)) : T.left;
+  return { T, P, left, str:`${pad(Math.floor(left/60))}:${pad(left % 60)}`, pct:T.total ? left/T.total : 1,
+    col:T.phase === 'focus' ? '#a07fff' : T.phase === 'short' ? '#8fd18b' : '#5ce1e6',
+    lab:`${P.k} · ${P.name}${!T.running && T.started ? ' · pausado' : ''}` };
+}
+function pipDraw(){
+  const i = pipInfo();
+  if (PIP.win) {
+    const d = PIP.win.document, q = id => d.getElementById(id); if (!q('t')) return;
+    d.body.style.setProperty('--c', i.col); q('t').textContent = i.str; q('l').textContent = i.lab; q('b').style.width = (i.pct*100) + '%';
+    q('go').textContent = i.T.running ? 'Pausar' : (i.T.started ? 'Continuar' : 'Começar');
+  }
+  if (PIP.cv) {
+    const c = PIP.cv.getContext('2d'), W = PIP.cv.width, H = PIP.cv.height;
+    c.fillStyle = '#0c0a18'; c.fillRect(0, 0, W, H);
+    c.fillStyle = i.col; c.font = '600 22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText(i.lab.toUpperCase(), W/2, 46);
+    c.fillStyle = '#f1ecff'; c.font = "120px VT323, 'DotGothic16', monospace"; c.fillText(i.str, W/2, 150);
+    c.fillStyle = '#342b5e'; c.fillRect(40, 176, W - 80, 10); c.fillStyle = i.col; c.fillRect(40, 176, (W - 80)*i.pct, 10);
+  }
+}
+function pipBuild(w){
+  const d = w.document;
+  d.head.innerHTML = `<meta charset="utf-8"><title>Dojo do Foco</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Pixelify+Sans:wght@600&display=swap"><style>
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;--c:#a07fff;background:radial-gradient(120% 120% at 0 0,color-mix(in srgb,var(--c) 22%,transparent),transparent 60%),#0c0a18;color:#f1ecff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;overflow:hidden;user-select:none}
+    #l{font:600 11px 'Pixelify Sans',system-ui;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+    #t{font:400 min(30vw,46vh)/.85 VT323,monospace;font-variant-numeric:tabular-nums}
+    .bar{width:86%;height:6px;border-radius:9px;background:#342b5e;overflow:hidden}#b{height:100%;background:var(--c);transition:width .25s linear}
+    .r{display:flex;gap:6px;margin-top:4px}button{font:600 12px 'Pixelify Sans',system-ui;color:#f1ecff;background:#1f1939;border:2px solid #342b5e;border-radius:8px;padding:5px 10px;cursor:pointer}button:hover{border-color:var(--c)}#go{background:var(--c);border-color:var(--c);color:#140d2b}
+  </style>`;
+  d.body.innerHTML = '<div id="l"></div><div id="t"></div><div class="bar"><div id="b"></div></div><div class="r"><button id="go" type="button"></button><button id="back" type="button">Voltar ao dojo</button></div>';
+  d.getElementById('go').addEventListener('click', () => { toggle(); pipDraw(); });
+  d.getElementById('back').addEventListener('click', () => { try { window.focus(); } catch(e){} w.close(); });
+  pipDraw(); PIP.iv = w.setInterval(pipDraw, 250); /* o relógio roda dentro da janelinha, que não é freada quando a aba some */
+}
+async function pipOpen(){
+  if (!CAN_PIP || pipOn()) return;
+  try {
+    if (CAN_DPIP) {
+      const w = await documentPictureInPicture.requestWindow({ width:280, height:170 });
+      PIP.win = w; pipBuild(w);
+      w.addEventListener('pagehide', () => { PIP.win = null; renderPipBtn(); });
+    } else {
+      if (!PIP.vid) {
+        PIP.cv = document.createElement('canvas'); PIP.cv.width = 480; PIP.cv.height = 220; pipDraw();
+        const v = PIP.vid = document.createElement('video'); v.muted = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.autoPictureInPicture = true;
+        v.srcObject = PIP.cv.captureStream(4);
+        v.addEventListener('leavepictureinpicture', () => renderPipBtn());
+        v.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;left:0'; document.body.appendChild(v);
+        PIP.iv = setInterval(pipDraw, 500);
+      }
+      await PIP.vid.play();
+      if (PIP.vid.requestPictureInPicture) await PIP.vid.requestPictureInPicture(); else PIP.vid.webkitSetPresentationMode('picture-in-picture');
+    }
+  } catch(e){ /* recusado ou sem toque: segue sem mini timer */ }
+  renderPipBtn();
+}
+function pipClose(){
+  if (PIP.win) { PIP.win.close(); PIP.win = null; }
+  if (PIP.vid) { try { document.pictureInPictureElement ? document.exitPictureInPicture() : PIP.vid.webkitSetPresentationMode && PIP.vid.webkitSetPresentationMode('inline'); } catch(e){} }
+  renderPipBtn();
+}
+function renderPipBtn(){ const b = $('#pipBtn'); if (!b) return; b.hidden = !CAN_PIP; b.textContent = pipOn() ? '⧉ Fechar mini' : '⧉ Mini timer'; b.setAttribute('aria-pressed', pipOn()); }
 function startMini(){
   const T = S.timer;
   if (S.cfg.focus <= 5) return start();
@@ -3257,7 +3789,7 @@ function drawSkyBg(now){
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js';
 const OPEN_REINO = location.hash === '#reino';
 const S3 = { T:null, r:null, sc:null, cam:null, world:null, upd:[], realm:'', loading:false, failed:false, on:false, last:0, t:0, mx:0, my:0, tx:0, ty:0, view:false };
-function want3d(){ return S.cfg.bg3d !== false && !S3.failed && !S3.lite; }
+function want3d(){ return S.cfg.bg3d === true && !S3.failed && !S3.lite; }
 function show3d(on){ S3.on = on; document.documentElement.classList.toggle('has3d', on); if (!on && S3.view) realmView(false); }
 async function init3d(){
   if (!want3d()) { show3d(false); return; }
@@ -3627,7 +4159,7 @@ function perfLevel(l){
   PERF.lvl = l; sceneKey = ''; resizeScene(); size3d(); S3.last = 0;
   if (l >= 2 && S3.on && !S3.view) {
     S3.lite = true; show3d(false);
-    if (!PERF.told) { PERF.told = true; toast('O computador estava sofrendo, então pausei o reino 3D. Dá para religar em Jogo → Reino.'); }
+    if (!PERF.told) { PERF.told = true; toast('O computador estava sofrendo, então pausei o reino 3D. Dá para religar em Jogo → Cena.'); }
   }
 }
 
@@ -3703,7 +4235,7 @@ function askPosition(){
 async function fetchWeather(manual, useGeo){
   if (wxBusy) return;
   const city = (S.wx.city || '').trim(), byGeo = useGeo || (!city && S.wx.geoCity === '@geo' && S.wx.lat != null);
-  if (!city && !byGeo) { wxSetStatus(CAN_GEO ? 'Escreva sua cidade ou toque em Usar minha localização.' : 'Escreva sua cidade e toque em Buscar clima.'); return; }
+  if (!city && !byGeo) { wxSetStatus(CAN_GEO ? 'Escreva sua cidade ou toque em Sua localização.' : 'Escreva sua cidade e toque em Buscar.'); return; }
   wxBusy = true; wxSetStatus('Buscando o clima…');
   try {
     if (useGeo) {
@@ -3720,7 +4252,7 @@ async function fetchWeather(manual, useGeo){
     const cur = f && f.current; if (!cur || cur.weather_code == null) throw { code:'parse' };
     S.wx.data = { code:cur.weather_code, temp:cur.temperature_2m, wind:cur.wind_speed_10m, cloud:cur.cloud_cover, precip:cur.precipitation, at:Date.now() };
     S.wx.mode = 'auto';
-    wxSetStatus(`${S.wx.place}: ${Math.round(cur.temperature_2m)}°C, ${WX[wxCode(cur.weather_code)].n.toLowerCase()}. Atualizado às ${hm(Date.now())}.`);
+    wxSetStatus(`${S.wx.place} · ${Math.round(cur.temperature_2m)}°C · ${WX[wxCode(cur.weather_code)].n.toLowerCase()} · ${hm(Date.now())}`);
     drops = []; sbDrops = []; applyUI(); renderHeader(); if (S.view === 'jogo') renderJogo();
     if (manual) toast(`Clima de ${S.wx.place}: ${WX[wxCode(cur.weather_code)].n.toLowerCase()}.`);
   } catch(e) {
@@ -3729,7 +4261,7 @@ async function fetchWeather(manual, useGeo){
       code === 'geo' ? (e.geo === 1 ? 'Você não permitiu a localização. Escreva sua cidade no campo acima.' : 'Não consegui descobrir sua localização. Escreva sua cidade no campo acima.') :
       code === 'no_route' ? 'No claude.ai pelo navegador, a busca automática não funciona. Abra no app Claude para desktop ou no site publicado, ou escolha o clima abaixo.' :
       code === 'server_not_connected' ? 'O navegador do app não respondeu. Abra esta página no app Claude para desktop e tente de novo.' :
-      code === 'cancelled' ? 'A busca foi recusada no app. Toque em Buscar clima para tentar de novo.' :
+      code === 'cancelled' ? 'A busca foi recusada no app. Toque em Buscar para tentar de novo.' :
       ['not_in_manifest','not_granted','approval_required','blocked_by_policy'].includes(code) ? 'A página não tem permissão para usar o navegador do app. Libere no menu de permissões do artifact.' :
       ['capability_disabled','capability_removed'].includes(code) ? 'Este jeito de abrir a página não permite buscar o clima. Escolha o clima abaixo.' :
       code === 'parse' ? 'A previsão veio num formato inesperado. Tente de novo mais tarde.' :
@@ -3777,17 +4309,21 @@ function renderDialog(force){
   const D = $('#dlg'); let h = '';
   const open = S.tasks.filter(t => !t.fin);
   if (st === 'plan') {
-    h = `<p class="dl-line"><span class="star">*</span>Nesta batalha eu vou...</p>
-      <input type="text" id="planIn" maxlength="120" placeholder="ex.: fazer as questões 1 a 5" value="${esc(S.draft.plan)}" aria-label="Plano desta batalha">
-      <div class="dl-row"><span class="mono">Energia</span>${[1,2,3].map(v => `<button class="chipb" data-act="energy" data-v="${v}" aria-pressed="${S.draft.energy === v}">${ENERGY[v]}</button>`).join('')}</div>
-      <div class="dl-row"><span class="mono">Missão</span><select id="taskSel" aria-label="Missão desta batalha">${open.length ? open.map(t => `<option value="${t.id}" ${t.id === S.active ? 'selected' : ''}>${CATS[t.cat] ? CATS[t.cat].k + ' ' : ''}${esc(t.name)} · ${t.done}/${t.est}</option>`).join('') : '<option value="">Sem missão (crie na aba Missões)</option>'}</select></div>
-      <div class="dl-actions"><button class="btn primary big" data-act="start">Começar batalha</button><button class="btn outline" data-act="mini">Só 5 minutos</button></div>`;
+    h = `<div class="dl-form">
+        <label class="mono" for="taskSel">Missão</label>
+        <select id="taskSel">${open.length ? open.map(t => `<option value="${t.id}" ${t.id === S.active ? 'selected' : ''}>${esc(t.name)} · ${t.done}/${t.est}</option>`).join('') : '<option value="">Sem missão (crie na aba Missões)</option>'}</select>
+        <label class="mono" for="planIn">Meta</label>
+        <input type="text" id="planIn" maxlength="120" placeholder="O que você vai fazer agora? ex.: questões 1 a 5" value="${esc(S.draft.plan)}" autocomplete="off">
+        <span class="mono" id="enLbl">Energia</span>
+        <div class="en-seg" role="radiogroup" aria-labelledby="enLbl">${[1,2,3].map(v => `<button type="button" role="radio" data-act="energy" data-v="${v}" aria-checked="${S.draft.energy === v}">${energyIcon(v)}<span>${ENERGY[v]}</span></button>`).join('')}</div>
+      </div>
+      <div class="dl-actions"><button class="btn primary big" data-act="start">Começar batalha<span class="btn-meta">${S.cfg.focus} min</span></button><button class="btn outline" data-act="mini">Só 5 minutos</button><span class="dl-hint">ou aperte Enter na meta</span></div>`;
   } else if (st === 'focus') {
     const t = activeTask(), plan = S.cur && S.cur.plan;
     const verb = t && CATS[t.cat] ? CATS[t.cat].verb : 'meditando';
     const line = T.running ? pick([`Estou ${verb} com você. Um trecho de cada vez.`, 'Respira. Você está indo bem.', 'Se distrair, anota no pergaminho e volta.'], Math.floor(Date.now()/60000)) : 'Pausado. Quando estiver pronto, a gente continua de onde parou.';
     h = `<p class="dl-line"><span class="star">*</span>${esc(line)}</p>
-      <div class="dl-plan"><span class="mono" style="font-size:15px;color:#a99fd6">Plano</span><br>${plan ? esc(plan) : 'Sem plano escrito. Foque na missão ativa.'}</div>
+      <div class="dl-plan"><span class="mono">Meta desta batalha</span><br>${plan ? esc(plan) : 'Sem meta escrita. Foque na missão ativa.'}</div>
       <div class="dl-actions"><button class="btn primary big" data-act="toggle">${T.running ? 'Pausar' : 'Continuar'}</button><button class="btn outline" data-act="distr">Anotar distração</button><button class="btn ${armed ? 'warn' : 'ghost'}" data-act="skip">${armed ? (S.cfg.penalties ? 'Confirmar (−15 de energia)' : 'Confirmar desistência') : 'Desistir'}</button></div>
       <div class="dl-row" id="dlDistr" hidden><input type="text" id="dlDistrIn" maxlength="120" placeholder="O que surgiu? Escreva e aperte Enter" aria-label="Distração"><button class="btn sm" data-act="distrSave">Anotar</button></div>`;
   } else if (st === 'mini') {
@@ -3796,7 +4332,7 @@ function renderDialog(force){
   } else if (st === 'review') {
     const r = S.pendingReview, s = S.days[r.date] && S.days[r.date].sessions[r.idx];
     h = `<p class="dl-line"><span class="star">*</span>Batalha vencida! O que você conseguiu?</p>
-      ${s && s.plan ? `<p class="dl-sub">Você planejou: ${esc(s.plan)}</p>` : ''}
+      ${s && s.plan ? `<p class="dl-sub">Sua meta: ${esc(s.plan)}</p>` : ''}
       <div class="dl-row">${Object.entries(RESULTS).map(([k, v]) => `<button class="chipb" data-act="res" data-v="${k}" aria-pressed="false">${v}</button>`).join('')}</div>
       <input type="text" id="noteIn" maxlength="140" placeholder="Uma nota rápida, se quiser" aria-label="Nota da batalha">
       <div class="dl-actions"><button class="btn primary big" data-act="reviewGo">Salvar e ir para a pausa</button><button class="btn ghost" data-act="reviewSkip">Agora não</button></div>`;
@@ -3832,10 +4368,10 @@ function updateClock(){
   const T = S.timer, P = PHASES[T.phase];
   const m = Math.floor(T.left/60), s = T.left % 60, str = `${pad(m)}:${pad(s)}`;
   $('#clockTime').textContent = str;
-  $('#clockLabel').textContent = `${P.k} · ${P.name.toUpperCase()}${!T.running && T.started ? ' · PAUSADO' : ''}`;
+  $('#clockLabel').textContent = `${P.name.toUpperCase()}${!T.running && T.started ? ' · PAUSADO' : ''}`;
   $('#tbar').style.width = (T.total ? T.left/T.total*100 : 100) + '%';
   const eh = $('#eHP'); if (eh) eh.textContent = `${T.started ? Math.ceil(enemyMax()*Math.max(0.02, T.left/T.total - stepBonus)) : enemyMax()}/${enemyMax()}`;
-  document.title = T.started ? `${str} ${P.k} · Dojo do Foco` : 'Dojo do Foco';
+  document.title = T.started ? `${str} ${P.name} · Dojo do Foco` : 'Dojo do Foco';
   renderNext();
 }
 function renderNext(){
@@ -3854,7 +4390,7 @@ function renderMissionCard(){
   if (!t) { el.innerHTML = `<div class="mono">Missão ativa</div><p class="small" style="margin:8px 0 12px">Nenhuma missão escolhida. Crie uma e divida em passos pequenos.</p><button class="btn sm" data-go="missoes">Criar missão</button>`; return; }
   let tm = ''; const n = Math.max(t.est, t.done);
   for (let i = 0; i < n; i++) tm += `<span class="tm ${i < t.done ? (i >= t.est ? 'over' : 'f') : ''}"></span>`;
-  el.innerHTML = `<div class="mono">Missão ativa · <span class="jp">${CATS[t.cat] ? CATS[t.cat].k + ' ' + CATS[t.cat].n : ''}</span></div>
+  el.innerHTML = `<div class="mono">Missão ativa · ${CATS[t.cat] ? CATS[t.cat].n : ''}</div>
     <p style="font-weight:700;margin-top:6px;overflow-wrap:anywhere">${esc(t.name)}</p>
     <div class="toms" title="${t.done} feitos de ${t.est} estimados">${tm}</div>
     ${t.steps.length ? `<ul class="steps">${t.steps.map(s => `<li><label><input type="checkbox" data-step="${s.id}" data-task="${t.id}" ${s.ok ? 'checked' : ''}><span class="${s.ok ? 'ok' : ''}">${esc(s.txt)}</span></label></li>`).join('')}</ul>` : '<p class="small">Sem passos. Adicione passos pequenos na aba Missões.</p>'}`;
@@ -4020,7 +4556,7 @@ function questFocus(t){
   const next = nx ? `<span>Próximo passo</span>${esc(nx.txt)}` : t.steps.length > 1 ? '<span>Tudo feito</span>Conclua a missão para ganhar o XP.' : '<span>Primeiro passo</span>Escreva abaixo a menor coisa que dá para fazer agora.';
   return `<section class="qf" aria-label="Missão em foco">
       <div class="qf-top">
-        <button type="button" class="qf-chip" data-q="cat" data-id="${t.id}" title="Trocar o tipo">${C.k} ${C.n}</button>
+        <button type="button" class="qf-chip" data-q="cat" data-id="${t.id}" title="Trocar o tipo">${C.n}</button>
         <button type="button" class="qf-chip" data-q="est" data-id="${t.id}" title="Pomodoros estimados. Toque para mudar." aria-label="${t.done} de ${t.est} pomodoros. Toque para mudar a estimativa.">${toms(t)}</button>
         <span class="qf-tag">Em foco</span>
       </div>
@@ -4034,7 +4570,7 @@ function questFocus(t){
 }
 function questItem(t){
   const C = CATS[t.cat] || CATS.ler, ok = t.steps.filter(s => s.ok).length;
-  const meta = `<small>${C.k} ${C.n} · ${toms(t)}${t.steps.length ? ` · ${ok}/${t.steps.length} passos` : ''}</small>`;
+  const meta = `<small>${C.n} · ${toms(t)}${t.steps.length ? ` · ${ok}/${t.steps.length} passos` : ''}</small>`;
   return t.fin
     ? `<li class="q-item fin"><div class="q-item-main" style="cursor:default"><b>${esc(t.name)}</b>${meta}</div><button class="ibtn" data-q="del" data-id="${t.id}" aria-label="Remover missão" title="Remover">×</button></li>`
     : `<li class="q-item"><button type="button" class="q-item-main" data-q="sel" data-id="${t.id}"><b>${esc(t.name)}</b>${meta}</button><button type="button" class="btn sm" data-q="sel" data-id="${t.id}">Focar</button><button class="ibtn" data-q="del" data-id="${t.id}" aria-label="Remover missão" title="Remover">×</button></li>`;
@@ -4098,8 +4634,8 @@ function renderEditor(){
       <div class="ed-grid">
         <label>Nome<input type="text" data-f="name" maxlength="24" value="${esc(ch.name)}"></label>
         <label>Título ou apelido<input type="text" data-f="title" maxlength="30" placeholder="ex.: Guardiã das revisões" value="${esc(ch.title)}"></label>
-        <label>Classe<select data-f="cls">${opt(Object.fromEntries(Object.entries(CLASSES).map(([k, c]) => [k, c.n + ' ' + c.k])), ch.cls)}</select></label>
-        <label>Arma<select data-f="weapon">${opt(WEAPONS, ch.weapon)}</select></label>
+        <label>Classe<select data-f="cls">${opt(Object.fromEntries(Object.entries(CLASSES).map(([k, c]) => [k, c.n])), ch.cls)}</select></label>
+        <div class="full"><span class="ed-label" id="wpnLbl">Arma · <b id="wpnName">${esc(WEAPONS[ch.weapon] || '')}</b></span><div class="wpn-opts" role="radiogroup" aria-labelledby="wpnLbl">${Object.entries(WEAPONS).map(([v, n]) => `<button type="button" class="wpn" role="radio" data-wpn="${v}" aria-checked="${v === ch.weapon}" aria-label="${esc(n)}" title="${esc(n)}"><canvas width="16" height="16" data-wi="${v}"></canvas></button>`).join('')}</div></div>
         <label class="full">Habilidade<select data-f="perk">${opt(PERKS, ch.perk)}</select></label>
         <label>Personalidade<select data-f="persona">${opt(PERSONAS, ch.persona)}</select></label>
         <label>Frase de efeito<input type="text" data-f="phrase" maxlength="80" placeholder="O que ela diz no cartão" value="${esc(ch.phrase)}"></label>
@@ -4125,49 +4661,114 @@ function renderEditor(){
       <button class="btn sm" data-ed="dup" type="button">Duplicar</button>
       <button class="btn sm warn" data-ed="del" type="button" ${S.chars.length < 2 ? 'disabled title="É preciso ter pelo menos uma personagem"' : ''}>${delArmed === ch.id ? 'Clique de novo para excluir' : 'Excluir personagem'}</button>
     </div>`;
-  visDraw($('#editor'), ch);
+  visDraw($('#editor'), ch); wpnDraw($('#editor'), ch);
 }
+/* Ícones das armas: pixel art 16x16 desenhada à mão, com contorno, brilho e sombra. */
+const WPN_PAL = {"o": "#170f22", "s": "#f4f6fb", "S": "#a7b0c8", "k": "#2c2346", "w": "#e6dcc0", "g": "#f5c66b", "G": "#b9852c", "b": "#b07a45", "B": "#73492a", "p": "#f6f1e4", "P": "#cfc4a8", "r": "#e0444f", "c": "#8ff3f6", "C": "#3fb7c7"};
+const WPN_ICONS = {
+  katana:['.............oso','............osSo','...........osSo.','..........osSo..','.........osSo...','........osSo....','.......osSo.....','....ooosSo......','...oGgooo.......','....oggo........','...owwggo.......','..okkooGo.......','.owwo..o........','okko............','ggo.............','Go..............'],
+  naginata:['.............oso','............ossS','............osSo','..........oosSo.','.........oGsSo..','.........ogGo...','........obBo....','.......obBo.....','......obBo......','.....obBo.......','....obBo........','...obBo.........','..obBo..........','.obBo...........','obBo............','ogo.............'],
+  kunai:['............ooo.','...........ossso','..........osssSo','.........osssSo.','........osssSo..','........ossSo...','.......ogoSo....','.......ogGo.....','......owko......','.....okwo.......','...oowko........','..oggoo.........','.ogoogo.........','.ogoogo.........','..oggo..........','...oo...........'],
+  arco:['.....oo.........','....obBo........','...obBopo.......','..obBoopo.......','..obo.opo.......','.obo..opo...o...','.oboooopo..oso..','.obrrropoooooso.','.obrSSSpSSSSSSso','.oborropoooooso.','.oboooopo..oso..','..obo.opo...o...','..obBoopo.......','...obBopo.......','....obBo........','.....oo.........'],
+  ofuda:['........ooooo...','.......opppppo..','.......oppppPo..','..oooooopprpPo..','.opppppoprrpPo..','.oppppPopprpPo..','.opprpPopprrPo..','.oprrpPopprpPo..','.opprpPoppppPo..','.opprrPoprrrPo..','.opprpPoPPPPPo..','.oppppPoooooo...','.oprrrPo........','.oPPPPPo........','..ooooo.........','................'],
+  gohei:['......oggo......','.....oobBoo.....','....opPbBPpo....','....opPbBPpo....','....opPbBPpo....','...opPobBoPpo...','...opPobBoPpo...','...opPobBoPpo...','..opPoobBooPpo..','..opPoobBooPpo..','..opPoobBooPpo..','.opPo.obBo.oPpo.','.opPo.obBo.oPpo.','.opPo.obBo.oPpo.','..oo..obBo..oo..','.......oo.......'],
+  cajado:['...........ooo..','..........ogggo.','.........ogccCgo','.........ogcCCgo','.........ogCCCgo','........oGGgggo.','........obBooo..','.......obBo.....','......obBo......','.....obBo.......','....obBo........','...obBo.........','..obBo..........','.obBo...........','obBo............','ogo.............'],
+  martelo:['.........ooo....','........ossSo...','.......ossSSSo..','......ossSSSSSo.','.......ossSSSSo.','........ossSSo..','........oosso...','.......obBoo....','......obBo......','.....obBo.......','....obBo........','...obBo.........','..obBo..........','.obBo...........','obBo............','ogo.............'],
+  leque:['................','................','................','....oooooooo....','..oorrrrrrrroo..','.orrPPPPpppprro.','orrppPPPpppPPrro','rPpppPPPpppPPPPr','rPPpppPPppPPPPpr','PPPPppPPppPPPppp','PPPPPppPpPPPpppp','ppPPPPobboPpppPP','ppppPoobboopPPPP','pppppoobbooPPPPP','PPPPPoobbooppppp','ooooo.oggo.ooooo']
+};
+function wpnIcon(c, id){
+  const g = c.getContext('2d'); g.clearRect(0, 0, 16, 16);
+  (WPN_ICONS[id] || WPN_ICONS.katana).forEach((row, y) => { for (let x = 0; x < 16; x++) { const k = row[x]; if (k !== '.') { g.fillStyle = WPN_PAL[k]; g.fillRect(x, y, 1, 1); } } });
+}
+function wpnDraw(root){ root.querySelectorAll('canvas[data-wi]').forEach(c => wpnIcon(c, c.dataset.wi)); }
 function renderRoster(){
   $('#roster').innerHTML = S.chars.map(ch => {
     const C = CLASSES[ch.cls] || CLASSES.samurai, act = ch.id === S.activeChar;
     return `<li class="row-item ros ${ch.id === S.editChar ? 'editing' : ''}" data-id="${ch.id}"><canvas width="24" height="30"></canvas>
-      <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small">${esc(ch.title || C.n)} · ${WEAPONS[ch.weapon] || ''}</span>
+      <div class="n"><b>${esc(ch.name || 'Sem nome')}</b> ${act ? '<span class="tagon">NO DOJO</span>' : ''}<br><span class="small ros-sub">${esc(ch.title || C.n)} <canvas class="wpn-mini" width="16" height="16" data-wi="${ch.weapon}" role="img" aria-label="${esc(WEAPONS[ch.weapon] || '')}"></canvas></span>
       <div class="spec-mini">${Object.entries(SPEC).map(([k, n]) => `<span>${n.slice(0, 3).toUpperCase()} ${ch.spec[k]}</span>`).join('')}</div></div>
       <div class="acts"><button class="btn sm" data-r="edit">Editar</button>${act ? '' : '<button class="btn sm primary" data-r="use">Usar</button>'}</div></li>`;
   }).join('');
-  $$('#roster .ros').forEach(li => { const ch = S.chars.find(c => c.id === li.dataset.id); drawFront(li.querySelector('canvas').getContext('2d'), 5, 29, { pal:charPal(ch), legs:'stand', arm:'down', u:1 }); });
+  $$('#roster .ros').forEach(li => { const ch = S.chars.find(c => c.id === li.dataset.id); drawFront(li.querySelector('canvas').getContext('2d'), 5, 29, { pal:charPal(ch), legs:'stand', arm:'down', u:1 }); wpnDraw(li, ch); });
 }
 function renderPerfil(){
   renderEditor(); renderRoster();
   $('#presetsGrid').innerHTML = PRESETS.map((p, i) => `<button type="button" class="pre" data-preset="${i}"><canvas width="24" height="30"></canvas><b>${esc(p.name)}</b><span>${CLASSES[p.cls].n}</span></button>`).join('');
   $$('#presetsGrid .pre').forEach(b => drawFront(b.querySelector('canvas').getContext('2d'), 5, 29, { pal:charPal(PRESETS[+b.dataset.preset]), legs:'stand', arm:'down', u:1 }));
   $('#path').innerHTML = TITLES.map((t, i) => { const nx = TITLES[i+1]; const now = S.lvl >= t[0] && (!nx || S.lvl < nx[0]); return `<li class="${now ? 'now' : S.lvl >= t[0] ? 'got' : ''}"><span>${t[1]} <span class="jp">${t[2]}</span></span><span class="mono" style="font-size:16px">Nível ${t[0]}</span></li>`; }).join('');
-  $('#stats4').innerHTML = [['Foco 集','foco','pomodoros completos'],['Sabedoria 知','sab','missões e revisões'],['Disciplina 律','disc','ciclos e metas'],['Vitalidade 気','vit','pausas feitas']].map(([n, k, s]) => `<div class="attr" style="text-align:left;padding:10px"><div class="k">${n}</div><div class="v">${S.stats[k]}</div><div class="k">${s}</div></div>`).join('');
+  $('#stats4').innerHTML = [['Foco','foco','pomodoros completos'],['Sabedoria','sab','missões e revisões'],['Disciplina','disc','ciclos e metas'],['Vitalidade','vit','pausas feitas']].map(([n, k, s]) => `<div class="attr" style="text-align:left;padding:10px"><div class="k">${n}</div><div class="v">${S.stats[k]}</div><div class="k">${s}</div></div>`).join('');
   const n = ACH.filter(a => S.ach[a.id]).length; $('#achCount').textContent = `${n}/${ACH.length}`;
-  $('#ach').innerHTML = ACH.map(a => `<div class="badge ${S.ach[a.id] ? 'on' : ''}" title="${a.n}: ${a.d}" aria-label="${a.n}: ${a.d}${S.ach[a.id] ? ' (desbloqueada)' : ''}">${a.k}</div>`).join('');
+  $('#ach').innerHTML = ACH.map(a => `<li class="badge ${S.ach[a.id] ? 'on' : ''}" title="${a.d}"><span class="badge-i">${icon(a.ic)}</span><b>${a.n}</b><small>${S.ach[a.id] ? 'Conquistada' : a.d}</small></li>`).join('');
   $('#shopRyo').textContent = `· ${S.ryo} ryō`;
   $('#rewards').innerHTML = S.rewards.map(r => `<li class="row-item"><span class="n">${esc(r.name)}</span><span class="cost">${r.cost}</span><button class="btn sm" data-ract="buy" data-id="${r.id}" ${S.ryo < r.cost ? 'disabled' : ''}>Resgatar</button><button class="ibtn" data-ract="del" data-id="${r.id}" aria-label="Remover recompensa">×</button></li>`).join('') || '<li class="empty">Crie recompensas que valem a pena para você.</li>';
 }
+/* Ajustes: qual parte está aberta (fica enquanto a aba do navegador estiver aberta).
+   Quem ainda não fez nenhum pomodoro abre em Como jogar; depois, em Ritmo. */
+const J_TABS = ['guia','ritmo','foco','som','cena','dados'];
+let jTab = null;
+const fmtMin = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}`;
+const AMB_HINT = {
+  off:'O melhor para a maioria das pessoas.',
+  marrom:'Grave e macio, como um rio ao longe.',
+  rosa:'Chiado leve e constante. Pode ajudar quem tem TDAH.'
+};
+function renderGuia(){
+  const c = S.cfg, t = title(S.lvl), nd = need(S.lvl);
+  $('#gLoopF').textContent = c.focus + ' min'; $('#gLoopS').textContent = c.short + ' min';
+  $('#gLoopB').textContent = c.cycles + 'º foco'; $('#gLoopL').textContent = c.long + ' min';
+  const T = [
+    { c:'var(--gold)', i:'✨', n:'XP', v:`${S.xp}/${nd}`, m:S.xp/nd, d:'Experiência. Enche a barra e sobe o seu nível.', h:'Ganha com focos, pausas, passos e missões.' },
+    { c:'var(--violet)', i:'🏯', n:'Nível', v:`Nv ${S.lvl}`, m:null, d:`Hoje você é <b>${t[1]}</b> ${t[2]}. Os títulos vão de Aprendiz a Shōgun.`, h:'Sobe quando a barra de XP enche.' },
+    { c:'var(--matcha)', i:'⚡', n:'Energia', v:`${Math.round(S.hp)}/100`, m:S.hp/100, d:'Cada foco cansa um pouco. Abaixo de 30, a personagem pede descanso.', h:'Recupera nas pausas, e o onsen enche mais.' },
+    { c:'var(--gold)', i:'🪙', n:'Ryō', v:`${S.ryo}`, m:null, d:'Moedas para trocar por recompensas reais que você mesmo cria.', h:'Gaste na loja da aba Perfil.' }
+  ];
+  $('#gTerms').innerHTML = T.map(x => `<div class="g-term" style="--c:${x.c}"><div class="g-term-h"><span class="g-ico" aria-hidden="true">${x.i}</span><b>${x.n}</b><span class="g-val">${x.v}</span></div>${x.m === null ? '' : `<div class="g-meter" aria-hidden="true"><i style="width:${Math.round(clamp(x.m, 0, 1)*100)}%"></i></div>`}<p>${x.d}</p><span class="g-how">${x.h}</span></div>`).join('');
+}
 function renderJogo(){
-  ['focus','short','long','cycles','goal'].forEach(k => { const el = $('#cfg-' + k); if (document.activeElement !== el) el.value = S.cfg[k]; });
-  $('#cfg-summaryAt').value = S.cfg.summaryAt;
-  ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).checked = !!S.cfg[k]);
-  $('#cfg-vol').value = S.cfg.vol;
-  $('#cfg-bg3d').checked = S.cfg.bg3d !== false;
-  $('#cfg-music').checked = !!S.cfg.music; $('#cfg-musicVol').value = S.cfg.musicVol;
-  $('#testMusic').textContent = MUS.on ? 'Parar' : 'Ouvir';
-  const cur = [S.cfg.focus, S.cfg.short, S.cfg.long].join(',');
+  if (!J_TABS.includes(jTab)) jTab = S.totals && S.totals.pomos ? 'ritmo' : 'guia';
+  J_TABS.forEach(k => { const t = $('#jt-' + k), on = k === jTab; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; $('#jp-' + k).hidden = !on; });
+  const c = S.cfg;
+  if (jTab === 'guia') renderGuia();
+  ['focus','short','long','cycles','goal'].forEach(k => { const el = $('#cfg-' + k); if (document.activeElement !== el) el.value = c[k]; });
+  $('#cfg-summaryAt').value = c.summaryAt;
+  ['focusMode','auto','penalties','sound','pip'].forEach(k => $('#cfg-' + k).checked = !!c[k]);
+  $('#cfg-pip').disabled = !CAN_PIP; $('#pipTog').classList.toggle('off', !CAN_PIP);
+  if (!CAN_PIP) $('#pipHint').textContent = 'Este navegador não tem janela flutuante. No computador, use Chrome ou Edge.';
+  $('#cfg-vol').value = c.vol; $('#cfg-musicVol').value = c.musicVol;
+  $('#cfg-bg3d').checked = c.bg3d === true;
+  /* som: três escolhas em cada bloco */
+  $$('#alarmOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.alarm === (c.alarm || 'sino')));
+  $$('#ambOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.amb === (c.amb || 'off')));
+  const brk = c.music ? (c.musicKind === 'caixinha' ? 'caixinha' : 'lofi') : 'off';
+  $$('#brkOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.brk === brk));
+  $('#ambHint').textContent = AMB_HINT[c.amb || 'off'];
+  $('#alarmOpts').closest('.j-snd').classList.toggle('off', !c.sound);
+  $('#jVolMus').classList.toggle('off', brk === 'off' && (c.amb || 'off') === 'off');
+  /* ritmo: carta escolhida, resumo no topo e um ciclo desenhado em escala */
+  const cur = [c.focus, c.short, c.long].join(','), pre = $(`#presets [data-preset="${cur}"]`);
   $$('#presets button').forEach(b => b.setAttribute('aria-pressed', b.dataset.preset === cur));
-  $$('#skyOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.sky === S.cfg.sky));
-  $('#sceneOpts').innerHTML = Object.entries(SCENES).map(([k, n]) => `<button class="btn sm" data-scene="${k}" aria-pressed="${S.cfg.scene === k}">${n}</button>`).join('');
+  if (!pre && !$('#jMore').open) $('#jMore').open = true;
+  $('#jSum').innerHTML = `${pre ? pre.querySelector('b').textContent : 'Personalizado'} · <b>${c.focus}</b> foco · <b>${c.short}</b> pausa · <b>${c.long}</b> onsen · meta <b>${c.goal}</b>/dia`;
+  const seg = [];
+  for (let i = 0; i < c.cycles; i++) { seg.push(`<i style="flex:${c.focus}"></i>`); seg.push(i < c.cycles - 1 ? `<i class="s" style="flex:${c.short}"></i>` : `<i class="l" style="flex:${c.long}"></i>`); }
+  $('#jCycBar').innerHTML = seg.join('');
+  const tot = c.cycles * c.focus + (c.cycles - 1) * c.short + c.long;
+  $('#jCycTxt').innerHTML = `<i style="background:var(--violet)"></i>${c.cycles} focos <i style="background:var(--matcha)"></i>${c.cycles - 1} pausas <i style="background:var(--cyan)"></i>1 onsen · um ciclo leva <b>${fmtMin(tot)}</b>`;
+  /* cena: céu e clima no mesmo padrão de botões; a caixa da cidade só aparece no automático */
+  $$('#skyOpts button').forEach(b => b.setAttribute('aria-pressed', b.dataset.sky === c.sky));
+  $('#sceneOpts').innerHTML = Object.entries(SCENES).map(([k, n]) => `<button type="button" data-scene="${k}" aria-pressed="${c.scene === k}">${n}</button>`).join('');
   renderVault();
+  const auto = S.wx.mode === 'auto';
+  $('#wxBox').hidden = !auto;
   const wc = $('#wxCity'); if (document.activeElement !== wc) wc.value = S.wx.city || '';
   $('#wxAuto').checked = !!S.wx.auto;
-  $('#wxStatus').textContent = S.wx.status || 'Nenhuma previsão buscada ainda.';
-  $('#wxOpts').innerHTML = `<button class="btn sm" data-wx="auto" aria-pressed="${S.wx.mode === 'auto'}">Seguir a previsão</button>` + Object.entries(WX).map(([k, v]) => `<button class="btn sm" data-wx="${k}" aria-pressed="${S.wx.mode === 'manual' && S.wx.manual === k}">${v.n}</button>`).join('');
+  $('#wxStatus').textContent = S.wx.status || 'Diga sua cidade e o céu segue o tempo de verdade.';
+  const WXI = { limpo:'☀️', parcial:'⛅', nublado:'☁️', neblina:'🌫️', garoa:'🌦️', chuva:'🌧️', tempestade:'⛈️', neve:'❄️' };
+  $('#wxOpts').innerHTML = `<button type="button" data-wx="auto" aria-pressed="${auto}"><span aria-hidden="true">🛰️</span>Automático</button>` + Object.entries(WX).map(([k, v]) => `<button type="button" data-wx="${k}" aria-pressed="${!auto && S.wx.manual === k}"><span aria-hidden="true">${WXI[k] || ''}</span>${v.n}</button>`).join('');
 }
 let sumDay = null, sumKeys = [], dayListOpen = false, dayActiveK = null;
 function renderResumo(){
+  Object.keys(S.days).forEach(k => { const d = S.days[k], b = newDay(k); Object.keys(b).forEach(f => { if (d[f] == null) d[f] = b[f]; }); });
   const keys = Object.keys(S.days).filter(k => S.days[k].pomos || S.days[k].sessions.length || k === dayKey(new Date())).sort().reverse();
   if (!sumDay || !S.days[sumDay]) sumDay = keys[0];
   sumKeys = keys;
@@ -4186,7 +4787,9 @@ function renderResumo(){
   if (dayListOpen) dayActive(dayActiveK || sumDay);
   const i = keys.indexOf(sumDay);
   $('#dayPrev').disabled = i >= keys.length - 1; $('#dayNext').disabled = i <= 0;
-  $('#sumBody').innerHTML = summaryHTML(sumDay);
+  let body; try { body = summaryHTML(sumDay); } catch (e) { console.error('Resumo do dia', sumDay, e); body = '<div class="card"><p class="empty">Não consegui montar o resumo deste dia.</p></div>'; }
+  const sb = $('#sumBody'), changed = sb.dataset.k !== sumDay; sb.innerHTML = body; sb.dataset.k = sumDay;
+  if (changed && sb.dataset.k0) { sb.classList.remove('swap'); void sb.offsetWidth; sb.classList.add('swap'); } sb.dataset.k0 = '1';
   const dc = $('#dayCv'), dd = S.days[sumDay]; if (dc && dd) { const h = hourNow(); drawCardArtTo(dc, HERO(), DAY_TIERS[dayTier(dd)][1], h, effAmb(skyAt(h).amb, WX[wxNow()])); }
 }
 /* Resumo do dia: carta do dia (raridade pelo desempenho) + painel com meta, missões, semana e ritmo.
@@ -4246,10 +4849,10 @@ function summaryHTML(k){
   const en = d.energy;
   const ach = d.ach.map(id => ACH.find(a => a.id === id)).filter(Boolean);
   let phrase;
-  if (!d.pomos && !minis.length) phrase = 'Hoje o dojo ficou em silêncio. Tudo bem. Amanhã, comece com 5 minutos.';
+  if (!d.pomos && !minis.length) phrase = today ? 'Hoje o dojo ficou em silêncio. Tudo bem. Amanhã, comece com 5 minutos.' : 'Neste dia o dojo ficou em silêncio. Tudo bem.';
   else if (d.pomos >= S.cfg.goal) phrase = 'Você bateu a meta. O dojo inteiro sente a sua disciplina.';
   else if (!d.skips && d.breaks > 0) phrase = 'Você respeitou todas as pausas. Isso também é sabedoria.';
-  else phrase = `Cada pomodoro é um passo no caminho. Você deu ${d.pomos} ${d.pomos === 1 ? 'passo' : 'passos'} hoje.`;
+  else phrase = `Cada pomodoro é um passo no caminho. Você deu ${d.pomos} ${d.pomos === 1 ? 'passo' : 'passos'}${today ? ' hoje' : ' neste dia'}.`;
   /* Para amanhã: dicas curtas, uma ideia por cartão */
   const sug = [];
   const over = Object.keys(byTask).map(id => S.tasks.find(t => t.id === id)).filter(t => t && t.done > t.est);
@@ -4288,7 +4891,7 @@ function summaryHTML(k){
   const g = S.cfg.goal, pct = Math.min(100, Math.round(d.pomos / g * 100));
   const tasks = Object.entries(byTask).map(([id, v]) => {
     const t = S.tasks.find(x => x.id === id);
-    if (!t || !t.est) return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${v.n} hoje</span></div></li>`;
+    if (!t || !t.est) return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${v.n} ${today ? 'hoje' : v.n === 1 ? 'pomodoro' : 'pomodoros'}</span></div></li>`;
     const p = Math.min(100, Math.round(t.done / t.est * 100)), passou = t.done > t.est;
     return `<li><div class="pm-row"><span>${esc(v.name)}</span><span class="pm-n">${t.done}/${t.est}${passou ? ' · passou' : ''}</span></div><div class="pm-bar"><i class="${passou ? 'over' : ''}" style="width:${p}%"></i></div></li>`;
   }).join('');
@@ -4316,7 +4919,7 @@ function summaryHTML(k){
     ${(() => {
       const parts = [['tudo', res.tudo, 'tudo'], ['parte', res.parte, 'parte'], ['travei', res.travei, 'travei'], ['int', aband.length, 'interrompida'], ['mini', minis.length, '5 min']].filter(x => x[1]);
       const tot = parts.reduce((n, x) => n + x[1], 0);
-      const face = v => (ENERGY[v] || '').split(' ');
+      const face = v => [energyIcon(v), (ENERGY[v] || '').toLowerCase()];
       const e0 = en.length ? face(en[0].v) : null, e1 = en.length ? face(en[en.length - 1].v) : null;
       return `<section class="howday" aria-label="Como foi o dia">
         <div class="hd-tile hd-res"><h3>Como foi</h3>
@@ -4374,14 +4977,14 @@ function toggleStep(taskId, stepId, ok){
 }
 function wire(){
   $$('[data-ico]').forEach(el => el.innerHTML = icon(el.dataset.ico));
-  document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); go(b.dataset.go); } });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); if (b.dataset.jtab) jTab = b.dataset.jtab; go(b.dataset.go); } });
   window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (v && v !== S.view) go(v); });
   $('#seg').addEventListener('click', e => { const b = e.target.closest('button'); if (b && !b.disabled && b.dataset.phase !== S.timer.phase) { S.pendingReview = null; setPhase(b.dataset.phase); } });
   const D = $('#dlg');
   D.addEventListener('click', e => {
     const b = e.target.closest('[data-act]'); if (!b) return;
     const a = b.dataset.act;
-    if (a === 'energy') { const v = +b.dataset.v; S.draft.energy = S.draft.energy === v ? null : v; $$('#dlg [data-act=energy]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.v === S.draft.energy)); save(); }
+    if (a === 'energy') { const v = +b.dataset.v; S.draft.energy = S.draft.energy === v ? null : v; $$('#dlg [data-act=energy]').forEach(x => x.setAttribute('aria-checked', +x.dataset.v === S.draft.energy)); save(); }
     if (a === 'start') start();
     if (a === 'mini') startMini();
     if (a === 'toggle') toggle();
@@ -4521,6 +5124,7 @@ function wire(){
   ED.addEventListener('click', e => {
     const ch = EC();
     const lk = e.target.closest('[data-look]'); if (lk) { ch.look[lk.dataset.look] = lk.dataset.v; edChanged(true); return; }
+    const wb = e.target.closest('[data-wpn]'); if (wb) { ch.weapon = wb.dataset.wpn; $$('#editor [data-wpn]').forEach(x => x.setAttribute('aria-checked', x === wb)); $('#wpnName').textContent = WEAPONS[ch.weapon]; edChanged(false); return; }
     const b = e.target.closest('[data-ed]'); if (!b) return;
     const a = b.dataset.ed;
     if (a === 'activate') { S.activeChar = ch.id; addLog(`${ch.name || 'Sua personagem'} entrou no dojo.`); renderAll(); save(); }
@@ -4578,12 +5182,33 @@ function wire(){
     renderPerfil(); renderStrip(); save();
   });
   // Jogo
+  const jGo = (k, focus) => { jTab = k; renderJogo(); if (focus) $('#jt-' + k).focus(); };
+  $('#view-jogo .j-tabs').addEventListener('click', e => { const b = e.target.closest('[data-jtab]'); if (b) jGo(b.dataset.jtab, true); });
+  $('#view-jogo .j-tabs').addEventListener('keydown', e => {
+    const i = J_TABS.indexOf(jTab), n = J_TABS.length, m = { ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1 }[e.key];
+    if (m) { e.preventDefault(); jGo(J_TABS[(i + m + n) % n], true); }
+    else if (e.key === 'Home') { e.preventDefault(); jGo(J_TABS[0], true); }
+    else if (e.key === 'End') { e.preventDefault(); jGo(J_TABS[n - 1], true); }
+  });
+  $('#view-jogo').addEventListener('click', e => {
+    const b = e.target.closest('[data-jstep]'); if (!b) return; e.preventDefault();
+    const el = $('#cfg-' + b.dataset.jstep), d = +b.dataset.d, v = +el.value || S.cfg[b.dataset.jstep];
+    /* passos de 5 param no múltiplo de 5 mais próximo (23 → 25 / 20) */
+    el.value = Math.abs(d) === 5 ? (d > 0 ? Math.floor(v / 5) * 5 + 5 : Math.ceil(v / 5) * 5 - 5) : v + d;
+    el.dispatchEvent(new Event('change'));
+  });
   const applyLen = () => { if (!S.timer.started) { S.timer.total = phaseLen(S.timer.phase); S.timer.left = S.timer.total; } if (S.timer.cycle >= S.cfg.cycles) S.timer.cycle = 0; };
   ['focus','short','long','cycles','goal'].forEach(k => $('#cfg-' + k).addEventListener('change', e => {
     const el = e.target; const v = clamp(Math.round(+el.value) || S.cfg[k], +el.min, +el.max); el.value = v; S.cfg[k] = v; applyLen(); renderAll(); save();
   }));
   $('#presets').addEventListener('click', e => { const b = e.target.closest('[data-preset]'); if (!b) return; const [f, s, l] = b.dataset.preset.split(',').map(Number); Object.assign(S.cfg, { focus:f, short:s, long:l }); applyLen(); renderAll(); save(); toast(`Ritmo ${f}/${s} aplicado.`); });
-  ['focusMode','auto','penalties','sound'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } renderAll(); save(); }));
+  ['focusMode','auto','penalties','sound','pip'].forEach(k => $('#cfg-' + k).addEventListener('change', e => { S.cfg[k] = e.target.checked; if (k === 'sound' && e.target.checked) { unlockAudio(); sfx('rin'); } if (k === 'pip' && e.target.checked && S.timer.running && S.timer.phase === 'focus') pipOpen(); renderAll(); save(); }));
+  $('#alarmOpts').addEventListener('click', e => { const b = e.target.closest('[data-alarm]'); if (!b) return; S.cfg.alarm = b.dataset.alarm; unlockAudio(); sfx('rin', true); renderJogo(); save(); });
+  $('#ambOpts').addEventListener('click', e => { const b = e.target.closest('[data-amb]'); if (!b) return; S.cfg.amb = b.dataset.amb; sndPreview(S.cfg.amb); renderJogo(); save(); });
+  $('#brkOpts').addEventListener('click', e => { const b = e.target.closest('[data-brk]'); if (!b) return; const v = b.dataset.brk; S.cfg.music = v !== 'off'; if (v !== 'off') S.cfg.musicKind = v; sndPreview(v); renderDialog(true); renderJogo(); save(); });
+  $('#pipBtn').addEventListener('click', () => { pipOn() ? pipClose() : pipOpen(); });
+  renderPipBtn();
+  try { navigator.mediaSession && navigator.mediaSession.setActionHandler('enterpictureinpicture', () => { if (S.cfg.pip && S.timer.running) pipOpen(); }); } catch(e){}
   $('#cfg-vol').addEventListener('input', e => { S.cfg.vol = +e.target.value; save(); });
   $('#cfg-bg3d').addEventListener('change', e => { S.cfg.bg3d = e.target.checked; if (S.cfg.bg3d) { S3.failed = false; S3.lite = false; if (PERF.lvl > 1) PERF.lvl = 1; init3d(); } else show3d(false); save(); });
   $('#realmBtn').addEventListener('click', () => realmView(true));
@@ -4591,21 +5216,17 @@ function wire(){
   const rvStep = d => { const ks = Object.keys(SCENES), i = ks.indexOf(S.cfg.scene); setScene(ks[(i + d + ks.length) % ks.length]); };
   $('#rvPrev').addEventListener('click', () => rvStep(-1)); $('#rvNext').addEventListener('click', () => rvStep(1));
   document.addEventListener('keydown', e => { if (!S3.view) return; if (e.key === 'Escape') realmView(false); else if (e.key === 'ArrowLeft') rvStep(-1); else if (e.key === 'ArrowRight') rvStep(1); });
-  $('#cfg-music').addEventListener('change', e => { S.cfg.music = e.target.checked; musicSync(); renderDialog(true); save(); });
   $('#cfg-musicVol').addEventListener('input', e => { S.cfg.musicVol = +e.target.value; musicVolume(S.cfg.musicVol); save(); });
-  $('#testMusic').addEventListener('click', e => {
-    if (MUS.on) { musicStop(); e.target.textContent = 'Ouvir'; return; }
-    const was = S.cfg.music; S.cfg.music = true; musicStart('short'); S.cfg.music = was; e.target.textContent = 'Parar';
-  });
   document.addEventListener('pointerdown', () => { if (!MUS.on) musicSync(); }, { passive:true });
-  $('#testSound').addEventListener('click', () => { unlockAudio(); sfx('chime'); setTimeout(() => sfx('rin'), 500); });
   $('#clockPill').addEventListener('click', () => { if (S.cfg.sky === 'auto') return; S.cfg.sky = 'auto'; applyUI(); renderAll(); save(); toast('A cena voltou a seguir o horário real.'); });
   $('#skyOpts').addEventListener('click', e => { const b = e.target.closest('[data-sky]'); if (!b) return; S.cfg.sky = b.dataset.sky; applyUI(); renderAll(); save(); });
   $('#cfg-summaryAt').addEventListener('change', e => { S.cfg.summaryAt = e.target.value || '22:00'; day().notified = false; save(); minuteTick(); });
-  let resetArmed = false;
-  $('#resetBtn').addEventListener('click', e => {
-    if (!resetArmed) { resetArmed = true; e.target.textContent = 'Clique de novo para apagar tudo'; setTimeout(() => { resetArmed = false; e.target.textContent = 'Apagar progresso'; }, 4000); return; }
-    S = fresh(); S.view = 'jogo'; resetArmed = false; e.target.textContent = 'Apagar progresso'; checkDay(); applyUI(); renderAll(); save(); toast('Progresso apagado. Um novo caminho começa.');
+  /* apagar tudo: o botão abre a confirmação; só "Sim, apagar tudo" apaga */
+  const resetAsk = on => { $('#resetAsk').hidden = !on; $('#resetBtn').hidden = on; (on ? $('#resetNo') : $('#resetBtn')).focus(); };
+  $('#resetBtn').addEventListener('click', () => resetAsk(true));
+  $('#resetNo').addEventListener('click', () => resetAsk(false));
+  $('#resetYes').addEventListener('click', () => {
+    S = fresh(); S.view = 'jogo'; jTab = 'guia'; resetAsk(false); checkDay(); applyUI(); renderAll(); save(); toast('Progresso apagado. Um novo caminho começa.');
   });
   const dayStep = n => { const i = sumKeys.indexOf(sumDay), j = i + n; if (j < 0 || j >= sumKeys.length) return; sumDay = sumKeys[j]; renderResumo(); };
   const dayBtn = $('#daySel'), dayList = $('#dayList');
